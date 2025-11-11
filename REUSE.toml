@@ -1,0 +1,43 @@
+# SPDX-FileCopyrightText: 2025 Will Reed
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+version = 1
+SPDX-PackageName = "confidant"
+SPDX-PackageSupplier = "Will Reed <wreed@disroot.org>"
+
+[[annotations]]
+path = "example/*"
+SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = "*.md"
+SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = "meson.*"
+SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+
+[[annotations]]
+path = ".gitignore"
+SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = ".editorconfig"
+SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = "subprojects/packagefiles/libucl/meson.build"
+SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = "subprojects/*.wrap"
+SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
+SPDX-License-Identifier = "GPL-3.0-or-later"

@@ -1,0 +1,7 @@
+[wrap-git]
+url = https://github.com/vstakhov/libucl.git
+revision = 0.9.2
+patch_directory = libucl
+
+[provide]
+libucl = libucl_dep

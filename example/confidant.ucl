@@ -1,0 +1,30 @@
+repository {
+    url: https://codeberg.org/wreedb/config.git
+}
+
+/* explicit path linking */
+link {
+    nvim {
+        source: ${REPO}/.config/nvim/init.lua
+        dest: ${XDG_CONFIG_HOME}/nvim/init.lua
+    }
+
+    fontconfig {
+        source: ${REPO}/.config/fontconfig/fonts.conf
+        destdir: ${XDG_CONFIG_HOME}/fontconfig /* reuse basename of file */
+    }
+}
+
+/* templated linking */
+link-from {
+    from: ${REPO}/.config/%{item}
+    to: ${XDG_CONFIG_HOME}/%{item}
+    items: [
+        wezterm/wezterm.lua
+        hypr/config.hl
+        kitty/kitty.conf
+        fish/config.fish
+        fish/conf.d
+        fish/functions
+    ]
+}

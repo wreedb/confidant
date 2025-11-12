@@ -10,33 +10,38 @@
 #include "ucl.hpp"
 #include "util.hpp"
 #include "confidant.hpp"
+#include "logging.hpp"
 #include "config.hpp"
+
+namespace logger = confidant::logging;
 
 const static std::string version = std::string(PROJECT_VERSION);
 
-void usageGeneral() {
-    std::println("confidant:");
+void usageGeneral(const std::string& argz) {
+    logger::info(argz, "options");
     std::println("\tinit: initialize a repository");
     std::println("\tlink: create symlinks");
     std::println("\tconfig: modify and view configuration");
     std::println("\thelp: display help for subcommands");
+    std::println("\tversion: display version information");
 }
 
-void usageInit() {
+void usageInit(const std::string& argz) {
     std::println("confidant init [PATH]: default: \".\"");
     std::println("Initialize a repo at PATH");
     std::println("\t--dry-run: show what actions would be taken");
 }
 
-void usageConfig() {
+void usageConfig(const std::string& argz) {
     std::println("confidant config [action]");
     std::println("View and modify configuration");
     std::println("\tdump: output the current configuration");
+    std::println("\t  -f,--file <FILE>: specify configuration file path");
 }
 
-void usageLink() {
-    std::println("confidant link [--dry-run,--verbose]");
-    std::println("Create symlinks");
+void usageLink(const std::string& argz) {
+    logger::info(argz, "link [--dry-run,--verbose]");
+    std::println("create symlinks");
     std::println("\t--dry-run: show what actions would be taken");
     std::println("\t--verbose: show more info about actions taken");
 }
@@ -53,16 +58,16 @@ int main(const int argc, const char *argv[]) {
     if (argc >= 3 && std::string(argv[1]) == "help") {
         std::string topic = argv[2];
         if (topic == "init") {
-            usageInit();
+            usageInit(argz);
             return 0;
         } else if (topic == "link") {
-            usageLink();
+            usageLink(argz);
             return 0;
         } else if (topic == "version") {
             std::println("{} version {}", argz, version);
             return 0;
         } else if (topic == "config") {
-            usageConfig();
+            usageConfig(argz);
             return 0;
         } else {
             std::println(std::cerr, "{}: help topic '{}' is not known", argz, topic);
@@ -71,7 +76,7 @@ int main(const int argc, const char *argv[]) {
     }
     
     if (argc == 2 && std::string(argv[1]) == "help") {
-        usageGeneral();
+        usageGeneral(argz);
         return 0;
     }
 
@@ -92,6 +97,8 @@ int main(const int argc, const char *argv[]) {
 
     auto* cmdConfig = args.add_subcommand("config", "modify and view configuration");
     auto* cmdConfig_dump = cmdConfig->add_subcommand("dump", "output the current configuration");
+    std::string configPath = "confidant.ucl";
+    [[maybe_unused]]auto* cmdConfig_dump_file = cmdConfig_dump->add_option("-f,--file", configPath, "specify configuration file to operate on");
     
     CLI11_PARSE(args, argc, argv);
 
@@ -104,15 +111,16 @@ int main(const int argc, const char *argv[]) {
         confidant::linkfrom(conf);
         return 0;
     } else if (args.got_subcommand(cmdVersion)) {
-        std::println("{} version {}", argz, version);
+        logger::info(argz, "version {}", version);
         return 0;
     } else if (args.got_subcommand(cmdConfig)) {
         if (cmdConfig->got_subcommand(cmdConfig_dump)) {
-            confidant::configuration conf = confidant::config::serialize("confidant.ucl");
+            confidant::configuration conf = confidant::config::serialize(configPath);
+            logger::info(argz, "dumping configuration from {}", configPath);
             confidant::debug::dumpConfig(conf);
             return 0;
         } else {
-            usageConfig();
+            usageConfig(argz);
             return 1;
         }
     }

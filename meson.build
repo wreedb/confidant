@@ -34,6 +34,7 @@ sources = files(
     'src/util.cpp',
     'src/ucl.cpp',
     'src/confidant.cpp',
+    'src/logging.cpp',
     'src/main.cpp'
 )
 

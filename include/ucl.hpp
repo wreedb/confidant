@@ -35,6 +35,7 @@ int members(const ucl::Ucl& object);
 }; // END ucl
 
 namespace confidant {
+std::string substitute(const std::string& tmpl, const std::string& item);
 namespace config {
 confidant::configuration serialize(const string& path);
 } // NOTE: end namespace confidant::config

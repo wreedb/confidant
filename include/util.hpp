@@ -12,6 +12,7 @@
 namespace fs = std::filesystem;
 
 namespace util {
+bool perms_to_link(const fs::path& p);
 std::string stripargz(const std::string& arg);
 std::optional<std::string> getenv(const std::string& name);
 bool hasenv(const std::string& name);

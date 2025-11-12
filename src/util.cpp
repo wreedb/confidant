@@ -13,6 +13,17 @@ namespace fs = std::filesystem;
 
 namespace util {
 
+bool perms_to_link(const fs::path& p) {
+    fs::path parent = p.parent_path();
+    if (parent.empty()) parent = ".";
+    
+    if (!fs::exists(parent)) return false;
+    
+    fs::perms perms = fs::status(parent).permissions();
+    
+    return (perms & fs::perms::owner_write) != fs::perms::none;
+}
+    
 std::string stripargz(const std::string& arg) {
     std::string argz = arg;
     // remove './' from beginning of string

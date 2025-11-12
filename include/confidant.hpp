@@ -48,4 +48,8 @@ struct configuration {
 namespace debug {
 void dumpConfig(const confidant::configuration& conf);
 } // NOTE: end namespace confidant::debug
+
+int linkfrom(const confidant::configuration& conf);
+int link(const confidant::configuration& conf);
+
 } // NOTE: end namespace confidant

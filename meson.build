@@ -13,6 +13,10 @@ config_hpp.set_quoted('PROJECT_NAME', meson.project_name())
 
 configure_file(output: 'config.hpp', configuration: config_hpp)
 
+if get_option('static-stdlib')
+    add_project_link_arguments('-static-libgcc', '-static-libstdc++', language: 'cpp')
+endif
+
 cli11_dep = dependency(
     'CLI11',
     required: false,
@@ -35,7 +39,7 @@ sources = files(
 
 deps = [libucl_dep, cli11_dep]
 
-bin = executable(
+executable(
   'confidant',
   sources,
   include_directories: ['include'],

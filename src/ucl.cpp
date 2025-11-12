@@ -87,6 +87,19 @@ int members(const ucl::Ucl& object) {
 }; // END ucl
 
 namespace confidant {
+
+std::string substitute(const std::string& tmpl, const std::string& item) {
+    const std::string placeholder = "%{item}";
+    std::string result = tmpl;
+    
+    size_t pos = 0;
+    while ((pos = result.find(placeholder, pos)) != std::string::npos) {
+        result.replace(pos, placeholder.length(), item);
+        pos += item.length();
+    }
+    return result;
+}
+
 namespace config {
 confidant::configuration serialize(const string& path) {
     // ensure the file exists

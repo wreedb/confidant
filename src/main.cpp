@@ -99,7 +99,9 @@ int main(const int argc, const char *argv[]) {
         std::println("Initializing repo at {}", optInit);
         return 0;
     } else if (args.got_subcommand(cmdLink)) {
-        std::println("Creating symlinks");
+        confidant::configuration conf = confidant::config::serialize("confidant.ucl");
+        confidant::link(conf);
+        confidant::linkfrom(conf);
         return 0;
     } else if (args.got_subcommand(cmdVersion)) {
         std::println("{} version {}", argz, version);

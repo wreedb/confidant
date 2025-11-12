@@ -1,0 +1,19 @@
+repository {
+    url: https://codeberg.org/wreedb/config.git
+}
+
+link {
+    ansible {
+        source: ${REPO}/.config/ansible/ansible.cfg
+        destdir: ${XDG_CONFIG_HOME}/ansible
+    }
+}
+
+link-from {
+    from: ${REPO}/.config/%{item}
+    to: ${XDG_CONFIG_HOME}/%{item}
+    items: [
+        btop/btop.conf
+        micro
+    ]
+}

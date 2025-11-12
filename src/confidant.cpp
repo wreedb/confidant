@@ -144,7 +144,6 @@ int link(const confidant::configuration& conf) {
     
 namespace debug {
 void dumpConfig(const confidant::configuration& conf) {
-    std::println("confidant.ucl:");
     std::println("  repository: ");
     std::println("    url: {}", conf.repo.url);
     std::println("  link:");

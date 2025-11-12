@@ -19,24 +19,30 @@ const static std::string version = std::string(PROJECT_VERSION);
 
 void usageGeneral(const std::string& argz) {
     logger::info(argz, "options");
+    std::println("{}commands{}:", logger::color(1), logger::color(0));
     std::println("\tinit: initialize a repository");
     std::println("\tlink: create symlinks");
     std::println("\tconfig: modify and view configuration");
     std::println("\thelp: display help for subcommands");
     std::println("\tversion: display version information");
+    std::cout << std::endl;
+    std::println("{}flags{}:", logger::color(1), logger::color(0));
+    std::println("\t--verbose,-v: increase verbosity, can be repeated to further increase");
 }
 
 void usageInit(const std::string& argz) {
-    std::println("confidant init [PATH]: default: \".\"");
-    std::println("Initialize a repo at PATH");
+    logger::info(argz, "init [path]");
+    std::println("initialize a repo at [path] {{.}}");
     std::println("\t--dry-run: show what actions would be taken");
+    std::println("\t--verbose,-v: increase verbosity, can be repeated to further increase");
 }
 
 void usageConfig(const std::string& argz) {
-    std::println("confidant config [action]");
-    std::println("View and modify configuration");
-    std::println("\tdump: output the current configuration");
-    std::println("\t  -f,--file <FILE>: specify configuration file path");
+    logger::info(argz, "config <action> [...options]");
+    std::println("view and modify configuration. default values shown in {{ }} braces");
+    std::println("{}commands{}:", logger::color(1), logger::color(0));
+    std::println("\t{}dump{}: output the current configuration", logger::color(1), logger::color(0));
+    std::println("\t-f,--file {}path{}: specify configuration file path {{confidant.ucl}}", logger::color(1), logger::color(0));
 }
 
 void usageLink(const std::string& argz) {
@@ -64,7 +70,7 @@ int main(const int argc, const char *argv[]) {
             usageLink(argz);
             return 0;
         } else if (topic == "version") {
-            std::println("{} version {}", argz, version);
+            logger::info(argz, "version {}", version);
             return 0;
         } else if (topic == "config") {
             usageConfig(argz);

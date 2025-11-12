@@ -41,3 +41,8 @@ SPDX-License-Identifier = "GPL-3.0-or-later"
 path = "subprojects/*.wrap"
 SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
 SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = "example/**"
+SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
+SPDX-License-Identifier = "GPL-3.0-or-later"

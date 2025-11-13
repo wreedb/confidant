@@ -141,6 +141,7 @@ confidant::configuration serialize(const string& path) {
     vars = ucl::var::add("HOME", homedir.value(), vars);
     vars = ucl::var::add("REPO", cwd, vars);
 
+    bool create_dirs = false;
     confidant::configuration conf;
     confidant::config::repository repository;
     std::vector<confidant::config::link> links;
@@ -152,11 +153,20 @@ confidant::configuration serialize(const string& path) {
         println(std::cerr, "parsing error: {}", uclerror);
         std::exit(1);
     }
+    
+    // BEGIN serializing
+    
+    if (ucl::check(input, "create-directories")
+    && input["create-directories"].type() == ucl::Bool) {
+        create_dirs = input["create-directories"].bool_value();
+    }
 
     if (ucl::check(input, "repository")) {
         if (ucl::check(input["repository"], "url")) {
             repository.url = input["repository"]["url"].string_value();
         }
+    } else {
+        repository.url = "";
     }
 
     if (!ucl::check(input, "link")) {
@@ -164,7 +174,7 @@ confidant::configuration serialize(const string& path) {
         std::exit(1);
     }
 
-    auto links_ucl = input.lookup("link");
+    ucl::Ucl links_ucl = input.lookup("link");
     int links_ucl_length = ucl::members(links_ucl);
     links.reserve(links_ucl_length);
 
@@ -215,7 +225,8 @@ confidant::configuration serialize(const string& path) {
     }
 
     linkFrom.items = items;
-
+    
+    conf.create_dirs = create_dirs;
     conf.repo = repository;
     conf.links = links;
     conf.linkFrom = linkFrom;

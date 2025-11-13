@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <print>
+#include <algorithm>
 #include <CLI/CLI.hpp>
 
 #include "ucl.hpp"
@@ -12,30 +13,11 @@
 #include "confidant.hpp"
 #include "logging.hpp"
 #include "config.hpp"
+#include "help.hpp"
 
 namespace logger = confidant::logging;
 
 const static std::string version = std::string(PROJECT_VERSION);
-
-void usageGeneral(const std::string& argz) {
-    logger::info(argz, "options");
-    std::println("{}commands{}:", logger::color(1), logger::color(0));
-    std::println("\tinit: initialize a repository");
-    std::println("\tlink: create symlinks");
-    std::println("\tconfig: modify and view configuration");
-    std::println("\thelp: display help for subcommands");
-    std::println("\tversion: display version information");
-    std::cout << std::endl;
-    std::println("{}flags{}:", logger::color(1), logger::color(0));
-    std::println("\t--verbose,-v: increase verbosity, can be repeated to further increase");
-}
-
-void usageInit(const std::string& argz) {
-    logger::info(argz, "init [path]");
-    std::println("initialize a repo at [path] {{.}}");
-    std::println("\t--dry-run: show what actions would be taken");
-    std::println("\t--verbose,-v: increase verbosity, can be repeated to further increase");
-}
 
 void usageConfig(const std::string& argz) {
     logger::info(argz, "config <action> [...options]");
@@ -52,7 +34,7 @@ void usageLink(const std::string& argz) {
     std::println("\t--verbose: show more info about actions taken");
 }
 
-int main(const int argc, const char *argv[]) {
+int main(int argc, char *argv[]) {
 
     std::string argz;
 
@@ -64,16 +46,30 @@ int main(const int argc, const char *argv[]) {
     if (argc >= 3 && std::string(argv[1]) == "help") {
         std::string topic = argv[2];
         if (topic == "init") {
-            usageInit(argz);
+            help::init::help(argz);
             return 0;
         } else if (topic == "link") {
-            usageLink(argz);
+            help::link::help(argz);
+            return 0;
+        } else if (topic == "link-from") {
+            help::link_from::help(argz);
             return 0;
         } else if (topic == "version") {
             logger::info(argz, "version {}", version);
             return 0;
         } else if (topic == "config") {
-            usageConfig(argz);
+            if (argc >= 4) {
+                if (std::string(argv[3]) == "dump") {
+                    help::config::dump::help(argz);
+                    return 0;
+                }
+                
+                if (std::string(argv[3]) == "get") {
+                    help::config::get::help(argz);
+                    return 0;
+                }
+            }
+            help::config::help(argz);
             return 0;
         } else {
             std::println(std::cerr, "{}: help topic '{}' is not known", argz, topic);
@@ -82,51 +78,109 @@ int main(const int argc, const char *argv[]) {
     }
     
     if (argc == 2 && std::string(argv[1]) == "help") {
-        usageGeneral(argz);
+        // usageGeneral(argz);
+        help::general::help(argz);
         return 0;
     }
 
     CLI::App args{"Your configuration \033[1;3mconfidant\033[m"};
+    argv = args.ensure_utf8(argv);
     args.set_help_flag();
     args.set_version_flag();
 
+    int verbosity = ansi::verbosity::normal;
+    
     std::string optInit = ".";
+    std::string optConfig_get_name;
+    std::string optConfig_dump_file = "confidant.ucl";
+    
+    std::string optLink_file = "confidant.ucl";
+    std::string optLinkFrom_file = "confidant.ucl";
+    
+    bool optLink_dryrun = false;
+    bool optLinkFrom_dryrun = false;
+    bool optInit_dryrun = false;
+    bool optHelp = false;
+    bool optVersion = false;
 
+    [[maybe_unused]]auto* flagVerbosity = args.add_flag("-v,--verbose", verbosity);
+    
     auto* cmdInit = args.add_subcommand("init", "Initialize configuration repository");
 
-    cmdInit->add_option("path", optInit, "path to new repository")
-           ->default_val(".");
+    cmdInit->add_option("path", optInit);
+    cmdInit->add_flag("-d,--dry-run", optInit_dryrun);
+    
+    [[maybe_unused]]auto* flagVersion = args.add_flag("-V,--version", optVersion)->default_val(false);
+    [[maybe_unused]]auto* flagHelp = args.add_flag("-h,--help", optHelp)->default_val(false);
+    
+    auto* cmdLink = args.add_subcommand("link");
+    auto* cmdLinkFrom = args.add_subcommand("link-from");
 
-    auto* cmdLink = args.add_subcommand("link", "create symlinks");
+    [[maybe_unused]]auto* cmdLinkFrom_dryrun = cmdLinkFrom->add_flag("-d,--dry-run", optLinkFrom_dryrun);
+    [[maybe_unused]]auto* cmdLink_dryrun = cmdLink->add_flag("-d,--dry-run", optLinkFrom_dryrun);
+ 
+    
+    auto* cmdVersion = args.add_subcommand("version");
+    auto* cmdUsage = args.add_subcommand("usage");
 
-    auto* cmdVersion = args.add_subcommand("version", "display version info");
+    auto* cmdConfig = args.add_subcommand("config");
+    auto* cmdConfig_dump = cmdConfig->add_subcommand("dump");
+    auto* cmdConfig_get = cmdConfig->add_subcommand("get");
 
-    auto* cmdConfig = args.add_subcommand("config", "modify and view configuration");
-    auto* cmdConfig_dump = cmdConfig->add_subcommand("dump", "output the current configuration");
+    [[maybe_unused]]auto* cmdConfig_get_name = cmdConfig_get->add_option("name", optConfig_get_name);
+    
     std::string configPath = "confidant.ucl";
-    [[maybe_unused]]auto* cmdConfig_dump_file = cmdConfig_dump->add_option("-f,--file", configPath, "specify configuration file to operate on");
+    [[maybe_unused]]auto* cmdConfig_dump_file = cmdConfig_dump->add_option("-f,--file", optConfig_dump_file);
+    
+    [[maybe_unused]]auto* cmdLink_file = cmdLink->add_option("-f,--file", optLink_file);
+    [[maybe_unused]]auto* cmdLinkFrom_file = cmdLinkFrom->add_option("-f,--file", optLinkFrom_file);
     
     CLI11_PARSE(args, argc, argv);
-
-    if (args.got_subcommand(cmdInit)) {
-        std::println("Initializing repo at {}", optInit);
+    
+    // apply verbosity flags to loglevel
+    ansi::loglevel = std::min(int(ansi::verbosity::normal) + verbosity, int(ansi::verbosity::trace));
+    
+    if (optVersion) {
+        logger::info(argz, "version {}", PROJECT_VERSION);
         return 0;
+    }
+    
+    if (optHelp) {
+        help::general::help(argz);
+        return 0;
+    }
+    
+    if (args.got_subcommand(cmdUsage)) {
+        help::general::usage(argz);
+        return 0;
+    } else if (args.got_subcommand(cmdInit)) {
+        if (optInit_dryrun) {
+            std::println("writing default configuration to: {}/confidant.ucl", optInit);
+            return 0;
+        } else {
+            help::defaults::write_local_config(optInit);
+            return 0;
+        }
+    
     } else if (args.got_subcommand(cmdLink)) {
-        confidant::configuration conf = confidant::config::serialize("confidant.ucl");
-        confidant::link(conf);
-        confidant::linkfrom(conf);
-        return 0;
+        return confidant::link(confidant::config::serialize(optLink_file), optLink_dryrun);
+        
+    } else if (args.got_subcommand(cmdLinkFrom)) {
+        return confidant::linkfrom(confidant::config::serialize(optLinkFrom_file), optLinkFrom_dryrun);
+    
     } else if (args.got_subcommand(cmdVersion)) {
         logger::info(argz, "version {}", version);
         return 0;
+    
     } else if (args.got_subcommand(cmdConfig)) {
         if (cmdConfig->got_subcommand(cmdConfig_dump)) {
-            confidant::configuration conf = confidant::config::serialize(configPath);
-            logger::info(argz, "dumping configuration from {}", configPath);
+            confidant::configuration conf = confidant::config::serialize(optConfig_dump_file);
+            logger::info(argz, "dumping configuration from {}", optConfig_dump_file);
             confidant::debug::dumpConfig(conf);
             return 0;
         } else {
-            usageConfig(argz);
+            logger::error(argz, "unknown subcommand");
+            help::config::help(argz);
             return 1;
         }
     }

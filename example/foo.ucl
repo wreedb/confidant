@@ -1,0 +1,21 @@
+create-directories: true
+
+repository {
+    url: https://codeberg.org/wreedb/config.git
+}
+
+link {
+    buzz {
+        source: ${REPO}/.config/buzz/buzz.yaml
+        destdir: ${XDG_CONFIG_HOME}/buzz
+    }
+}
+
+link-from {
+    from: ${REPO}/.config/%{item}
+    to: ${XDG_CONFIG_HOME}/%{item}
+    items: [
+        foo/foo.conf
+        bar
+    ]
+}

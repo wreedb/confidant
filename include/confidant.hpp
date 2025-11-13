@@ -24,6 +24,12 @@ namespace fs = std::filesystem;
 
 namespace confidant {
 namespace config {
+    
+struct global {
+    bool create_directories;
+    int verbosity;
+};
+    
 enum linkType { directory, file };
 struct repository {
     std::string url;
@@ -41,6 +47,7 @@ struct linkFrom {
 };
 } // NOTE: end namespace confidant::config
 struct configuration {
+    bool create_dirs;
     config::repository repo;
     vector<config::link> links;
     config::linkFrom linkFrom;
@@ -49,7 +56,7 @@ namespace debug {
 void dumpConfig(const confidant::configuration& conf);
 } // NOTE: end namespace confidant::debug
 
-int linkfrom(const confidant::configuration& conf);
-int link(const confidant::configuration& conf);
+int linkfrom(const confidant::configuration& conf, const bool& dry);
+int link(const confidant::configuration& conf, const bool& dry);
 
 } // NOTE: end namespace confidant

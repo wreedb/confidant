@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #pragma once
 
 #include <string>
@@ -79,7 +83,7 @@ namespace confidant {
 namespace logging {
 std::string color(const int& num);
 template <typename... Args>
-void err(std::string_view argz, std::string_view msg, Args&&... fmt) {
+void error(std::string_view argz, std::string_view msg, Args&&... fmt) {
     std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
     std::cerr
     << logging::color(31)
@@ -113,6 +117,20 @@ void warn (std::string_view argz, std::string_view msg, Args&&... fmt) {
     << fmtMsg
     << std::endl;
 }
+
+template <typename... Args>
+void extra (std::string_view argz, std::string_view msg, Args&&... fmt) {
+    if (ansi::loglevel < ansi::verbosity::debug) return;
+    std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+    std::cout
+    << logging::color(35)
+    << argz
+    << logging::color(0)
+    << ": "
+    << fmtMsg
+    << std::endl;
+}
+
 
 template <typename... Args>
 [[noreturn]] void fatal(std::string_view argz, int exitCode, std::string_view msg, Args&&... fmt) {

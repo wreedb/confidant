@@ -27,8 +27,7 @@
           cli11
         ];
 
-      in {
-        packages.default = stdenv.mkDerivation {
+        confidant-package = stdenv.mkDerivation {
           pname = "confidant";
           version = "0.1.0";
           src = ./.;
@@ -45,6 +44,17 @@
           mesonFlags = ["-D strip=true"];
 
         };
+
+      in {
+        packages.confidant = confidant-package;
+
+        apps.confidant = {
+          type = "app";
+          program = "${confidant-package}/bin/confidant";
+        };
+
+        apps.default = self.apps.${system}.confidant;
+        packages.default = confidant-package;
 
         devShells.default = pkgs.mkShell {
           inherit nativeBuildInputs buildInputs;

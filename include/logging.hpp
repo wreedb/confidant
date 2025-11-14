@@ -11,61 +11,61 @@
 
 
 namespace ansi {
-enum color : int {
-    black = 0,
-    red = 1,
-    green = 2,
-    yellow = 3,
-    blue = 4,
-    magenta = 5,
-    cyan = 6,
-    white = 7
-};
+    enum color : int {
+        black = 0,
+        red = 1,
+        green = 2,
+        yellow = 3,
+        blue = 4,
+        magenta = 5,
+        cyan = 6,
+        white = 7
+    };
 
-enum verbosity : int {
-    quiet = 0,
-    normal = 1,
-    info = 2,
-    debug = 3,
-    trace = 4
-};
+    enum verbosity : int {
+        quiet = 0,
+        normal = 1,
+        info = 2,
+        debug = 3,
+        trace = 4
+    };
 
-std::string verbosity_literal(const int& v);
+    std::string verbosity_literal(const int& v);
 
-inline bool useColor = util::hasenv("NO_COLOR") ? false : true;
-inline int loglevel = ansi::verbosity::normal;
+    inline bool useColor = util::hasenv("NO_COLOR") ? false : true;
+    inline int loglevel = ansi::verbosity::normal;
 
-constexpr std::string_view freset     = "\033[0m";
-constexpr std::string_view bold       = "\033[1m";
-constexpr std::string_view dim        = "\033[2m";
-constexpr std::string_view italic     = "\033[3m";
-constexpr std::string_view underline  = "\033[4m";
-constexpr std::string_view blink      = "\033[5m";
-constexpr std::string_view hidden     = "\033[8m";
-constexpr std::string_view strikethru = "\033[9m";
+    constexpr std::string_view freset     = "\033[0m";
+    constexpr std::string_view bold       = "\033[1m";
+    constexpr std::string_view dim        = "\033[2m";
+    constexpr std::string_view italic     = "\033[3m";
+    constexpr std::string_view underline  = "\033[4m";
+    constexpr std::string_view blink      = "\033[5m";
+    constexpr std::string_view hidden     = "\033[8m";
+    constexpr std::string_view strikethru = "\033[9m";
 
-namespace reset {
-constexpr std::string_view bold       = "\033[22m";
-constexpr std::string_view dim        = "\033[22m";
-constexpr std::string_view italic     = "\033[23m";
-constexpr std::string_view underline  = "\033[24m";
-constexpr std::string_view blink      = "\033[25m";
-constexpr std::string_view hidden     = "\033[28m";
-constexpr std::string_view strikethru = "\033[29m";
-}
+    namespace reset {
+        constexpr std::string_view bold       = "\033[22m";
+        constexpr std::string_view dim        = "\033[22m";
+        constexpr std::string_view italic     = "\033[23m";
+        constexpr std::string_view underline  = "\033[24m";
+        constexpr std::string_view blink      = "\033[25m";
+        constexpr std::string_view hidden     = "\033[28m";
+        constexpr std::string_view strikethru = "\033[29m";
+    };
 
-namespace fg {
-constexpr std::string_view black   = "\033[30m";
-constexpr std::string_view red     = "\033[31m";
-constexpr std::string_view green   = "\033[32m";
-constexpr std::string_view yellow  = "\033[33m";
-constexpr std::string_view blue    = "\033[34m";
-constexpr std::string_view magenta = "\033[35m";
-constexpr std::string_view cyan    = "\033[36m";
-constexpr std::string_view white   = "\033[37m";
-constexpr std::string_view reset   = "\033[39m";
-std::string rgb(const int& red, const int& green, const int& blue);
-}
+    namespace fg {
+        constexpr std::string_view black   = "\033[30m";
+        constexpr std::string_view red     = "\033[31m";
+        constexpr std::string_view green   = "\033[32m";
+        constexpr std::string_view yellow  = "\033[33m";
+        constexpr std::string_view blue    = "\033[34m";
+        constexpr std::string_view magenta = "\033[35m";
+        constexpr std::string_view cyan    = "\033[36m";
+        constexpr std::string_view white   = "\033[37m";
+        constexpr std::string_view reset   = "\033[39m";
+        std::string rgb(const int& red, const int& green, const int& blue);
+    }
 
 namespace bg {
 constexpr std::string_view black   = "\033[40m";

@@ -1,21 +1,33 @@
-create-directories: true
-
+create-directories: on
 repository {
     url: https://codeberg.org/wreedb/config.git
 }
 
 link {
+    
     buzz {
         source: ${REPO}/.config/buzz/buzz.yaml
         destdir: ${XDG_CONFIG_HOME}/buzz
     }
+
+    lorem {
+        source: ${REPO}/.config/lorem/ipsum
+        dest: ${XDG_CONFIG_HOME}/lorem/ipsum
+        type: directory
+    }
+
 }
 
 link-from {
+    
     from: ${REPO}/.config/%{item}
     to: ${XDG_CONFIG_HOME}/%{item}
+    
     items: [
         foo/foo.conf
         bar
+        fizz/fizz.cfg
+        fuzz
     ]
+
 }

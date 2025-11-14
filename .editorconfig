@@ -5,6 +5,12 @@ insert_final_newline = false
 end_of_line = lf
 charset = utf-8
 
+# version file should never get a newline
+[.version]
+insert_final_newline = false
+end_of_line = lf
+charset = utf-8
+
 [*.{cpp,cxx,cc,hpp,hxx,hh,h,c}]
 indent_style = space
 indent_size = 4

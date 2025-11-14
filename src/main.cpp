@@ -2,37 +2,24 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <iostream>
 #include <string>
 #include <print>
 #include <algorithm>
+#include <filesystem>
 #include <CLI/CLI.hpp>
 
 #include "ucl.hpp"
 #include "util.hpp"
 #include "confidant.hpp"
 #include "logging.hpp"
-#include "config.hpp"
 #include "help.hpp"
+#include "options.hpp"
+#include "config.hpp"
 
 namespace logger = confidant::logging;
+namespace fs = std::filesystem;
 
 const static std::string version = std::string(PROJECT_VERSION);
-
-void usageConfig(const std::string& argz) {
-    logger::info(argz, "config <action> [...options]");
-    std::println("view and modify configuration. default values shown in {{ }} braces");
-    std::println("{}commands{}:", logger::color(1), logger::color(0));
-    std::println("\t{}dump{}: output the current configuration", logger::color(1), logger::color(0));
-    std::println("\t-f,--file {}path{}: specify configuration file path {{confidant.ucl}}", logger::color(1), logger::color(0));
-}
-
-void usageLink(const std::string& argz) {
-    logger::info(argz, "link [--dry-run,--verbose]");
-    std::println("create symlinks");
-    std::println("\t--dry-run: show what actions would be taken");
-    std::println("\t--verbose: show more info about actions taken");
-}
 
 int main(int argc, char *argv[]) {
 
@@ -72,80 +59,88 @@ int main(int argc, char *argv[]) {
             help::config::help(argz);
             return 0;
         } else {
-            std::println(std::cerr, "{}: help topic '{}' is not known", argz, topic);
+            logger::error(argz, "help topic '{}' is not recognized", topic);
             return 1;
         }
     }
     
     if (argc == 2 && std::string(argv[1]) == "help") {
-        // usageGeneral(argz);
         help::general::help(argz);
         return 0;
     }
-
-    CLI::App args{"Your configuration \033[1;3mconfidant\033[m"};
+    
+    // before setting up the argument parser, read the global config so the settings apply.
+    if (!fs::exists(help::defaults::global_config_path()))
+        help::defaults::write_global_config(help::defaults::global_config_path());
+    
+    confidant::settings settings = confidant::config::global::serialize(help::defaults::global_config_path());
+    
+    CLI::App args{"your configuration confidant"};
     argv = args.ensure_utf8(argv);
     args.set_help_flag();
     args.set_version_flag();
 
-    int verbosity = ansi::verbosity::normal;
+    int verbosity = settings.loglevel;
+    ansi::loglevel = verbosity;
     
-    std::string optInit = ".";
-    std::string optConfig_get_name;
-    std::string optConfig_dump_file = "confidant.ucl";
-    
-    std::string optLink_file = "confidant.ucl";
-    std::string optLinkFrom_file = "confidant.ucl";
-    
-    bool optLink_dryrun = false;
-    bool optLinkFrom_dryrun = false;
-    bool optInit_dryrun = false;
-    bool optHelp = false;
-    bool optVersion = false;
-
-    [[maybe_unused]]auto* flagVerbosity = args.add_flag("-v,--verbose", verbosity);
-    
-    auto* cmdInit = args.add_subcommand("init", "Initialize configuration repository");
-
-    cmdInit->add_option("path", optInit);
-    cmdInit->add_flag("-d,--dry-run", optInit_dryrun);
-    
-    [[maybe_unused]]auto* flagVersion = args.add_flag("-V,--version", optVersion)->default_val(false);
-    [[maybe_unused]]auto* flagHelp = args.add_flag("-h,--help", optHelp)->default_val(false);
-    
-    auto* cmdLink = args.add_subcommand("link");
-    auto* cmdLinkFrom = args.add_subcommand("link-from");
-
-    [[maybe_unused]]auto* cmdLinkFrom_dryrun = cmdLinkFrom->add_flag("-d,--dry-run", optLinkFrom_dryrun);
-    [[maybe_unused]]auto* cmdLink_dryrun = cmdLink->add_flag("-d,--dry-run", optLinkFrom_dryrun);
- 
+    args.add_flag("-v,--verbose", options::verbosity);
+    args.add_flag("-V,--version", options::version);
+    args.add_flag("-h,--help",    options::help);
+    args.add_flag("-u,--usage",   options::usage);
     
     auto* cmdVersion = args.add_subcommand("version");
-    auto* cmdUsage = args.add_subcommand("usage");
-
+    auto* cmdUsage   = args.add_subcommand("usage");
+    
+    auto* cmdInit = args.add_subcommand("init", "initialize a confidant repository");
+    cmdInit->add_option("path",       options::init::path);
+    cmdInit->add_flag("-d,--dry-run", options::init::dryrun);
+    cmdInit->add_flag("-h,--help",    options::init::help);
+    
+    auto* cmdLinkFrom = args.add_subcommand("link-from", "apply templated symlinks");
+    cmdLinkFrom->add_flag("-h,--help",    options::linkfrom::help);
+    cmdLinkFrom->add_flag("-d,--dry-run", options::linkfrom::dryrun);
+    cmdLinkFrom->add_flag("-v,--verbose", options::linkfrom::verbosity);
+    cmdLinkFrom->add_option("-f,--file",  options::linkfrom::file);
+    
+    auto* cmdLink = args.add_subcommand("link", "apply symlinks");
+    cmdLink->add_flag("-d,--dry-run", options::link::dryrun);
+    cmdLink->add_flag("-h,--help",    options::link::help);
+    cmdLink->add_flag("-v,--verbose", options::link::verbosity);
+    cmdLink->add_option("-f,--file",  options::link::file);
+    
     auto* cmdConfig = args.add_subcommand("config");
+    cmdConfig->add_flag("-v,--verbose", options::config::verbosity);
+    cmdConfig->add_flag("-h,--help",    options::config::help);
+        
     auto* cmdConfig_dump = cmdConfig->add_subcommand("dump");
+    cmdConfig_dump->add_flag("-h,--help",    options::config::dump::help);
+    cmdConfig_dump->add_flag("-g,--global",  options::config::dump::global);
+    cmdConfig_dump->add_flag("-v,--verbose", options::config::dump::verbosity);
+    cmdConfig_dump->add_option("-f,--file",  options::config::dump::file);
+    
     auto* cmdConfig_get = cmdConfig->add_subcommand("get");
-
-    [[maybe_unused]]auto* cmdConfig_get_name = cmdConfig_get->add_option("name", optConfig_get_name);
-    
-    std::string configPath = "confidant.ucl";
-    [[maybe_unused]]auto* cmdConfig_dump_file = cmdConfig_dump->add_option("-f,--file", optConfig_dump_file);
-    
-    [[maybe_unused]]auto* cmdLink_file = cmdLink->add_option("-f,--file", optLink_file);
-    [[maybe_unused]]auto* cmdLinkFrom_file = cmdLinkFrom->add_option("-f,--file", optLinkFrom_file);
+    cmdConfig_get->add_flag("-h,--help",    options::config::get::help);
+    cmdConfig_get->add_flag("-v,--verbose", options::config::get::verbosity);
+    cmdConfig_get->add_option("name",       options::config::get::name);
     
     CLI11_PARSE(args, argc, argv);
     
-    // apply verbosity flags to loglevel
-    ansi::loglevel = std::min(int(ansi::verbosity::normal) + verbosity, int(ansi::verbosity::trace));
+    ansi::loglevel = std::min(
+        ( options::verbosity
+        + options::config::verbosity
+        + options::config::get::verbosity
+        + options::config::dump::verbosity
+        + options::init::verbosity
+        + options::link::verbosity
+        + options::linkfrom::verbosity),
+        int(ansi::verbosity::trace));
     
-    if (optVersion) {
+    if (options::version) {
         logger::info(argz, "version {}", PROJECT_VERSION);
         return 0;
     }
     
-    if (optHelp) {
+    if (options::help) {
         help::general::help(argz);
         return 0;
     }
@@ -153,36 +148,85 @@ int main(int argc, char *argv[]) {
     if (args.got_subcommand(cmdUsage)) {
         help::general::usage(argz);
         return 0;
+        
     } else if (args.got_subcommand(cmdInit)) {
-        if (optInit_dryrun) {
-            std::println("writing default configuration to: {}/confidant.ucl", optInit);
+        if (options::init::help) {
+            help::init::help(argz);
             return 0;
+        }
+        
+        if (options::init::dryrun) {
+            std::println("writing default configuration to: {}/confidant.ucl", options::init::path);
+            return 0;
+        
         } else {
-            help::defaults::write_local_config(optInit);
+            help::defaults::write_local_config(options::init::path);
             return 0;
         }
     
     } else if (args.got_subcommand(cmdLink)) {
-        return confidant::link(confidant::config::serialize(optLink_file), optLink_dryrun);
+        if (options::link::help) {
+            help::link::help(argz);
+            return 0;
+        }
+        
+        return confidant::link(
+            confidant::config::serialize(options::link::file, settings),
+            options::link::dryrun
+        );
         
     } else if (args.got_subcommand(cmdLinkFrom)) {
-        return confidant::linkfrom(confidant::config::serialize(optLinkFrom_file), optLinkFrom_dryrun);
+        if (options::linkfrom::help) {
+            help::link_from::help(argz);
+            return 0;
+        }
+        return confidant::linkfrom(
+            confidant::config::serialize(options::linkfrom::file, settings),
+            options::linkfrom::dryrun
+        );
     
     } else if (args.got_subcommand(cmdVersion)) {
         logger::info(argz, "version {}", version);
         return 0;
     
     } else if (args.got_subcommand(cmdConfig)) {
-        if (cmdConfig->got_subcommand(cmdConfig_dump)) {
-            confidant::configuration conf = confidant::config::serialize(optConfig_dump_file);
-            logger::info(argz, "dumping configuration from {}", optConfig_dump_file);
-            confidant::debug::dumpConfig(conf);
+        if (options::config::help) {
+            help::config::help(argz);
             return 0;
+        }
+        
+        if (cmdConfig->got_subcommand(cmdConfig_get)) {
+            if (options::config::get::help) {
+                help::config::get::help(argz);
+                return 0;
+            }
+            logger::info(argz, "'get' not yet implemented");
+            return 0;
+        }
+        
+        if (cmdConfig->got_subcommand(cmdConfig_dump)) {
+            if (options::config::dump::help) {
+                help::config::dump::help(argz);
+                return 0;
+            }
+            
+            if (options::config::dump::global) {
+                confidant::debug::global::dumpConfig(settings);
+                return 0;
+            }
+            
+            logger::info(argz, "dumping configuration from {}", options::config::dump::file);
+            confidant::debug::dumpConfig(
+                confidant::config::serialize(options::config::dump::file, settings)
+            );
+            return 0;
+        
         } else {
             logger::error(argz, "unknown subcommand");
             help::config::help(argz);
             return 1;
         }
+    
     }
 
     return 0;

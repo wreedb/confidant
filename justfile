@@ -1,3 +1,6 @@
+version-file := ".version"
+version := `cat .version`
+
 [group("flake")]
 build-flake:
     nix build
@@ -9,3 +12,11 @@ clean-flake:
 [group("git")]
 commit:
     convco commit -i
+
+[group("maintainence")]
+bump amt:
+    @semver -i {{amt}} {{version}}
+
+[group("maintainence")]
+changelog:
+    @git cliff

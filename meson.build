@@ -1,7 +1,7 @@
 project(
   'confidant',
   'cpp',
-  version: files('meson.version'),
+  version: files('.version'),
   meson_version: '>= 1.4.0',
   default_options: ['cpp_std=c++23'],
 )

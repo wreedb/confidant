@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <filesystem>
+#include <utility>
 #include <vector>
 #include <string>
 #include <format>
@@ -187,9 +188,7 @@ int link(const confidant::configuration& conf, const bool& dry) {
             }
             linksdone++;
         } else {
-            // this should never happen, but hey; what can ya do.
-            logger::error(PROJECT_NAME, "link type for '{}' is not recognized, expected one of: file, directory", conf.links.at(n).name);
-            continue;
+            std::unreachable();
         }
         
         // the file was linked
@@ -231,8 +230,7 @@ void dumpConfig(const confidant::configuration& conf) {
                     break;
                     // theoretically this should never be possible
                 default:
-                    std::println("    type: unknown");
-                    break;
+                    std::unreachable();
             }
         }
     }

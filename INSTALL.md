@@ -36,3 +36,12 @@ Runtime dependencies
 - [libucl](https://github.com/vstakhov/libucl)
 
 Meson will attempt to build *libucl* on-demand if not found on your system.
+
+
+Flake
+=====
+Nix users can try **Confidant** directly with the following commands:
+```sh
+nix run git+https://codeberg.org/wreedb/confidant.git -- --version
+nix run git+https://codeberg.org/wreedb/confidant.git -- --help
+```

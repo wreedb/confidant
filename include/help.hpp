@@ -40,6 +40,9 @@ void help(std::string_view argz);
 };
 
 namespace defaults {
+std::string global_config_path();
+std::string global_config();
+void write_global_config(std::string_view p);
 std::string local_config(std::string_view argz);
 void write_local_config(std::string_view dir);
 };

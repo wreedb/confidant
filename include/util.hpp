@@ -13,8 +13,10 @@ namespace fs = std::filesystem;
 
 namespace util {
 bool perms_to_link(const fs::path& p);
+bool perms_to_write(const fs::path& p);
 std::string stripargz(const std::string& arg);
 std::optional<std::string> getenv(const std::string& name);
 bool hasenv(const std::string& name);
+std::string unexpandhome(std::string_view p);
 std::vector<fs::path> splitpath(const std::string& pathstr);
 };

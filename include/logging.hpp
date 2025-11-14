@@ -30,6 +30,8 @@ enum verbosity : int {
     trace = 4
 };
 
+std::string verbosity_literal(const int& v);
+
 inline bool useColor = util::hasenv("NO_COLOR") ? false : true;
 inline int loglevel = ansi::verbosity::normal;
 

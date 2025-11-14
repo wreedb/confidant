@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "logging.hpp"
 #include <filesystem>
 #include <vector>
 #include <string>
@@ -23,12 +24,14 @@ using std::pair;
 namespace fs = std::filesystem;
 
 namespace confidant {
-namespace config {
-    
-struct global {
-    bool create_directories;
-    int verbosity;
+
+// represents the global config file
+struct settings {
+    bool create_dirs = true; // overridden by the local setting
+    int loglevel = ansi::verbosity::normal; // increases base-level verbosity, before cli options
 };
+
+namespace config {
     
 enum linkType { directory, file };
 struct repository {
@@ -53,10 +56,13 @@ struct configuration {
     config::linkFrom linkFrom;
 };
 namespace debug {
+namespace global {
+void dumpConfig(const confidant::settings& conf);  
+};
 void dumpConfig(const confidant::configuration& conf);
-} // NOTE: end namespace confidant::debug
+}; // NOTE: end namespace confidant::debug
 
 int linkfrom(const confidant::configuration& conf, const bool& dry);
 int link(const confidant::configuration& conf, const bool& dry);
 
-} // NOTE: end namespace confidant
+}; // NOTE: end namespace confidant

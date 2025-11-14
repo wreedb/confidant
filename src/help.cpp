@@ -12,6 +12,7 @@
 #include "config.hpp"
 #include "help.hpp"
 #include "logging.hpp"
+#include "xdg.hpp"
 
 #define sv  std::string_view
 #define out std::cout
@@ -145,6 +146,12 @@ namespace link_from {
 }; // END help::link_from
 
 namespace defaults {
+    std::string global_config_path() {
+        return std::format("{}/{}/config.ucl",
+                           xdg::homes().at("XDG_CONFIG_HOME").string(),
+                           PROJECT_NAME);
+    }
+    
     std::string local_config() {
         std::string s = R"(# this is an example (local) configuration file for confidant
 #
@@ -203,24 +210,68 @@ link-from {
         return s;
     }
     
-    void write_local_config(sv dir) {
+    std::string global_config() {
+        return R"(
+# default global configuration for confidant
+
+# by default, confidant will attempt to create parent directories if they don't exist
+# to disable, set this to false.
+create-directories: true
+
+# the default verbosity level, before command-line options are parsed
+# valid values:
+# [quiet, normal, info, debug, trace] or [0, 1, 2, 3, 4]
+log-level: normal
+)";
+
+    }
+    
+    void write_global_config(std::string_view p) {
+        fs::path parent_dir = fs::path(p).parent_path();
+        if (!fs::exists(parent_dir)) {
+            try {
+                fs::create_directories(parent_dir);
+            } catch (const fs::filesystem_error& e) {
+                logger::error(PROJECT_NAME, "failed to create directory {}", parent_dir.string());
+                std::cerr << e.what() << std::endl;
+            }
+            logger::info(PROJECT_NAME, "created directory {}", parent_dir.string());
+        }
         
-        std::string outpath = fmt("{}/confidant.ucl", dir);
+        if (!util::perms_to_write(parent_dir))
+            logger::fatal(PROJECT_NAME, 1, "no permission to write files to {}", parent_dir.string());
+        
+        if (fs::exists(p)) {
+            logger::warn(PROJECT_NAME, "file {} already exists, not overwriting", p);
+            std::exit(0);
+        }
+        
+        std::ofstream handle((fs::path(p)));
+        if (!handle.is_open())
+            logger::fatal(PROJECT_NAME, 1, "failed to open {} for writing", p);
+        
+        handle << help::defaults::global_config();
+        handle.close();
+        
+        logger::info(PROJECT_NAME, "write configuration to file {}", util::unexpandhome(p));
+    }
+    
+    void write_local_config(std::string_view dir) {
+        
+        std::string outpath = std::format("{}/confidant.ucl", dir);
         
         if (fs::exists(outpath)) {
              logger::warn(PROJECT_NAME, "file '{}' already exists, not overwriting.", outpath);
              std::exit(1);
         }
         
-        std::ofstream outfile(outpath);
+        std::ofstream handle(outpath);
         
-        if (!outfile.is_open()) {
-            logger::error(PROJECT_NAME, "unable to open '{}' for writing", outpath);
-            std::exit(1);
-        }
+        if (!handle.is_open())
+            logger::fatal(PROJECT_NAME, 1, "unable to open '{}' for writing", outpath);
         
-        outfile << help::defaults::local_config();
-        outfile.close();
+        handle << help::defaults::local_config();
+        handle.close();
         
         logger::info(PROJECT_NAME, "wrote configuration to file {}", fs::relative(outpath).string());
         

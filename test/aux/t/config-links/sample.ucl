@@ -1,0 +1,23 @@
+link {
+
+    foo {
+        source: ${REPO}/foo
+        dest: ${HOME}/foo
+    }
+
+    bar {
+        source: ${REPO}/bar
+        dest: ${HOME}/bar
+    }
+
+    fuzz {
+        source: ${REPO}/fuzz
+        dest: ${HOME}/fuzz
+    }
+
+    buzz {
+        source: ${REPO}/buzz
+        dest: ${HOME}/buzz
+    }
+
+}

@@ -1,3 +1,5 @@
+#include "confidant.hpp"
+#include "logging.hpp"
 #include <string>
 #include <filesystem>
 
@@ -53,4 +55,15 @@ namespace options {
     inline bool usage = false;
     inline bool help = false;
     inline int verbosity = 0;
+    
+    namespace global {
+        inline bool create_dirs = true;
+        inline int verbosity = ansi::verbosity::normal;
+        inline confidant::settings defaults() {
+            return confidant::settings{
+                .create_dirs = create_dirs,
+                .loglevel = verbosity
+            };
+        }
+    };
 };

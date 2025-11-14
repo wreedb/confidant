@@ -10,9 +10,7 @@
 #include <map>
 
 
-namespace fs = std::filesystem;
-
 namespace xdg {
-std::map<std::string, std::vector<fs::path>> dirs();
-std::map<std::string, fs::path> homes();
+    std::map<std::string, std::vector<std::filesystem::path>> dirs();
+    std::map<std::string, std::filesystem::path> homes();
 } // NOTE: end namespace xdg

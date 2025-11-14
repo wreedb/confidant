@@ -6,3 +6,8 @@ option('static-stdlib',
        type: 'boolean',
        value: false,
        description: 'link the c++ standard library statically')
+
+option('use-libcxx',
+       type: 'boolean',
+       value: false,
+       description: 'link with libc++ instead of libstdc++')

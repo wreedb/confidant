@@ -6,6 +6,23 @@ project(
   default_options: ['cpp_std=c++23'],
 )
 
+cxx = meson.get_compiler('cpp')
+
+if get_option('static-stdlib')
+    if get_option('use-libcxx') and cxx.get_id() == 'clang'
+        # add_project_link_arguments('-static-libc++', language: 'cpp')
+        add_project_link_arguments('-l:libc++.a', '-l:libc++abi.a', language: 'cpp')
+    else
+        add_project_link_arguments('-static-libstdc++', language: 'cpp')
+    endif
+    add_project_link_arguments('-static-libgcc', language: 'cpp')
+endif
+
+if get_option('use-libcxx') and cxx.get_id() == 'clang'
+    add_project_arguments('-stdlib=libc++', language: 'cpp')
+    add_project_link_arguments('-stdlib=libc++', language: 'cpp')
+endif
+
 config_hpp = configuration_data()
 test_hpp = configuration_data()
 
@@ -16,10 +33,6 @@ test_hpp.set_quoted('PROJECT_ROOT', meson.project_source_root())
 
 configure_file(output: 'config.hpp', configuration: config_hpp)
 configure_file(output: 'test.hpp', configuration: test_hpp)
-
-if get_option('static-stdlib')
-    add_project_link_arguments('-static-libgcc', '-static-libstdc++', language: 'cpp')
-endif
 
 cli11_dep = dependency(
     'CLI11',
@@ -40,7 +53,6 @@ sources = files(
     'src/confidant.cpp',
     'src/logging.cpp',
     'src/help.cpp',
-    'src/main.cpp'
 )
 
 test_sources = files(

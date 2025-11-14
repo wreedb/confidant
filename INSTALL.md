@@ -12,7 +12,7 @@ A compiler with support for at least C++23 is also needed, such as:
 You may want to add the following argument to `meson setup` or `meson configure` 
 to use [libc++](https://libcxx.llvm.org):
 ```sh
--D cpp_args=-stdlib=libc++
+-D use-libcxx=true
 ```
 
 Building

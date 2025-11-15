@@ -1,0 +1,59 @@
+
+confidant -v        "output more info about actions taken";
+confidant --verbose "output more info about actions taken";
+confidant -h        "display help information";
+confidant --help    "display help information";
+confidant --usage   "brief usage info";
+confidant -V        "display version info";
+confidant --version "display version info";
+confidant version   "display version info";
+confidant usage     "brief usage info";
+
+confidant init "initialize a confidant repository"
+    ( ( -f <PATH> | --file <PATH> ) "specify a file path"
+    | ( -v | --verbose ) "display more info about actions" )
+    ... <DIRECTORY> ...;
+
+confidant config "view and modify configuration"
+
+    ( get "find a value by name"
+    ( ( -s <NAME> | --section <NAME> ) "search within a specific config section"
+    | ( -h | --help ) "display help info"
+    | ( -v | --verbose ) "display more info about actions"
+    ) ... <NAME> ...
+
+    | dump "display current configuration"
+    ( ( -g | --global ) "dump the global configuration file"
+    | ( -h | --help ) "display help info"
+    | ( -f <PATH> | --file <PATH> ) "specify a file to read from"
+    | ( -v | --verbose ) "display more info about actions"
+    ) ...
+    
+    | ( -h | --help ) "display help info"
+    | ( -v | --verbose ) "display more info about actions"
+
+    );
+
+confidant link "apply symlinks"
+    ( ( -f <PATH> | --file <PATH> ) "specify a file path"
+    | ( -n <NAME> | --name <NAME> ) "specify a link name to apply"
+    | ( -d | --dry-run ) "simulate actions"
+    | ( -h | --help ) "display help info"
+    | ( -v | --verbose ) "display more info about actions taken"
+    ) ...;
+
+confidant link-from "apply template symlinks"
+    ( ( -f <PATH> | --file <PATH> ) "specify a file path"
+    | ( -d | --dry-run ) "simulate actions"
+    | ( -h | --help ) "display help info"
+    | ( -v | --verbose ) "increase verbosity"
+    ) ...;
+
+confidant help "display help for subcommands"
+    ( init "display help for init"
+    | config "display help for config"
+    ( dump "display help for config dump"
+    | get "display help for config get")
+    | link "display help for link"
+    | link-from "display help for link-from"
+    ) ...;

@@ -24,3 +24,7 @@ bump amt:
 [group("maintainence")]
 changelog:
     @git cliff
+
+completions:
+    complgen misc/completions/confidant.usage --bash misc/completions/bash/confidant.bash
+    complgen misc/completions/confidant.usage --zsh  misc/completions/zsh/_confidant

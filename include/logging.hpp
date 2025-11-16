@@ -11,6 +11,7 @@
 
 
 namespace ansi {
+
     enum color : int {
         black = 0,
         red = 1,
@@ -52,7 +53,8 @@ namespace ansi {
         constexpr std::string_view blink      = "\033[25m";
         constexpr std::string_view hidden     = "\033[28m";
         constexpr std::string_view strikethru = "\033[29m";
-    };
+    
+    }; // END ansi::reset
 
     namespace fg {
         constexpr std::string_view black   = "\033[30m";
@@ -65,86 +67,115 @@ namespace ansi {
         constexpr std::string_view white   = "\033[37m";
         constexpr std::string_view reset   = "\033[39m";
         std::string rgb(const int& red, const int& green, const int& blue);
-    }
+    
+    }; // END ansi::fg
 
-namespace bg {
-constexpr std::string_view black   = "\033[40m";
-constexpr std::string_view red     = "\033[41m";
-constexpr std::string_view green   = "\033[42m";
-constexpr std::string_view yellow  = "\033[43m";
-constexpr std::string_view blue    = "\033[44m";
-constexpr std::string_view magenta = "\033[45m";
-constexpr std::string_view cyan    = "\033[46m";
-constexpr std::string_view white   = "\033[47m";
-constexpr std::string_view reset   = "\033[49m";
-std::string rgb(const int& red, const int& green, const int& blue);
-}
-}
+    namespace bg {
+        constexpr std::string_view black   = "\033[40m";
+        constexpr std::string_view red     = "\033[41m";
+        constexpr std::string_view green   = "\033[42m";
+        constexpr std::string_view yellow  = "\033[43m";
+        constexpr std::string_view blue    = "\033[44m";
+        constexpr std::string_view magenta = "\033[45m";
+        constexpr std::string_view cyan    = "\033[46m";
+        constexpr std::string_view white   = "\033[47m";
+        constexpr std::string_view reset   = "\033[49m";
+        std::string rgb(const int& red, const int& green, const int& blue);
+    
+    }; // END ansi::bg
+
+}; // END ansi
 
 namespace confidant {
-namespace logging {
-std::string color(const int& num);
-template <typename... Args>
-void error(std::string_view argz, std::string_view msg, Args&&... fmt) {
-    std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
-    std::cerr
-    << logging::color(31)
-    << argz
-    << logging::color(0)
-    << ": "
-    << fmtMsg
-    << "\n";
-}
+    
+    namespace logging {
+        
+        std::string bolden(std::string_view str);
+        std::string ital(std::string_view str);
+        std::string ul(std::string_view str);
+        std::string sthru(std::string_view str);
+        std::string color(const int& num);
+        
+        template <typename... Args>
+        void error(std::string_view argz, std::string_view msg, Args&&... fmt) {
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cerr
+            << logging::color(31)
+            << argz
+            << logging::color(0)
+            << ": "
+            << fmtMsg
+            << "\n";
+        }
 
-template <typename... Args>
-void info (std::string_view argz, std::string_view msg, Args&&... fmt) {
-    std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
-    std::cout
-    << logging::color(34)
-    << argz
-    << logging::color(0)
-    << ": "
-    << fmtMsg
-    << "\n";
-}
-template <typename... Args>
-void warn (std::string_view argz, std::string_view msg, Args&&... fmt) {
-    if (ansi::loglevel < ansi::verbosity::info) return;
-    std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
-    std::cout
-    << logging::color(33)
-    << argz
-    << logging::color(0)
-    << ": "
-    << fmtMsg
-    << std::endl;
-}
+        template <typename... Args>
+        void info (std::string_view argz, std::string_view msg, Args&&... fmt) {
+            if (ansi::loglevel == ansi::verbosity::quiet) return;
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cout
+            << logging::color(34)
+            << argz
+            << logging::color(0)
+            << ": "
+            << fmtMsg
+            << "\n";
+        }
 
-template <typename... Args>
-void extra (std::string_view argz, std::string_view msg, Args&&... fmt) {
-    if (ansi::loglevel < ansi::verbosity::debug) return;
-    std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
-    std::cout
-    << logging::color(35)
-    << argz
-    << logging::color(0)
-    << ": "
-    << fmtMsg
-    << std::endl;
-}
+        template <typename... Args>
+        void warn (std::string_view argz, std::string_view msg, Args&&... fmt) {
+            if (ansi::loglevel == ansi::verbosity::quiet) return;
+            if (ansi::loglevel < int(ansi::verbosity::normal)) return;
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cout
+            << logging::color(33)
+            << argz
+            << logging::color(0)
+            << ": "
+            << fmtMsg
+            << std::endl;
+        }
 
+        template <typename... Args>
+        void warnextra (std::string_view argz, std::string_view msg, Args&&... fmt) {
+            if (ansi::loglevel == ansi::verbosity::quiet) return;
+            if (ansi::loglevel < ansi::verbosity::info) return;
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cout
+            << logging::color(33)
+            << argz
+            << logging::color(0)
+            << ": "
+            << fmtMsg
+            << std::endl;
+        }
 
-template <typename... Args>
-[[noreturn]] void fatal(std::string_view argz, int exitCode, std::string_view msg, Args&&... fmt) {
-    std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
-    std::cerr
-    << logging::color(31)
-    << argz
-    << logging::color(0)
-    << " (fatal): "
-    << fmtMsg
-    << std::endl;
-    std::exit(exitCode);
-}
-}
-}
+        template <typename... Args>
+        void extra (std::string_view argz, std::string_view msg, Args&&... fmt) {
+            if (ansi::loglevel == ansi::verbosity::quiet) return;
+            if (ansi::loglevel < ansi::verbosity::debug) return;
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cout
+            << logging::color(35)
+            << argz
+            << logging::color(0)
+            << ": "
+            << fmtMsg
+            << std::endl;
+        }
+
+        template <typename... Args>
+        [[noreturn]] void fatal(std::string_view argz, int exitCode, std::string_view msg, Args&&... fmt) {
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cerr
+            << logging::color(31)
+            << argz
+            << logging::color(0)
+            << " (fatal): "
+            << fmtMsg
+            << std::endl;
+            std::exit(exitCode);
+        }
+
+    }; // END confidant::logging
+
+}; // END confidant

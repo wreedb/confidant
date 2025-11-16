@@ -35,10 +35,6 @@ namespace link {
 void help(std::string_view argz);
 };
 
-namespace link_from {
-void help(std::string_view argz);
-};
-
 namespace defaults {
 std::string global_config_path();
 std::string global_config();

@@ -41,13 +41,6 @@ namespace options {
         inline string file = fs::current_path().string() + "/confidant.ucl";
     };
     
-    namespace linkfrom {
-        inline bool help = false;
-        inline bool dryrun = false;
-        inline int verbosity = 0;
-        inline string file = fs::current_path().string() + "/confidant.ucl";
-    };
-    
     namespace init {
         inline string path = fs::current_path().string();
         inline int verbosity = 0;
@@ -59,6 +52,7 @@ namespace options {
     inline bool usage = false;
     inline bool help = false;
     inline int verbosity = 0;
+    inline bool quiet;
     
     namespace global {
         inline bool create_dirs = true;

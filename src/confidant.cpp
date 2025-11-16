@@ -24,316 +24,357 @@ namespace logger = confidant::logging;
 
 namespace confidant {
 
-int linktemplate(const confidant::configuration& conf, const bool& dry) {
-    int processedTemplates = 0;
-    for (auto& tmpl : conf.templates) {
-  
-        int processedItems = 0;
-        int numitems = tmpl.items.size();
-        
-        for (int n = 0; n < numitems; n++) {
+    int linktemplate(const confidant::configuration& conf, const bool& dry) {
+        int processedTemplates = 0;
+        for (auto& tmpl : conf.templates) {
+      
+            int processedItems = 0;
+            int numitems = tmpl.items.size();
             
-            std::string sourcestr = confidant::substitute(tmpl.source.string() , tmpl.items.at(n));
-            std::string deststr   = confidant::substitute(tmpl.destination.string(), tmpl.items.at(n));
-            
-            fs::path sourcepath = path(sourcestr);
-            fs::path destpath = path(deststr);
-            
-            std::string usourcestr = fs::relative(path(sourcestr)).string();
-            std::string udeststr = util::unexpandhome(deststr);
-            
-            if (!fs::exists(path(sourcestr))) {
-                logger::error(PROJECT_NAME, "source file {} does not exist!", usourcestr);
-                continue;
-            }
-            
-            if (fs::exists(deststr)) {
-                if (fs::equivalent(sourcestr, deststr)) {
-                    logger::warn(PROJECT_NAME, "skipping {}, already linked", udeststr);
+            for (int n = 0; n < numitems; n++) {
+                
+                std::string sourcestr = confidant::substitute(tmpl.source.string() , tmpl.items.at(n));
+                std::string deststr   = confidant::substitute(tmpl.destination.string(), tmpl.items.at(n));
+                
+                fs::path sourcepath = path(sourcestr);
+                fs::path destpath = path(deststr);
+                
+                std::string usourcestr = fs::relative(path(sourcestr)).string();
+                std::string udeststr = util::unexpandhome(deststr);
+                
+                if (!fs::exists(sourcepath)) {
+                    logger::error(PROJECT_NAME,
+                        "source file {}{}{} does not exist!",
+                        logger::color(1),
+                        usourcestr,
+                        ansi::freset);
                     continue;
                 }
-                logger::warn(PROJECT_NAME, "destination {} already exists, skipping", udeststr);
+                
+                if (fs::exists(destpath)) {
+                    if (fs::equivalent(sourcepath, destpath)) {
+                        logger::warn(PROJECT_NAME,
+                            "skipping {}{}{}, already linked",
+                            logger::color(1),
+                            udeststr,
+                            ansi::freset);
+                        continue;
+                    }
+                    logger::warn(PROJECT_NAME,
+                        "destination {}{}{} already exists, skipping",
+                        logger::color(1),
+                        udeststr,
+                        ansi::freset);
+                    continue;
+                }
+                
+                if (!fs::exists(destpath.parent_path())) {
+                    if (!conf.create_dirs) {
+                        logger::warn(PROJECT_NAME,
+                            "parent directory for {}{}{} doesn't exist, skipping",
+                            logger::color(1),
+                            udeststr,
+                            ansi::freset);
+                        continue;
+                    } else {
+                        if (!dry) {
+                            try {
+                                fs::create_directories(destpath.parent_path());
+                            } catch (const fs::filesystem_error& err) {
+                                logger::error(PROJECT_NAME,
+                                    "failed to create directory {}{}{}",
+                                    logger::color(1),
+                                    util::unexpandhome(destpath.parent_path().string()),
+                                    ansi::freset);
+                                cout << err.what() << std::endl;
+                                return 1;
+                            }
+                        }
+                        logger::extra(PROJECT_NAME,
+                            "created directory {}{}{}",
+                            logger::color(1),
+                            util::unexpandhome(destpath.parent_path().string()),
+                            ansi::freset);
+                    }
+                }
+                
+                if (!util::perms_to_link(destpath) && !dry) {
+                    logger::error(PROJECT_NAME,
+                        "no write permission for directory {}{}{}",
+                        logger::color(1),
+                        util::unexpandhome(destpath.parent_path().string()),
+                        ansi::freset);
+                    continue;
+                }
+                
+                if (fs::status(sourcepath).type() == fs::file_type::directory) {
+                    if (!dry) {
+                        try {
+                            // create the link
+                            fs::create_directory_symlink(sourcepath, destpath);
+                        } catch (const fs::filesystem_error& err) {
+                            logger::error(PROJECT_NAME,
+                                "failed to create symlink at {}{}{}",
+                                logger::color(1),
+                                udeststr,
+                                ansi::freset);
+                            cout << err.what() << std::endl;
+                            return 1;
+                        }
+                    }
+                    processedItems++;
+                } else {
+                    if (!dry) {
+                        try {
+                            // create the link
+                            fs::create_symlink(sourcepath, destpath);
+                        } catch (const fs::filesystem_error& err) {
+                            logger::error(PROJECT_NAME,
+                                "failed to create symlink at {}{}{}",
+                                logger::color(1),
+                                udeststr,
+                                ansi::freset);
+                            std::cout << err.what() << std::endl;
+                            return 1;
+                        }
+                    }
+                    processedItems++;
+                }
+                // show message regardless for dry-runs
+                logger::info(PROJECT_NAME,
+                    "linked {}{}{}",
+                    logger::color(1),
+                    udeststr,
+                    ansi::freset);
+            }
+            logger::extra(PROJECT_NAME, "processed {} items", processedItems);
+            processedTemplates++;
+        }
+        
+        logger::extra(PROJECT_NAME, "processed {} templates", processedTemplates);
+        
+        return 0;
+    }
+    
+    int link(const confidant::configuration& conf, const bool& dry) {
+        using util::unexpandhome;
+        int numlinks = conf.links.size();
+        int linksdone = 0;
+        
+        for (int n = 0; n < numlinks; n++) {
+            
+            std::string name       = conf.links.at(n).name;
+            fs::path sourcepath    = conf.links.at(n).source;
+            fs::path destpath      = conf.links.at(n).destination;
+            std::string sourcestr  = sourcepath.string();
+            std::string deststr    = destpath.string();
+            std::string usourcestr = fs::relative(sourcepath).string();
+            std::string udeststr   = util::unexpandhome(deststr);
+            
+            confidant::config::linkType linkType = conf.links.at(n).type;
+            
+            
+            // skip if the source file doesn't exist
+            if (!fs::exists(sourcepath)) {
+                logger::error(PROJECT_NAME,
+                    "source file {}{}{} does not exist!",
+                    logger::color(1),
+                    usourcestr,
+                    ansi::freset);
+                continue;
+            }
+            // only after checking the file exists
+            fs::file_status sourcefstat = fs::status(sourcepath);
+            
+            // check if the destination exists
+            if (fs::exists(destpath)) {
+                // if the source and dest are the same file, e.g. the link was (likely) already created by us
+                if (fs::equivalent(sourcepath, destpath)) {
+                    logger::warn(PROJECT_NAME,
+                        "skipping {}{}{}, already linked",
+                        logger::color(1),
+                        udeststr,
+                        ansi::freset);
+                    continue;
+                }
+                
+                // the destination already exists, and isn't identical to our source; we do nothing and skip
+                logger::warn(PROJECT_NAME,
+                    "destination {}{}{}, already exists, skipping",
+                    logger::color(1),
+                    udeststr,
+                    ansi::freset);
                 continue;
             }
             
             if (!fs::exists(destpath.parent_path())) {
                 if (!conf.create_dirs) {
-                    logger::warn(PROJECT_NAME, "parent directory for {} doesn't exist, skipping", udeststr);
+                    // parent path doesn't exist and settings to create dirs is off
+                    logger::warn(PROJECT_NAME,
+                        "parent directory for {}{}{} does not exist, skipping",
+                        logger::color(1),
+                        name,
+                        ansi::freset);
                     continue;
                 } else {
+                    // create dirs unless we are doing a dry run
                     if (!dry) {
                         try {
                             fs::create_directories(destpath.parent_path());
                         } catch (const fs::filesystem_error& err) {
-                            logger::error(PROJECT_NAME, "failed to create directory {}", util::unexpandhome(destpath.parent_path().string()));
+                            logger::error(PROJECT_NAME,
+                                "failed to create directory {}{}{}",
+                                logger::color(1),
+                                unexpandhome(destpath.parent_path().string()),
+                                ansi::freset);
                             cout << err.what() << "\n";
-                            std::exit(1);
+                            return 1;
                         }
                     }
-                    logger::extra(PROJECT_NAME, "created directory {}", util::unexpandhome(destpath.parent_path().string()));
+                    // display extra message regardless, for dry-run verbose
+                    logger::extra(PROJECT_NAME,
+                        "created directory {}{}{}",
+                        logger::color(1),
+                        unexpandhome(destpath.parent_path().string()),
+                        ansi::freset);
                 }
             }
             
+            // check parent directory for write permission
             if (!util::perms_to_link(destpath) && !dry) {
-                logger::error(PROJECT_NAME, "no write permission for directory '{}'", util::unexpandhome(destpath.parent_path().string()));
+                logger::error(PROJECT_NAME,
+                    "no write permissions for {}{}{}",
+                    logger::color(1),
+                    unexpandhome(destpath.parent_path().string()),
+                    ansi::freset);
                 continue;
             }
             
-            if (fs::status(sourcepath).type() == fs::file_type::directory) {
+            // use create_directory_symlink for dirs because apparenty
+            // some inferior operating systems treat directory symlinks
+            // differently to file symlinks
+            if (linkType == confidant::config::linkType::directory) {
+                
+                if (sourcefstat.type() != fs::file_type::directory) {
+                    // they specified directory, but the source is not a directory
+                    logger::error(PROJECT_NAME,
+                        "link {}{}{} source {}{}{} is not a directory",
+                        logger::color(1),
+                        name,
+                        ansi::freset,
+                        logger::color(3),
+                        usourcestr,
+                        ansi::freset);
+                    continue;
+                }
                 if (!dry) {
                     try {
+                        // create the link
                         fs::create_directory_symlink(sourcepath, destpath);
                     } catch (const fs::filesystem_error& err) {
-                        logger::error(PROJECT_NAME, "failed to create symlink at {}", udeststr);
+                        logger::error(PROJECT_NAME,
+                            "failed to create symlink for {}{}{} at {}{}{}",
+                            logger::color(1),
+                            name,
+                            ansi::freset,
+                            logger::color(3),
+                            udeststr,
+                            ansi::freset);
                         std::cout << err.what() << std::endl;
+                        return 1;
                     }
                 }
-                processedItems++;
-            } else {
+                linksdone++;
+                
+            } else if (linkType == confidant::config::linkType::file) {
                 if (!dry) {
                     try {
+                        // create the link
                         fs::create_symlink(sourcepath, destpath);
                     } catch (const fs::filesystem_error& err) {
-                        logger::error(PROJECT_NAME, "failed to create symlink at {}", udeststr);
-                        std::cout << err.what() << std::endl;
+                        logger::error(PROJECT_NAME,
+                            "failed to create symlink for {}{}{} at {}{}{}",
+                            logger::color(1),
+                            name,
+                            ansi::freset,
+                            logger::color(3),
+                            udeststr,
+                            ansi::freset);
+                        cout << err.what() << std::endl;
+                        return 1;
                     }
                 }
-                processedItems++;
-            }
-            logger::info(PROJECT_NAME, "linked {}", udeststr);
-            
-        }
-        logger::extra(PROJECT_NAME, "processed {} items", processedItems);
-        processedTemplates++;
-    }
-    
-    logger::extra(PROJECT_NAME, "processed {} temlates", processedTemplates);
-    
-    return 0;
-}
-    
-// int linkfrom(const confidant::configuration& conf, const bool& dry) {
-//     int numitems = conf.linkFrom.items.size();
-//     int itemslinked = 0;
-//     for (int n = 0; n < numitems; n++) {
-//         std::string from = confidant::substitute(conf.linkFrom.from, conf.linkFrom.items.at(n));
-//         std::string to   = confidant::substitute(conf.linkFrom.to, conf.linkFrom.items.at(n));
-//         std::string ufrom = fs::relative(path(from)).string();
-//         std::string uto   = util::unexpandhome(to);
-//         if (!fs::exists(path(from))) {
-//             logger::error(PROJECT_NAME, "source file '{}' does not exist!", ufrom);
-//             continue;
-//         }
-//         if (fs::exists(to)) {
-//             if (fs::equivalent(from, to)) {
-//                 logger::warn(PROJECT_NAME, "skipping '{}', already linked", uto);
-//                 continue;
-//             }
-//             logger::warn(PROJECT_NAME, "destination '{}', already exists, skipping", uto);
-//             continue;
-//         }
-        
-//         if (!fs::exists(fs::path(to).parent_path())) {
-//             if (!conf.create_dirs) {
-//                 logger::warn(PROJECT_NAME, "parent directory for {} does not exist, skipping", uto);
-//                 continue;
-//             } else {
-//                 if (!dry) {
-//                     try {
-//                         fs::create_directories(fs::path(to).parent_path());
-//                     } catch (const fs::filesystem_error& err) {
-//                         logger::error(PROJECT_NAME, "no write permission for directory '{}'", util::unexpandhome(path(to).parent_path().string()));
-//                         cout << err.what() << "\n";
-//                         std::exit(1);
-//                     }
-//                 }
-//                 logger::extra(PROJECT_NAME, "created directory {}", util::unexpandhome(path(to).parent_path().string()));
-//             }
-//         }
-        
-//         if (!util::perms_to_link(path(to)) && !dry) {
-//             logger::error(PROJECT_NAME, "no write permission for directory '{}'", util::unexpandhome(path(to).parent_path().string()));
-//             continue;
-//         }
-        
-//         if (fs::status(path(from)).type() == fs::file_type::directory) {
-//             if (!dry) {
-//                 try {
-//                     fs::create_directory_symlink(path(from), path(to));
-//                 } catch (const fs::filesystem_error& err) {
-//                     logger::error(PROJECT_NAME, "failed to create symlink at '{}'", uto);
-//                     std::cout << err.what() << std::endl;
-//                 }
-//             }
-//             itemslinked++;
-//         } else {
-//             if (!dry) {
-//                 try {
-//                     fs::create_symlink(path(from), path(to));
-//                 } catch (const fs::filesystem_error& err) {
-//                     logger::error(PROJECT_NAME, "failed to create symlink at '{}'", uto);
-//                     std::cout << err.what() << std::endl;
-//                 }
-//             }
-//             itemslinked++;
-//         }
-    
-//         logger::info(PROJECT_NAME, "link-from {} -> {}", ufrom, uto);
-//     }
-    
-//     logger::extra(PROJECT_NAME, "linked {} items", itemslinked);
-//     return 0;
-// }
-    
-int link(const confidant::configuration& conf, const bool& dry) {
-    using util::unexpandhome;
-    int numlinks = conf.links.size();
-    int linksdone = 0;
-    
-    for (int n = 0; n < numlinks; n++) {
-        
-        std::string src = conf.links.at(n).source.string();
-        std::string dest = conf.links.at(n).destination.string();
-        std::string usrc = fs::relative(path(src)).string();
-        std::string udest = util::unexpandhome(dest);
-        
-        confidant::config::linkType linkType = conf.links.at(n).type;
-        
-        fs::file_status src_stat = fs::status(conf.links.at(n).source);
-        
-        // skip if the source file doesn't exist
-        if (!fs::exists(path(conf.links.at(n).source))) {
-            logger::error(PROJECT_NAME, "source file '{}' does not exist!", usrc);
-            continue;
-        }
-        
-        // skip if the output file already exists
-        
-        if (fs::exists(path(conf.links.at(n).destination))) {
-            // if the source and dest are the same file, e.g. the link was already made before
-            if (fs::equivalent(conf.links.at(n).source, conf.links.at(n).destination)) {
-                logger::warn(PROJECT_NAME, "skipping '{}', already linked", udest);
-                continue;
-            }
-            
-            // the files are not the same, just warn and skip
-            logger::warn(PROJECT_NAME, "destination '{}', already exists, skipping", udest);
-            continue;
-        }
-        
-        if (!fs::exists(fs::path(dest).parent_path())) {
-            if (!conf.create_dirs) {
-                logger::warn(PROJECT_NAME, "parent directory for {} does not exist, skipping", conf.links.at(n).name);
-                continue;
+                // incr the tracking counter
+                linksdone++;
             } else {
-                if (!dry) {
-                    try {
-                        fs::create_directories(fs::path(dest).parent_path());
-                    } catch (const fs::filesystem_error& err) {
-                        logger::error(PROJECT_NAME, "could not create directory {}", unexpandhome(path(dest).parent_path().string()));
-                        cout << err.what() << "\n";
-                        std::exit(1);
+                // cant happen, the linkType will have already been set to 
+                // file by default if it was invalid.
+                std::unreachable();
+            }
+            
+            // the file was linked
+            logger::info(PROJECT_NAME, "linked {}{}{}",
+                logger::color(1),
+                udeststr,
+                ansi::freset);
+        }
+    
+        logger::extra(PROJECT_NAME, "created {} normal links", linksdone);
+        return 0;
+
+    }
+    
+    namespace debug {
+
+        namespace global {
+
+            void dumpConfig(const confidant::settings& conf) {
+                logger::info(PROJECT_NAME, "global configuration");
+                std::println("  create-directories: {}", conf.create_dirs);
+                std::println("  log-level: {}", ansi::verbosity_literal(conf.loglevel));
+            }
+
+        }; // END confidant::debug::global
+        
+        void dumpConfig(const confidant::configuration& conf) {
+            std::println("  repository: ");
+            std::println("    url: {}", conf.repo.url);
+            int numlinks = conf.links.size();
+            int numtemplates = conf.templates.size();
+            if (numlinks > 0) {
+                std::println("  link:");
+                for (int n = 0; n < numlinks; n++) {
+                    std::println("  - name: {}", conf.links.at(n).name);
+                    std::println("    source: {}", conf.links.at(n).source.string());
+                    std::println("    destination: {}", conf.links.at(n).destination.string());
+                    switch (conf.links.at(n).type) {
+                        case confidant::config::linkType::file:
+                            std::println("    type: file");
+                            break;
+                        case confidant::config::linkType::directory:
+                            std::println("    type: directory");
+                            break;
+                        default:
+                            // invalid or absent values will have been replaced with 'file'
+                            std::unreachable();
                     }
                 }
-                logger::extra(PROJECT_NAME, "created directory {}", unexpandhome(path(dest).parent_path().string()));
             }
-        }
-        
-        // check parent directory for write permission
-        if (!util::perms_to_link(fs::path(dest)) && !dry) {
-            logger::error(PROJECT_NAME, "no write permissions for {}", unexpandhome(path(dest).parent_path().string()));
-            continue;
-        }
-        
-        // use create_directory_symlink for dirs
-        if (linkType == confidant::config::linkType::directory) {
             
-            if (src_stat.type() != fs::file_type::directory) {
-                logger::error(PROJECT_NAME, "{} source '{}' is not a directory", conf.links.at(n).name, usrc);
-                continue;
-            }
-            if (!dry) {
-                try {
-                    fs::create_directory_symlink(src, dest);
-                } catch (const fs::filesystem_error& err) {
-                    logger::error(PROJECT_NAME, "failed to create symlink for {} at {}", conf.links.at(n).name, udest);
-                    std::cout << err.what() << std::endl;
+            if (numtemplates > 0) {
+                std::println("  templates:");
+                for (int n = 0; n < numtemplates; n++) {
+                    std::println("    {}:", conf.templates.at(n).name);
+                    std::println("      source: {}", conf.templates.at(n).source.string());
+                    std::println("      destination: {}", conf.templates.at(n).destination.string());
+                    int numitems = conf.templates.at(n).items.size();
+                    for (int x = 0; x < numitems; x++) {
+                        std::println("      - {}", conf.templates.at(n).items.at(x));
+                    }
                 }
             }
-            linksdone++;
-            
-        } else if (linkType == confidant::config::linkType::file) {
-            if (!dry) {
-                try {
-                    fs::create_symlink(src, dest);
-                } catch (const fs::filesystem_error& err) {
-                    logger::error(PROJECT_NAME, "failed to create symlink for {} at {}", conf.links.at(n).name, udest);
-                    std::cout << err.what() << std::endl;
-                }
-            }
-            linksdone++;
-        } else {
-            std::unreachable();
         }
-        
-        // the file was linked
-        logger::info(PROJECT_NAME, "link {} -> {}", usrc, udest);    
-    }
-    
-    logger::extra(PROJECT_NAME, "created {} links", linksdone);
-    
-    return 0;
 
-}
-    
-namespace debug {
-namespace global {
-void dumpConfig(const confidant::settings& conf) {
-    logger::info(PROJECT_NAME, "global configuration");
-    std::println("  create-directories: {}", conf.create_dirs);
-    std::println("  log-level: {}", ansi::verbosity_literal(conf.loglevel));
-    std::cout << std::endl;
-}
+    } // END confidant::debug
 
-}; // END confidant::debug::global
-void dumpConfig(const confidant::configuration& conf) {
-    std::println("  repository: ");
-    std::println("    url: {}", conf.repo.url);
-    int numlinks = conf.links.size();
-    int numtemplates = conf.templates.size();
-    if (numlinks > 0) {
-        std::println("  link:");
-        for (int n = 0; n < numlinks; n++) {
-            std::println("  - name: {}", conf.links.at(n).name);
-            std::println("    source: {}", std::string(conf.links.at(n).name));
-            std::println("    destination: {}", std::string(conf.links.at(n).destination));
-            switch (conf.links.at(n).type) {
-                case confidant::config::linkType::file:
-                    std::println("    type: file");
-                    break;
-                case confidant::config::linkType::directory:
-                    std::println("    type: directory");
-                    break;
-                    // theoretically this should never be possible
-                default:
-                    std::unreachable();
-            }
-        }
-    }
-    if (numtemplates > 0) {
-        std::println("  templates:");
-        for (int n = 0; n < numlinks; n++) {
-            std::println("    {}:", conf.templates.at(n).name);
-            std::println("      source: {}", std::string(conf.templates.at(n).source));
-            std::println("      destination: {}", std::string(conf.templates.at(n).destination));
-            int numitems = conf.templates.at(n).items.size();
-            for (int x = 0; x < numitems; x++) {
-                std::println("      - {}", conf.templates.at(n).items.at(x));
-            }
-        }
-    }
-}
-
-} // NOTE: end namespace confidant::debug
-
-} // NOTE: end namespace confidant
+} // END confidant

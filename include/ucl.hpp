@@ -29,6 +29,14 @@ namespace ucl {
         std::map<std::string, std::string> fromenv(const std::string& key, std::map<std::string, std::string>& vm, const std::string& fallback);
     }; // END ucl::var
 
+    namespace get {
+        optional<bool> boolean(const ucl::Ucl& object, const std::string& key);
+        optional<int> integer(const ucl::Ucl& object, const std::string& key);
+        optional<string> str(const ucl::Ucl& object, const std::string& key);
+        optional<ucl::Ucl> list(const ucl::Ucl& object, const std::string& key);
+        optional<ucl::Ucl> node(const ucl::Ucl& object, const std::string& key);
+    };
+    
     bool check(const ucl::Ucl& obj, const std::string& key);
     int members(const ucl::Ucl& object);
 

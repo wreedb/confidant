@@ -4,7 +4,6 @@
 
 #include <string>
 #include <print>
-#include <algorithm>
 #include <filesystem>
 #include <CLI/CLI.hpp>
 
@@ -31,21 +30,24 @@ int main(int argc, char *argv[]) {
         argz = std::string(PROJECT_NAME);
 
     if (argc >= 3 && std::string(argv[1]) == "help") {
+        
         std::string topic = argv[2];
+        
         if (topic == "init") {
             help::init::help(argz);
             return 0;
+            
         } else if (topic == "link") {
             help::link::help(argz);
             return 0;
-        } else if (topic == "link-from") {
-            help::link_from::help(argz);
-            return 0;
+            
         } else if (topic == "version") {
             logger::info(argz, "version {}", version);
             return 0;
+            
         } else if (topic == "config") {
             if (argc >= 4) {
+        
                 if (std::string(argv[3]) == "dump") {
                     help::config::dump::help(argz);
                     return 0;
@@ -55,6 +57,7 @@ int main(int argc, char *argv[]) {
                     help::config::get::help(argz);
                     return 0;
                 }
+        
             }
             help::config::help(argz);
             return 0;
@@ -87,6 +90,7 @@ int main(int argc, char *argv[]) {
     args.add_flag("-V,--version", options::version);
     args.add_flag("-h,--help",    options::help);
     args.add_flag("-u,--usage",   options::usage);
+    args.add_flag("-q,--quiet",   options::quiet);
     
     auto* cmdVersion = args.add_subcommand("version");
     auto* cmdUsage   = args.add_subcommand("usage");
@@ -95,12 +99,6 @@ int main(int argc, char *argv[]) {
     cmdInit->add_option("path",       options::init::path);
     cmdInit->add_flag("-d,--dry-run", options::init::dryrun);
     cmdInit->add_flag("-h,--help",    options::init::help);
-    
-    auto* cmdLinkFrom = args.add_subcommand("link-from", "apply templated symlinks");
-    cmdLinkFrom->add_flag("-h,--help",    options::linkfrom::help);
-    cmdLinkFrom->add_flag("-d,--dry-run", options::linkfrom::dryrun);
-    cmdLinkFrom->add_flag("-v,--verbose", options::linkfrom::verbosity);
-    cmdLinkFrom->add_option("-f,--file",  options::linkfrom::file);
     
     auto* cmdLink = args.add_subcommand("link", "apply symlinks");
     cmdLink->add_flag("-d,--dry-run", options::link::dryrun);
@@ -125,15 +123,21 @@ int main(int argc, char *argv[]) {
     
     CLI11_PARSE(args, argc, argv);
     
-    ansi::loglevel = std::min(
+    // get sum of verbosity flags
+    int sumverbosity =
         ( options::verbosity
         + options::config::verbosity
         + options::config::get::verbosity
         + options::config::dump::verbosity
         + options::init::verbosity
-        + options::link::verbosity
-        + options::linkfrom::verbosity),
-        int(ansi::verbosity::trace));
+        + options::link::verbosity);
+    
+    if (sumverbosity > 0)
+        ansi::loglevel = ansi::verbosity::trace;
+    
+    
+    if (options::quiet)
+        ansi::loglevel = ansi::verbosity::quiet;
     
     if (options::version) {
         logger::info(argz, "version {}", PROJECT_VERSION);
@@ -170,21 +174,13 @@ int main(int argc, char *argv[]) {
             return 0;
         }
         
-        return confidant::link(
-            confidant::config::serialize(options::link::file, settings),
-            options::link::dryrun
-        );
+        confidant::configuration conf = confidant::config::serialize(options::link::file, settings);
         
-    } else if (args.got_subcommand(cmdLinkFrom)) {
-        if (options::linkfrom::help) {
-            help::link_from::help(argz);
-            return 0;
-        }
-        return confidant::linktemplate(
-            confidant::config::serialize(options::linkfrom::file, settings),
-            options::linkfrom::dryrun
-        );
-    
+        int ecode_link = confidant::link(conf, options::link::dryrun);
+        int ecode_linktemplate = confidant::linktemplate(conf, options::link::dryrun);
+        if (ecode_link + ecode_linktemplate > 1)
+            return 1;
+        
     } else if (args.got_subcommand(cmdVersion)) {
         logger::info(argz, "version {}", version);
         return 0;

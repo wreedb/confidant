@@ -29,6 +29,9 @@
 /_build/
 /_bld/
 
+# sphinx
+doc/build/
+
 deps/
 stage
 

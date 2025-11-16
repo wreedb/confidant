@@ -25,7 +25,7 @@ namespace fs = std::filesystem;
 
 namespace confidant {
 
-// represents the global config file
+    // represents the global config file
     struct settings {
         bool create_dirs = true; // overridden by the local setting
         int loglevel = ansi::verbosity::normal; // increases base-level verbosity, before cli options
@@ -53,12 +53,6 @@ namespace confidant {
             std::vector<std::string> items;
         };
 
-        /* struct linkFrom {
-            fs::path from;
-            fs::path to;
-            std::vector<std::string> items;
-        }; */
-
     }; // END confidant::config
 
     struct configuration {
@@ -79,7 +73,6 @@ namespace confidant {
     }; // END confidant::debug
 
     int linktemplate(const confidant::configuration& conf, const bool& dry);
-    // int linkfrom(const confidant::configuration& conf, const bool& dry);
     int link(const confidant::configuration& conf, const bool& dry);
 
 }; // END confidant

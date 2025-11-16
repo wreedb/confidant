@@ -41,7 +41,6 @@ namespace general {
             << "    init                initialize a repository\n"
             << "    config              modify and view configuration\n"
             << "    link                create symlinks\n"
-            << "    link-from           create templated symlinks\n"
             << "    help                display help for subcommands\n"
             << "    usage               brief command-line usage info\n"
             << "    version             display version info\n\n"
@@ -52,7 +51,7 @@ namespace general {
     }
     void usage(sv argz) {
         out << "usage: " << argz << " [action] [...options]\n"
-            << "actions: init, config, link, link-from, help, usage, version\n\n"
+            << "actions: init, config, link, help, usage, version\n\n"
             << "see 'confidant help <command>' for more information about a specific command\nand its' respective options.\n"
             << nl;
     }
@@ -130,20 +129,6 @@ void help(std::string_view argz) {
 }
     
 }; // END help::link
-
-namespace link_from {
-    void help(std::string_view argz) {
-        out << logger::color(1) << argz << logger::color(0) << " link-from:\n\n"
-            << "    apply symlinks from the" << logger::color(1) << " link-from " << logger::color(0) << "section of your configuration\n\n"
-            << "options:\n\n"
-            << "    -f, --file PATH     specify the configuration file to operate on\n"
-            << "                        default: <repo>/confidant.ucl\n\n"
-            << "    -d, --dry-run       show what actions" << logger::color(3) << " would " << logger::color(0) << "be taken\n\n"
-            << "    -v, --verbose       output more information about actions taken,\n"
-            << "                        may be repeated to increase verbosity level\n\n"
-            << nl;
-    }
-}; // END help::link_from
 
 namespace defaults {
     std::string global_config_path() {

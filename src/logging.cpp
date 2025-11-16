@@ -52,11 +52,40 @@ std::string rgb(const int& red, const int& green, const int& blue) {
 
 namespace confidant {
     namespace logging {
+        std::string bolden(std::string_view str) {
+            if (!ansi::useColor)
+                return std::string(str);
+            else
+                return std::format("{}{}{}", ansi::bold, str, ansi::freset);
+        }
+        
+        std::string ital(std::string_view str) {
+            if (!ansi::useColor)
+                return std::string(str);
+            else
+                return std::format("{}{}{}", ansi::italic, str, ansi::freset);
+        }
+        
+        std::string ul(std::string_view str) {
+            if (!ansi::useColor)
+                return std::string(str);
+            else
+                return std::format("{}{}{}", ansi::underline, str, ansi::freset);
+        }
+        
+        std::string sthru(std::string_view str) {
+            if (!ansi::useColor)
+                return std::string(str);
+            else
+                return std::format("{}{}{}", ansi::strikethru, str, ansi::freset);
+        }
+        
         std::string color(const int& num) {
             if (!ansi::useColor)
-                return std::string("");
-            else
-                return std::format("\033[{}m", num);
+                return "";
+            else {
+                return "\033[" + std::to_string(num) + "m";
+            }
         }
     }
 }

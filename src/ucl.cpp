@@ -5,6 +5,9 @@
 #include <filesystem>
 #include <sstream>
 #include <stdexcept>
+#include <optional>
+#include <format>
+#include <print>
 #include "confidant.hpp"
 #include "util.hpp"
 #include "ucl.hpp"
@@ -15,9 +18,12 @@
 namespace fs = std::filesystem;
 namespace logger = confidant::logging;
 
+using std::optional;
+
 std::string cwd = std::string(fs::current_path());
 
 namespace ucl {
+    
     ucl_type_t Null = UCL_NULL;
     ucl_type_t Object = UCL_OBJECT;
     ucl_type_t Array = UCL_ARRAY;
@@ -27,7 +33,7 @@ namespace ucl {
     ucl_type_t Bool = UCL_BOOLEAN;
     ucl_type_t Time = UCL_TIME;
     ucl_type_t UserData = UCL_USERDATA;
-
+    
     namespace emit {
         ucl_emitter json = UCL_EMIT_JSON;
         ucl_emitter jsonc = UCL_EMIT_JSON_COMPACT;
@@ -48,6 +54,43 @@ namespace ucl {
         ucl_parser_flags_t NoMacros = UCL_PARSER_DISABLE_MACRO;
         ucl_parser_flags_t NoVars = UCL_PARSER_NO_FILEVARS;
     }; // END ucl::flags
+    
+    namespace get {
+        optional<bool> boolean(const ucl::Ucl& object, const std::string& key) {
+            if (object.lookup(key).type() == ucl::Bool)
+                return object.lookup(key).bool_value();
+            else
+                return std::nullopt;
+        }
+        
+        optional<int> integer(const ucl::Ucl& object, const std::string& key) {
+            if (object.lookup(key).type() == ucl::Int)
+                return object.lookup(key).int_value();
+            else
+                return std::nullopt;
+        }
+        
+        optional<string> str(const ucl::Ucl& object, const std::string& key) {
+            if (object.lookup(key).type() == ucl::String)
+                return object.lookup(key).string_value();
+            else
+                return std::nullopt;
+        }
+        
+        optional<ucl::Ucl> list(const ucl::Ucl& object, const std::string& key) {
+            if (object.lookup(key).type() == ucl::Array)
+                return object.lookup(key);
+            else
+                return std::nullopt;
+        }
+        
+        optional<ucl::Ucl> node(const ucl::Ucl& object, const std::string& key) {
+            if (object.lookup(key).type() == ucl::Object)
+                return object.lookup(key);
+            else
+                return std::nullopt;
+        }
+    };
 
     namespace var {
 
@@ -263,44 +306,89 @@ confidant::configuration serialize(std::string_view path, const confidant::setti
         conf.repo.url = "";
     }
 
-    if (!ucl::check(input, "link")) {
-        logger::warn(PROJECT_NAME, "field 'link' not specified");
-        
+    if (!ucl::check(input, "links")) {
+        //logger::warn(PROJECT_NAME, "field {}links{} not specified", logger::color(1), logger::color(0));
     } else {
 
-        ucl::Ucl links_ucl = input.lookup("link");
+        ucl::Ucl links_ucl = input.lookup("links");
         int links_ucl_length = ucl::members(links_ucl);
         conf.links.reserve(links_ucl_length);
 
         for (const auto& object : links_ucl) {
             confidant::config::link link;
+            // link name is ucl obj key
             link.name = object.key();
             
             if (ucl::check(object, "source") && object["source"].type() == ucl::String) {
-                // source exists and is a string
-                link.source = fs::path(object["source"].string_value());
+                // source exists and is a string (correct)
+                optional<string> s = ucl::get::str(object, "source");
+                if (!s)
+                    logger::fatal(PROJECT_NAME, 1,
+                        "failed to get {} field {} as a string!",
+                        logger::bolden(link.name),
+                        logger::ital("source"));
+                else
+                    link.source = fs::path(s.value());
+
             } else if (ucl::check(object, "source") && object["source"].type() != ucl::String) {
-                // source exists and is NOT a string
-                logger::fatal(PROJECT_NAME, 1, "link {} 'source' field must a string value!", link.name);
+                // source exists and is NOT a string (fatal)
+                logger::fatal(PROJECT_NAME, 1, 
+                    "link {} {} field must a string value!",
+                    logger::bolden(link.name),
+                    logger::ital("source"));
+
             } else {
-                // source doesn't exist
-                logger::fatal(PROJECT_NAME, 1, "link {} is missing a 'source' field!", link.name);
+                // source doesn't exist (fatal)
+                logger::fatal(PROJECT_NAME, 1,
+                    "link {} is missing a {} field!",
+                    logger::bolden(link.name),
+                    logger::ital("source"));
             }
 
             if (ucl::check(object, "dest")) {
-                link.destination = fs::path(object["dest"].string_value());
+                // normal dest path
+                optional<string> tmp = ucl::get::str(object, "dest");
+                if (!tmp) // nullopt
+                    logger::fatal(PROJECT_NAME, 1,
+                        "failed to get string value for {} destination",
+                        logger::bolden(link.name));
+                else
+                    link.destination = fs::path(tmp.value());
+            
             } else if (ucl::check(object, "destdir")) {
+                // convert destdir + basename to destination path
+                optional<string> s = ucl::get::str(object, "destdir");
+                if (!s)
+                    logger::fatal(PROJECT_NAME, 1,
+                        "failed to get {} field {} as a string!",
+                        logger::bolden(link.name),
+                        logger::ital("destdir"));
+                
                 std::string destdir = object["destdir"].string_value();
                 std::string bn = string(link.source.filename());
                 link.destination = fs::path(std::format("{}/{}", destdir, bn));
+            
             } else {
-                logger::fatal(PROJECT_NAME, 1, "link {} is missing a 'dest' or 'destdir' field!", link.name);
+                // no dest or destdir (fatal)
+                logger::fatal(PROJECT_NAME, 1,
+                    "link {} is missing a {} or {} field!",
+                    logger::bolden(link.name),
+                    logger::ital("dest"),
+                    logger::ital("destdir"));
             }
 
             if (!ucl::check(object, "type")) {
+                // default value when it's not specified at all is 'file'
                 link.type = confidant::config::linkType::file;
             
             } else {
+                
+                optional<string> t = ucl::get::str(object, "type");
+                if (!t)
+                    logger::fatal(PROJECT_NAME, 1,
+                        "failed to get {} field {} as a string!",
+                        logger::bolden(link.name),
+                        logger::ital("type"));
                 
                 if (object["type"].string_value() == "file") {
                     link.type = confidant::config::linkType::file;
@@ -309,7 +397,12 @@ confidant::configuration serialize(std::string_view path, const confidant::setti
                     link.type = confidant::config::linkType::directory;
                 
                 } else {
-                    logger::warn(PROJECT_NAME, "type '{}' is not recognized, expected on of 'file' or 'directory', using default 'file'", object["type"].string_value());
+                    logger::warn(PROJECT_NAME,
+                        "type {} is not recognized, expected one of: {} or {}, using default {}",
+                        logger::ital(object["type"].string_value()),
+                        logger::ital("file"),
+                        logger::ital("directory"),
+                        logger::bolden("file"));
                     link.type = confidant::config::linkType::file;
                 }
             
@@ -319,8 +412,9 @@ confidant::configuration serialize(std::string_view path, const confidant::setti
     }
 
     if (!ucl::check(input, "templates")) {
-        logger::warn(PROJECT_NAME, "field 'template' not specified");
-        
+        logger::warnextra(PROJECT_NAME,
+            "field {} not specified",
+            logger::ital("templates"));
     } else {
 
         ucl::Ucl templates_ucl = input.lookup("templates");
@@ -331,33 +425,53 @@ confidant::configuration serialize(std::string_view path, const confidant::setti
         
         for (auto& tmpl : templates_ucl) {
             confidant::config::templatelink x;
+            // templates name is the ucl obj key
             x.name = tmpl.key();
             
             if (ucl::check(tmpl, "source"))
                 x.source = fs::path(tmpl["source"].string_value());
             else
-                logger::fatal(PROJECT_NAME, 1, "template {} is missing a 'source' value!", tmpl.key());
+                logger::fatal(PROJECT_NAME, 1,
+                    "template {} is missing a {} value!",
+                    logger::bolden(x.name),
+                    logger::ital("source"));
                 
             if (ucl::check(tmpl, "dest"))
                 x.destination = fs::path(tmpl["dest"].string_value());
             else
-                logger::fatal(PROJECT_NAME, 1, "template {} is missing a 'dest' value!", tmpl.key());
+                logger::fatal(PROJECT_NAME, 1,
+                    "template {} is missing a {} value!",
+                    logger::bolden(x.name),
+                    logger::ital("dest"));
             
             if (ucl::check(tmpl, "items") && tmpl["items"].type() == ucl::Array) {
-                // items field exists and is an array
-                
+                // items field exists and is an array (normal, correct)
                 int numitems = tmpl["items"].size();
                 x.items.reserve(numitems);
                 
-                for (int i = 0; i < numitems; i++)
-                    x.items.push_back(tmpl["items"].at(i).string_value());
+                for (int i = 0; i < numitems; i++) {
+                    optional<ucl::Ucl> obj = ucl::get::list(tmpl, "items");
+                    if (!obj) {
+                        logger::fatal(PROJECT_NAME, 1,
+                            "failed to get {} items field as a list!",
+                            logger::bolden(x.name));
+                    } else {
+                        x.items.push_back(obj.value().at(i).string_value());
+                    }
+                }
                 
             } else if (ucl::check(tmpl, "items") && tmpl["items"].type() != ucl::Array) {
-                // items field exists, but is not an array
-                logger::fatal(PROJECT_NAME, 1, "template {} 'items' is not a list!", tmpl.key());
+                // items field exists, but is not an array (fatal)
+                logger::fatal(PROJECT_NAME, 1,
+                    "template {} {} field is not a list!",
+                    logger::bolden(x.name),
+                    logger::ital("items"));
             } else {
-                // items field doesn't exist
-                logger::fatal(PROJECT_NAME, 1, "template {} has no 'items' list!", tmpl.key());
+                // items field doesn't exist (fatal)
+                logger::fatal(PROJECT_NAME, 1,
+                    "template {} has no {} list!",
+                    logger::bolden(x.name),
+                    logger::ital("items"));
             }
             conf.templates.push_back(x);
         }

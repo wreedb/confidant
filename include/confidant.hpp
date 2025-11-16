@@ -26,43 +26,60 @@ namespace fs = std::filesystem;
 namespace confidant {
 
 // represents the global config file
-struct settings {
-    bool create_dirs = true; // overridden by the local setting
-    int loglevel = ansi::verbosity::normal; // increases base-level verbosity, before cli options
-};
+    struct settings {
+        bool create_dirs = true; // overridden by the local setting
+        int loglevel = ansi::verbosity::normal; // increases base-level verbosity, before cli options
+    };
 
-namespace config {
+    namespace config {
     
-enum linkType { directory, file };
-struct repository {
-    std::string url;
-};
-struct link {
-    std::string name;
-    fs::path source;
-    fs::path destination;
-    confidant::config::linkType type;
-};
-struct linkFrom {
-    fs::path from;
-    fs::path to;
-    std::vector<std::string> items;
-};
-} // NOTE: end namespace confidant::config
-struct configuration {
-    bool create_dirs;
-    config::repository repo;
-    vector<config::link> links;
-    config::linkFrom linkFrom;
-};
-namespace debug {
-namespace global {
-void dumpConfig(const confidant::settings& conf);  
-};
-void dumpConfig(const confidant::configuration& conf);
-}; // NOTE: end namespace confidant::debug
+        enum linkType { directory, file };
 
-int linkfrom(const confidant::configuration& conf, const bool& dry);
-int link(const confidant::configuration& conf, const bool& dry);
+        struct repository {
+            std::string url;
+        };
 
-}; // NOTE: end namespace confidant
+        struct link {
+            std::string name;
+            fs::path source;
+            fs::path destination;
+            confidant::config::linkType type;
+        };
+
+        struct templatelink {
+            std::string name;
+            fs::path source;
+            fs::path destination;
+            std::vector<std::string> items;
+        };
+
+        /* struct linkFrom {
+            fs::path from;
+            fs::path to;
+            std::vector<std::string> items;
+        }; */
+
+    }; // END confidant::config
+
+    struct configuration {
+        bool create_dirs;
+        config::repository repo;
+        vector<config::link> links;
+        vector<config::templatelink> templates;
+    };
+
+    namespace debug {
+        
+        namespace global {
+            void dumpConfig(const confidant::settings& conf);  
+        };
+        
+        void dumpConfig(const confidant::configuration& conf);
+    
+    }; // END confidant::debug
+
+    int linktemplate(const confidant::configuration& conf, const bool& dry);
+    // int linkfrom(const confidant::configuration& conf, const bool& dry);
+    int link(const confidant::configuration& conf, const bool& dry);
+
+}; // END confidant

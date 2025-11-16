@@ -20,6 +20,7 @@ std::string cwd = std::string(fs::current_path());
 namespace ucl {
     ucl_type_t Null = UCL_NULL;
     ucl_type_t Object = UCL_OBJECT;
+    ucl_type_t Array = UCL_ARRAY;
     ucl_type_t Int = UCL_INT;
     ucl_type_t Float = UCL_FLOAT;
     ucl_type_t String = UCL_STRING;
@@ -230,8 +231,6 @@ confidant::configuration serialize(std::string_view path, const confidant::setti
 
     confidant::configuration conf;
     confidant::config::repository repository;
-    std::vector<confidant::config::link> links;
-    confidant::config::linkFrom linkFrom;
     
     ucl::Ucl input = ucl::Ucl::parse(fileContents, vars, uclerror, UCL_DUPLICATE_APPEND);
 
@@ -256,25 +255,37 @@ confidant::configuration serialize(std::string_view path, const confidant::setti
     }
 
     if (ucl::check(input, "repository")) {
-        if (ucl::check(input["repository"], "url")) {
-            repository.url = input["repository"]["url"].string_value();
-        }
+        
+        if (ucl::check(input["repository"], "url"))
+            conf.repo.url = input["repository"]["url"].string_value();
+        
     } else {
-        repository.url = "";
+        conf.repo.url = "";
     }
 
     if (!ucl::check(input, "link")) {
         logger::warn(PROJECT_NAME, "field 'link' not specified");
+        
     } else {
 
         ucl::Ucl links_ucl = input.lookup("link");
         int links_ucl_length = ucl::members(links_ucl);
-        links.reserve(links_ucl_length);
+        conf.links.reserve(links_ucl_length);
 
         for (const auto& object : links_ucl) {
             confidant::config::link link;
             link.name = object.key();
-            link.source = fs::path(object["source"].string_value());
+            
+            if (ucl::check(object, "source") && object["source"].type() == ucl::String) {
+                // source exists and is a string
+                link.source = fs::path(object["source"].string_value());
+            } else if (ucl::check(object, "source") && object["source"].type() != ucl::String) {
+                // source exists and is NOT a string
+                logger::fatal(PROJECT_NAME, 1, "link {} 'source' field must a string value!", link.name);
+            } else {
+                // source doesn't exist
+                logger::fatal(PROJECT_NAME, 1, "link {} is missing a 'source' field!", link.name);
+            }
 
             if (ucl::check(object, "dest")) {
                 link.destination = fs::path(object["dest"].string_value());
@@ -282,13 +293,15 @@ confidant::configuration serialize(std::string_view path, const confidant::setti
                 std::string destdir = object["destdir"].string_value();
                 std::string bn = string(link.source.filename());
                 link.destination = fs::path(std::format("{}/{}", destdir, bn));
+            } else {
+                logger::fatal(PROJECT_NAME, 1, "link {} is missing a 'dest' or 'destdir' field!", link.name);
             }
 
             if (!ucl::check(object, "type")) {
                 link.type = confidant::config::linkType::file;
             
             } else {
-            
+                
                 if (object["type"].string_value() == "file") {
                     link.type = confidant::config::linkType::file;
                 
@@ -296,42 +309,62 @@ confidant::configuration serialize(std::string_view path, const confidant::setti
                     link.type = confidant::config::linkType::directory;
                 
                 } else {
-                    std::println(std::cerr, "warning: type '{}' is not recognized, expected one of 'file' or 'directory'. Using default value of 'file'.", object["type"].string_value());
+                    logger::warn(PROJECT_NAME, "type '{}' is not recognized, expected on of 'file' or 'directory', using default 'file'", object["type"].string_value());
                     link.type = confidant::config::linkType::file;
                 }
             
             }
-            links.push_back(link);
+            conf.links.push_back(link);
         }
     }
 
-    if (!ucl::check(input, "link-from")) {
-        logger::warn(PROJECT_NAME, "field 'link-from' not specified");
+    if (!ucl::check(input, "templates")) {
+        logger::warn(PROJECT_NAME, "field 'template' not specified");
+        
     } else {
 
-        ucl::Ucl linkfrom_ucl = input.lookup("link-from");
-    
-        linkFrom.from = fs::path(linkfrom_ucl["from"].string_value());
-        linkFrom.to   = fs::path(linkfrom_ucl["to"].string_value());
-
-        auto linkfrom_items = linkfrom_ucl.lookup("items");
-        int numitems = linkfrom_items.size();
-    
-        std::vector<std::string> items;
-        items.reserve(numitems);
-
-        for (int n = 0; n < numitems; n++) {
-            items.push_back(linkfrom_items.at(n).string_value());
+        ucl::Ucl templates_ucl = input.lookup("templates");
+        int numtemplates = ucl::members(templates_ucl);
+        
+        // reserve the amount ahead of time
+        conf.templates.reserve(numtemplates);
+        
+        for (auto& tmpl : templates_ucl) {
+            confidant::config::templatelink x;
+            x.name = tmpl.key();
+            
+            if (ucl::check(tmpl, "source"))
+                x.source = fs::path(tmpl["source"].string_value());
+            else
+                logger::fatal(PROJECT_NAME, 1, "template {} is missing a 'source' value!", tmpl.key());
+                
+            if (ucl::check(tmpl, "dest"))
+                x.destination = fs::path(tmpl["dest"].string_value());
+            else
+                logger::fatal(PROJECT_NAME, 1, "template {} is missing a 'dest' value!", tmpl.key());
+            
+            if (ucl::check(tmpl, "items") && tmpl["items"].type() == ucl::Array) {
+                // items field exists and is an array
+                
+                int numitems = tmpl["items"].size();
+                x.items.reserve(numitems);
+                
+                for (int i = 0; i < numitems; i++)
+                    x.items.push_back(tmpl["items"].at(i).string_value());
+                
+            } else if (ucl::check(tmpl, "items") && tmpl["items"].type() != ucl::Array) {
+                // items field exists, but is not an array
+                logger::fatal(PROJECT_NAME, 1, "template {} 'items' is not a list!", tmpl.key());
+            } else {
+                // items field doesn't exist
+                logger::fatal(PROJECT_NAME, 1, "template {} has no 'items' list!", tmpl.key());
+            }
+            conf.templates.push_back(x);
         }
-        linkFrom.items = items;
     }
-
-    conf.repo = repository;
-    conf.links = links;
-    conf.linkFrom = linkFrom;
-
+        
     return conf;
-
+    
 }
 }; // END confidant::config
 }; // END confidant

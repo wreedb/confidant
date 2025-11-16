@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
             help::link_from::help(argz);
             return 0;
         }
-        return confidant::linkfrom(
+        return confidant::linktemplate(
             confidant::config::serialize(options::linkfrom::file, settings),
             options::linkfrom::dryrun
         );

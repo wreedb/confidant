@@ -11,3 +11,14 @@ option('use-libcxx',
        type: 'boolean',
        value: false,
        description: 'link with libc++ instead of libstdc++')
+
+option('shell-completions',
+       type: 'array',
+       choices: ['bash', 'fish', 'zsh'],
+       value: ['bash', 'fish', 'zsh'],
+       description: 'install shell completions for the given shell(s)')
+
+option('build-tests',
+       type: 'boolean',
+       value: false,
+       description: 'build tests for confidant')

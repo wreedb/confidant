@@ -2,8 +2,16 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-version-file := ".version"
 version := `cat .version`
+
+[group("build")]
+build: clean-build
+    meson setup .build --prefix=/usr --buildtype=release --strip -D static-stdlib=true
+    meson compile -C .build
+    
+[group("clean")]
+clean-build:
+    -rm -rf .build/
 
 [group("flake")]
 build-flake:

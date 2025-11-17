@@ -119,6 +119,7 @@ int main(int argc, char *argv[]) {
     auto* cmdConfig_get = cmdConfig->add_subcommand("get");
     cmdConfig_get->add_flag("-h,--help",    options::config::get::help);
     cmdConfig_get->add_flag("-v,--verbose", options::config::get::verbosity);
+    cmdConfig_get->add_option("-f,--file",  options::config::get::file);
     cmdConfig_get->add_option("name",       options::config::get::name);
     
     CLI11_PARSE(args, argc, argv);
@@ -149,7 +150,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     
-    if (args.got_subcommand(cmdUsage)) {
+    if (args.got_subcommand(cmdUsage) || options::usage) {
         help::general::usage(argz);
         return 0;
         
@@ -178,8 +179,10 @@ int main(int argc, char *argv[]) {
         
         int ecode_link = confidant::link(conf, options::link::dryrun);
         int ecode_linktemplate = confidant::linktemplate(conf, options::link::dryrun);
-        if (ecode_link + ecode_linktemplate > 1)
+        if (ecode_link + ecode_linktemplate >= 1)
             return 1;
+        else
+            return 0;
         
     } else if (args.got_subcommand(cmdVersion)) {
         logger::info(argz, "version {}", version);
@@ -196,7 +199,14 @@ int main(int argc, char *argv[]) {
                 help::config::get::help(argz);
                 return 0;
             }
-            logger::info(argz, "'get' not yet implemented");
+            auto conf = confidant::config::serialize(options::config::get::file, settings);
+            optional<confidant::config::ConfigValue> results = confidant::config::get(conf, options::config::get::name);
+            if (!results) {
+                logger::error(argz, "failed to find configuration value for {}",
+                    logger::bolden(options::config::get::name));
+                return 1;
+            }
+            cout << confidant::config::formatconfigvalue(results.value()) << std::endl;
             return 0;
         }
         
@@ -224,7 +234,7 @@ int main(int argc, char *argv[]) {
         }
     
     }
-
+    help::general::usage(argz);
     return 0;
 
 }

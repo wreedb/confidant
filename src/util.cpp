@@ -11,9 +11,32 @@
 #include <string_view>
 
 namespace fs = std::filesystem;
+using std::vector;
+using std::string;
+using std::string_view;
+
 
 namespace util {
 
+
+    vector<string_view> split(string_view sv, char delimiter = '.') {
+        vector<string_view> result;
+        
+        size_t start = 0;
+        size_t end = sv.find(delimiter);
+        
+        while (end != std::string_view::npos) {
+            result.push_back(sv.substr(start, end - start));
+            start = end + 1;
+            end = sv.find(delimiter, start);
+        }
+        
+        // Add the last (or only) part
+        result.push_back(sv.substr(start));
+        
+        return result;
+    }
+    
 bool perms_to_link(const fs::path& p) {
     fs::path parent = p.parent_path();
     if (parent.empty()) parent = ".";

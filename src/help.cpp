@@ -14,6 +14,14 @@
 #include "logging.hpp"
 #include "xdg.hpp"
 
+using std::string_view;
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::format;
+
+namespace fg = confidant::logging::fg;
+
 #define sv  std::string_view
 #define out std::cout
 #define err std::cerr
@@ -35,97 +43,101 @@ std::string tab(const int& amt) {
     
 namespace general {
     void help(sv argz) {
-        out << logger::color(1) << argz << logger::color(22) << ":\n\n"
-            << "    your configuration " << logger::color(3) << "pal and confidant" << logger::color(23) << "\n\n"
-            << "actions:\n\n"
-            << "    init                initialize a repository\n"
-            << "    config              modify and view configuration\n"
-            << "    link                create symlinks\n"
-            << "    help                display help for subcommands\n"
-            << "    usage               brief command-line usage info\n"
-            << "    version             display version info\n\n"
-            << "options:\n\n"
-            << "    -v, --verbose       output more information about actions taken,\n"
-            << "                        may be repeated to increase verbosity level\n"
-            << nl;
+        using logger::ul;
+        cout << fg::green(argz) << ":\n\n"
+             << "    your configuration " << logger::ital("pal and confidant") << "\n\n"
+             << fg::magenta("actions") << ":\n\n"
+             << "    " << ul("init") << "                initialize a repository\n"
+             << "    " << ul("config") << "              modify and view configuration\n"
+             << "    " << ul("link") << "                create symlinks\n"
+             << "    " << ul("help") << "                display help for subcommands\n"
+             << "    " << ul("usage") << "               brief command-line usage info\n"
+             << "    " << ul("version") << "             display version info\n\n"
+             << fg::yellow("options") << ":\n\n"
+             << "    -v, --verbose       output more information about actions taken\n"
+             << endl;
     }
     void usage(sv argz) {
-        out << "usage: " << argz << " [action] [...options]\n"
-            << "actions: init, config, link, help, usage, version\n\n"
-            << "see 'confidant help <command>' for more information about a specific command\nand its' respective options.\n"
-            << nl;
+        using logger::ul;
+        cout << "usage: " << fg::green(argz) << " [" << ul("action") << "] [...options]\n"
+             << fg::magenta("actions") << ": "
+             << ul("init")    << ", "
+             << ul("config")  << ", "
+             << ul("link")    << ", "
+             << ul("help")    << ", "
+             << ul("usage")   << ", "
+             << ul("version") << "\n\n"
+             << "see 'confidant help <" << ul("action") << ">' for more information about a specific action\nand its' respective options."
+             << endl;
     }
 };
 
 namespace init {
     void help(std::string_view argz) {
-        out << logger::color(1) << argz << logger::color(0) << " init:\n\n"
-            << "    initialize a confidant repository\n\n"
-            << "arguments:\n\n"
-            << "    PATH                specify the path to initialize\n"
-            << "                        default: current working directory\n\n"
-            << "options:\n\n"
-            << "    -f, --file          specify the repository config file to read\n"
-            << "                        default: <repo>/confidant.ucl\n\n"
-            << "    -v, --verbose       output more information about actions taken,\n"
-            << "                        may be repeated to increase verbosity level\n"
-            << nl;
+        using logger::ul;
+        cout << fg::green(argz) << " " << ul("init") << ":\n\n"
+             << "    initialize a confidant repository\n\n"
+             << fg::blue("arguments") << ":\n\n"
+             << "    "<< ul("PATH") <<"                specify the path to initialize\n"
+             << "                        default: current working directory\n\n"
+             << fg::yellow("options") << ":\n\n"
+             << "    -v, --verbose       output more information about actions taken\n"
+             << endl;
     }
 };
 
 namespace config {
     void help(std::string_view argz) {
-        out << logger::color(1) << argz << logger::color(0) << " config:\n\n"
-            << "    view and modify configuration\n\n"
-            << "actions:\n\n"
-            << "    dump                display current configuration settings\n"
-            << "    get                 find the value of a setting by name\n\n"
-            << "options:\n\n"
-            << "    -v, --verbose       output more information about actions taken,\n"
-            << "                        may be repeated to increase verbosity level\n\n"
-            << "see 'confidant help config <action>' for more information about a specific command\nand its' respective options."
-            << nl;
+        using logger::ul;
+        cout << fg::green(argz) << " " << ul("config") << ":\n\n"
+            << "    view configuration settings\n\n"
+            << fg::magenta("actions") << ":\n\n"
+            << "    " << ul("dump") << "                display current configuration settings\n"
+            << "    " << ul("get") << "                 find the value of a setting by name\n\n"
+            << fg::yellow("options") << ":\n\n"
+            << "    -v, --verbose       output more information about actions taken\n\n"
+            << "see 'confidant help config <" << ul("action") << ">' for more information about a specific command\nand its' respective options."
+            << endl;
     }
 namespace dump {
     void help(std::string_view argz) {
-        out << logger::color(1) << argz << logger::color(0) << " config dump:\n\n"
-            << "    display current configuration\n\n"
-            << "options:\n\n"
-            << "    -f, --file PATH     specify a configuration file to operate on\n"
-            << "                        default: <repo>/confidant.ucl\n\n"
-            << "    -v, --verbose       output more information about actions taken,\n"
-            << "                        may be repeated to increase verbosity level\n\n"
-            << nl;
+        using logger::ul;
+        cout << fg::green(argz) << " " << ul("config") << " " << ul("dump") << ":\n\n"
+             << "    display current configuration\n\n"
+             << fg::yellow("options") << ":\n\n"
+             << "    -f, --file " << ul("PATH") << "     specify a configuration file to operate on\n"
+             << "                        default: <current directory>/confidant.ucl\n\n"
+             << "    -v, --verbose       output more information about actions taken\n"
+             << endl;
     }
 };
 namespace get {
     void help(std::string_view argz) {
-        out << logger::color(1) << argz << logger::color(0) << " config get:\n\n"
-            << "    find a configuration value by name\n\n"
-            << "arguments:\n\n"
-            << "    NAME                the configuration setting to search for\n\n"
-            << "options:\n\n"
-            << "    -s, --section NAME  specify a configuration section to search in\n"
-            << "                        default: top level of configuration file\n\n"
-            << "    -v, --verbose       output more information about actions taken,\n"
-            << "                        may be repeated to increase verbosity level\n\n"
-            << nl;
+        using logger::ul;
+        cout << fg::green(argz) << " " << ul("config") << " " << ul("get") << ":\n\n"
+             << "    find a configuration value by name\n\n"
+             << fg::blue("arguments") << ":\n\n"
+             << "    " << ul("NAME") << "                the configuration setting to search for,\n"
+             << "                        you may search for nested values by using\n"
+             << "                        periods to traverse, e.g.: 'repository.url'\n\n"
+             << fg::yellow("options") << ":\n\n"
+             << "    -v, --verbose       output more information about actions taken\n"
+             << endl;
     }
 };
 };
 
 namespace link {
 void help(std::string_view argz) {
-    out << logger::color(1) << argz << logger::color(0) << " link:\n\n"
-        << "    apply symlinks from the" << logger::color(1) << " link " << logger::color(0) << "section of your configuration\n\n"
-        << "options:\n\n"
-        << "    -f, --file PATH     specify the configuration file to operate on\n"
-        << "                        default: <repo>/confidant.ucl\n\n"
-        << "    -n, --name NAME     apply link for only provided entry name\n\n"
-        << "    -d, --dry-run       show what actions" << logger::color(3) << " would " << logger::color(0) << "be taken\n\n"
-        << "    -v, --verbose       output more information about actions taken,\n"
-        << "                        may be repeated to increase verbosity level\n\n"
-        << nl;
+    using logger::ul;
+    cout << fg::green(argz) << " " << ul("link") << ":\n\n"
+         << "    apply symlinks from your configuration file\n\n"
+         << fg::yellow("options") << ":\n\n"
+         << "    -f, --file " << ul("PATH") << "     specify the configuration file to operate on\n"
+         << "                        default: <current directory>/confidant.ucl\n\n"
+         << "    -d, --dry-run       show what actions " << logger::ital("would") << " be taken\n\n"
+         << "    -v, --verbose       output more information about actions taken\n"
+         << endl;
 }
     
 }; // END help::link
@@ -151,7 +163,7 @@ repository {
 
 # 'link' entries provide fine-grain explicit control over how
 # your files are handled
-link {
+links {
     nvim {
         source: ${REPO}/.config/nvim/init.lua
         dest: ${XDG_CONFIG_HOME}/nvim/init.lua
@@ -173,19 +185,22 @@ link {
     
 }
 
-# 'link-from' allows you to do linking with templated names
-# note: unlike link, link-from does not care whether the item
-# being linked is a file or directory.
-link-from {
-    from: ${REPO}/.config/%{item}
-    to: ${XDG_CONFIG_HOME}/%{item}
-    # each item will be substituted into the 'from' and 'to'
-    # values, and then will be symlinked accordingly
-    items: [
-        kitty/kitty.conf
-        fish/conf.d
-        fish/config.fish
-    ]
+# 'templates' allows you to do linking with templated names
+# note: unlike the 'links' section, templates do not care whether
+# the item being linked is a file or directory, it is automatically
+# determined
+templates {
+    config {
+        source: ${REPO}/.config/%{item}
+        dest: ${XDG_CONFIG_HOME}/%{item}
+        # each item will be substituted into the 'from' and 'to'
+        # values, and then will be symlinked accordingly
+        items: [
+            kitty/kitty.conf
+            fish/conf.d
+            fish/config.fish
+        ]
+    }
     # the resulting links would be:
     # ${REPO}/.config/kitty/kitty.conf -> ${XDG_CONFIG_HOME}/kitty/kitty.conf
     # ${REPO}/.config/fish/conf.d      -> ${XDG_CONFIG_HOME}/fish/conf.d

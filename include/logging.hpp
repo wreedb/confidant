@@ -9,6 +9,8 @@
 #include <iostream>
 #include "util.hpp"
 
+using std::string;
+using std::string_view;
 
 namespace ansi {
 
@@ -176,6 +178,32 @@ namespace confidant {
             std::exit(exitCode);
         }
 
+        namespace fg {
+            
+            string black(string_view s);
+            string red(string_view s);
+            string green(string_view s);
+            string yellow(string_view s);
+            string blue(string_view s);
+            string magenta(string_view s);
+            string cyan(string_view s);
+            string white(string_view s);
+        
+        }; // END confidant::logging::fg
+        
+        namespace bg {
+            
+            string black(string_view s);
+            string red(string_view s);
+            string green(string_view s);
+            string yellow(string_view s);
+            string blue(string_view s);
+            string magenta(string_view s);
+            string cyan(string_view s);
+            string white(string_view s);
+        
+        }; // END confidant::logging::bg
+        
     }; // END confidant::logging
 
 }; // END confidant

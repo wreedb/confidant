@@ -9,6 +9,9 @@
 #include "logging.hpp"
 #include "config.hpp"
 
+using std::string;
+using std::string_view;
+
 namespace logger = confidant::logging;
 
 namespace ansi {
@@ -52,6 +55,8 @@ std::string rgb(const int& red, const int& green, const int& blue) {
 
 namespace confidant {
     namespace logging {
+        
+        
         std::string bolden(std::string_view str) {
             if (!ansi::useColor)
                 return std::string(str);
@@ -87,5 +92,122 @@ namespace confidant {
                 return "\033[" + std::to_string(num) + "m";
             }
         }
+        
+        namespace fg {
+            string black(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::fg::black, s, ansi::fg::reset);
+                else
+                    return string(s);
+            }
+        
+            string red(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::fg::red, s, ansi::fg::reset);
+                else
+                    return string(s);
+            }
+        
+            string green(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::fg::green, s, ansi::fg::reset);
+                else
+                    return string(s);
+            }
+        
+            string yellow(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::fg::yellow, s, ansi::fg::reset);
+                else
+                    return string(s);
+            }
+        
+            string blue(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::fg::blue, s, ansi::fg::reset);
+                else
+                    return string(s);
+            }
+        
+            string magenta(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::fg::magenta, s, ansi::fg::reset);
+                else
+                    return string(s);
+            }
+        
+            string cyan(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::fg::cyan, s, ansi::fg::reset);
+                else
+                    return string(s);
+            }
+        
+            string white(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::fg::white, s, ansi::fg::reset);
+                else
+                    return string(s);
+            }
+        }; // end confidant::logging::fg
+        
+        namespace bg {
+            string black(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::bg::black, s, ansi::bg::reset);
+                else
+                    return string(s);
+            }
+        
+            string red(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::bg::red, s, ansi::bg::reset);
+                else
+                    return string(s);
+            }
+        
+            string green(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::bg::green, s, ansi::bg::reset);
+                else
+                    return string(s);
+            }
+        
+            string yellow(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::bg::yellow, s, ansi::bg::reset);
+                else
+                    return string(s);
+            }
+        
+            string blue(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::bg::blue, s, ansi::bg::reset);
+                else
+                    return string(s);
+            }
+        
+            string magenta(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::bg::magenta, s, ansi::bg::reset);
+                else
+                    return string(s);
+            }
+        
+            string cyan(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::bg::cyan, s, ansi::bg::reset);
+                else
+                    return string(s);
+            }
+        
+            string white(string_view s) {
+                if (ansi::useColor)
+                    return format("{}{}{}", ansi::bg::white, s, ansi::bg::reset);
+                else
+                    return string(s);
+            }
+        }; // END confidant::logging::bg
+        
     }
 }

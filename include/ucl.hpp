@@ -6,6 +6,7 @@
 
 #include <optional>
 #include <iostream>
+#include <variant>
 #include <fstream>
 #include <string>
 #include <print>
@@ -45,6 +46,19 @@ namespace ucl {
 namespace confidant {
     std::string substitute(const std::string& tmpl, const std::string& item);
     namespace config {
+        using ConfigValue = std::variant<
+            bool,
+            string,
+            vector<string>,
+            vector<confidant::config::link>,
+            vector<confidant::config::templatelink>,
+            confidant::config::link,
+            confidant::config::templatelink
+        >;
+        
+        optional<ConfigValue> get(const confidant::configuration& conf, string_view qry);
+        string formatconfigvalue(const ConfigValue& val);
+        
         confidant::configuration serialize(std::string_view path, const confidant::settings& globals);
         namespace global {
             confidant::settings serialize(std::string_view path);

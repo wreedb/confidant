@@ -9,7 +9,11 @@
 #include <vector>
 #include <filesystem>
 
+using std::vector;
+using std::string_view;
+
 namespace util {
+    vector<string_view> split(string_view sv, char delimiter = '.');
     bool perms_to_link(const std::filesystem::path& p);
     bool perms_to_write(const std::filesystem::path& p);
     std::string stripargz(const std::string& arg);

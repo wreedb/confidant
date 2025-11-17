@@ -9,55 +9,34 @@ _confidant_cmd_1 () {
 }
 
 _confidant () {
-    declare -a literals=("-v" "--verbose" "-h" "--help" "--usage" "-V" "--version" "version" "usage" "init" "-f" "--file" "-v" "--verbose" "config" "get" "-s" "--section" "-h" "--help" "-v" "--verbose" "dump" "-g" "--global" "-h" "--help" "-f" "--file" "-v" "--verbose" "-h" "--help" "-v" "--verbose" "link" "-f" "--file" "-n" "--name" "-d" "--dry-run" "-h" "--help" "-v" "--verbose" "link-from" "-f" "--file" "-d" "--dry-run" "-h" "--help" "-v" "--verbose" "help" "init" "config" "dump" "get" "link" "link-from")
+    declare -a literals=("-h" "--help" "-V" "--version" "init" "-f" "--file" "..." "config" "get" "-f" "--file" "dump" "-f" "--file" "link" "-f" "--file" "-d" "--dry-run" "help" "init" "config" "dump" "get" "link" "usage" "version")
     declare -A descrs=()
-    descrs[0]="output more info about actions taken"
-    descrs[1]="display help information"
-    descrs[2]="brief usage info"
-    descrs[3]="display version info"
-    descrs[4]="initialize a confidant repository"
-    descrs[5]="specify a file path"
-    descrs[6]="display more info about actions"
-    descrs[7]="view and modify configuration"
-    descrs[8]="find a value by name"
-    descrs[9]="search within a specific config section"
-    descrs[10]="display help info"
-    descrs[11]="display current configuration"
-    descrs[12]="dump the global configuration file"
-    descrs[13]="specify a file to read from"
-    descrs[14]="apply symlinks"
-    descrs[15]="specify a link name to apply"
-    descrs[16]="simulate actions"
-    descrs[17]="display more info about actions taken"
-    descrs[18]="apply template symlinks"
-    descrs[19]="increase verbosity"
-    descrs[20]="display help for subcommands"
-    descrs[21]="display help for init"
-    descrs[22]="display help for config"
-    descrs[23]="display help for config dump"
-    descrs[24]="display help for config get"
-    descrs[25]="display help for link"
-    descrs[26]="display help for link-from"
-    declare -A descr_id_from_literal_id=([1]=0 [2]=0 [3]=1 [4]=1 [5]=2 [6]=3 [7]=3 [8]=3 [9]=2 [10]=4 [11]=5 [12]=5 [13]=6 [14]=6 [15]=7 [16]=8 [17]=9 [18]=9 [19]=10 [20]=10 [21]=6 [22]=6 [23]=11 [24]=12 [25]=12 [26]=10 [27]=10 [28]=13 [29]=13 [30]=6 [31]=6 [32]=10 [33]=10 [34]=6 [35]=6 [36]=14 [37]=5 [38]=5 [39]=15 [40]=15 [41]=16 [42]=16 [43]=10 [44]=10 [45]=17 [46]=17 [47]=18 [48]=5 [49]=5 [50]=16 [51]=16 [52]=10 [53]=10 [54]=19 [55]=19 [56]=20 [57]=21 [58]=22 [59]=23 [60]=24 [61]=25 [62]=26)
+    descrs[0]="help information"
+    descrs[1]="version information"
+    descrs[2]="initialize a confidant repository"
+    descrs[3]="specify a file path"
+    descrs[4]="view configuration"
+    descrs[5]="find a value by name"
+    descrs[6]="display current configuration"
+    descrs[7]="apply symlinks"
+    descrs[8]="simulate actions"
+    descrs[9]="display help for subcommands"
+    descrs[10]="brief usage info"
+    descrs[11]="version info"
+    declare -A descr_id_from_literal_id=([1]=0 [2]=0 [3]=1 [4]=1 [5]=2 [6]=3 [7]=3 [9]=4 [10]=5 [13]=6 [16]=7 [17]=3 [18]=3 [19]=8 [20]=8 [21]=9 [27]=10 [28]=11)
     declare -a regexes=()
     declare -A literal_transitions=()
-    literal_transitions[1]="([1]=2 [2]=2 [3]=2 [4]=2 [5]=2 [6]=2 [7]=2 [8]=2 [9]=2 [10]=3 [15]=4 [36]=5 [47]=6 [56]=7)"
-    literal_transitions[3]="([48]=8 [49]=9 [34]=10 [35]=10)"
-    literal_transitions[4]="([16]=17 [23]=18 [52]=2 [53]=2 [34]=2 [35]=2)"
-    literal_transitions[5]="([48]=11 [49]=12 [39]=13 [40]=14 [50]=15 [51]=15 [52]=15 [53]=15 [45]=15 [46]=15)"
-    literal_transitions[6]="([48]=26 [49]=27 [50]=28 [51]=28 [52]=28 [53]=28 [54]=28 [55]=28)"
-    literal_transitions[7]="([57]=29 [58]=30 [61]=29 [62]=29)"
-    literal_transitions[10]="([48]=8 [49]=9 [34]=10 [35]=10)"
-    literal_transitions[15]="([48]=11 [49]=12 [39]=13 [40]=14 [50]=15 [51]=15 [52]=15 [53]=15 [45]=15 [46]=15)"
-    literal_transitions[17]="([17]=22 [18]=23 [52]=24 [53]=24 [34]=24 [35]=24)"
-    literal_transitions[18]="([24]=19 [25]=19 [52]=19 [53]=19 [28]=20 [29]=21 [34]=19 [35]=19)"
-    literal_transitions[19]="([24]=19 [25]=19 [52]=19 [53]=19 [28]=20 [29]=21 [34]=19 [35]=19)"
-    literal_transitions[24]="([17]=22 [18]=23 [52]=24 [53]=24 [34]=24 [35]=24)"
-    literal_transitions[28]="([48]=26 [49]=27 [50]=28 [51]=28 [52]=28 [53]=28 [54]=28 [55]=28)"
-    literal_transitions[29]="([57]=29 [58]=30 [61]=29 [62]=29)"
-    literal_transitions[30]="([59]=29 [60]=29)"
+    literal_transitions[1]="([1]=2 [2]=2 [3]=2 [4]=2 [5]=3 [9]=4 [16]=5 [21]=6 [27]=2 [28]=2)"
+    literal_transitions[3]="([17]=7 [18]=8)"
+    literal_transitions[4]="([10]=14 [13]=15)"
+    literal_transitions[5]="([17]=12 [18]=13 [19]=2 [20]=2)"
+    literal_transitions[6]="([22]=2 [23]=21 [26]=2)"
+    literal_transitions[9]="([8]=10)"
+    literal_transitions[14]="([14]=16 [15]=17)"
+    literal_transitions[15]="([14]=19 [15]=20)"
+    literal_transitions[21]="([24]=2 [25]=2)"
     declare -A nontail_transitions=()
-    declare -A match_anything_transitions=([11]=15 [10]=16 [13]=15 [20]=19 [21]=19 [14]=15 [12]=15 [16]=16 [23]=24 [24]=25 [22]=24 [25]=25 [9]=10 [8]=10 [26]=28 [27]=28)
+    declare -A match_anything_transitions=([8]=9 [10]=11 [11]=11 [12]=2 [13]=2 [14]=2 [17]=18 [18]=2 [16]=18 [20]=2 [19]=2 [7]=9)
     declare -A subword_transitions=()
 
     declare state=1
@@ -112,12 +91,12 @@ _confidant () {
         return 1
     done
 
-    declare -A literal_transitions_level_0=([4]="16 23 52 53 34 35" [24]="17 18 52 53 34 35" [6]="48 49 50 51 52 53 54 55" [30]="59 60" [18]="24 25 52 53 28 29 34 35" [3]="48 49 34 35" [1]="1 2 3 4 5 6 7 8 9 10 15 36 47 56" [10]="48 49 34 35" [15]="48 49 39 40 50 51 52 53 45 46" [28]="48 49 50 51 52 53 54 55" [17]="17 18 52 53 34 35" [29]="57 58 61 62" [5]="48 49 39 40 50 51 52 53 45 46" [7]="57 58 61 62" [19]="24 25 52 53 28 29 34 35")
+    declare -A literal_transitions_level_0=([3]="17 18" [1]="1 2 3 4 5 9 16 21 27 28" [4]="10 13" [9]="8" [14]="14 15" [15]="14 15" [21]="24 25" [6]="22 23 26" [5]="17 18 19 20")
     declare -A subword_transitions_level_0=()
     declare -A commands_level_0=()
     declare -A nontail_commands_level_0=()
     declare -A nontail_regexes_level_0=()
-    declare -A specialized_commands_level_0=([10]="1" [9]="0" [21]="0" [11]="0" [12]="0" [20]="0" [27]="0" [16]="1" [8]="0" [26]="0")
+    declare -A specialized_commands_level_0=([19]="0" [10]="1" [7]="0" [11]="1" [12]="0" [17]="0" [13]="0" [8]="0" [16]="0" [20]="0")
 
     declare max_fallback_level=0
     for (( fallback_level=0; fallback_level <= max_fallback_level; fallback_level++ )); do

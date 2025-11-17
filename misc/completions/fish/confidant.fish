@@ -22,15 +22,14 @@ complete -c confidant -s v -l verbose -d "increase verbosity level"
 
 # subcommands
 complete -c confidant -f -n __fish_use_subcommand -a init      -d "initialize a confidant repository"
-complete -c confidant -f -n __fish_use_subcommand -a config    -d "modify and view configuration"
+complete -c confidant -f -n __fish_use_subcommand -a config    -d "view configuration settings"
 complete -c confidant -f -n __fish_use_subcommand -a link      -d "apply symlinks"
-complete -c confidant -f -n __fish_use_subcommand -a link-from -d "apply templated symlinks"
 complete -c confidant -f -n __fish_use_subcommand -a usage     -d "display usage info"
 complete -c confidant -f -n __fish_use_subcommand -a version   -d "display version info"
 complete -c confidant -f -n __fish_use_subcommand -a help      -d "display help for subcommands"
 
 # subcommand help
-complete -c confidant -n "__fish_seen_subcommand_from help; and __confidant_help_depth_1" -f -a "init link link-from version config"
+complete -c confidant -n "__fish_seen_subcommand_from help; and __confidant_help_depth_1" -f -a "init link config"
 complete -c confidant -n "__fish_seen_subcommand_from help; and __fish_seen_subcommand_from config; and __confidant_help_depth_2" -f -a "dump get"
 
 # subcommand: init
@@ -41,13 +40,8 @@ complete -c confidant -n "__fish_seen_subcommand_from init" -a "(__fish_complete
 complete -c confidant -n "__fish_seen_subcommand_from config" -f -a "dump get"
 complete -c confidant -n "__fish_seen_subcommand_from config; and __fish_seen_subcommand_from dump" -s g -l global     -d "operate on global config"
 complete -c confidant -n "__fish_seen_subcommand_from config; and __fish_seen_subcommand_from dump" -s f -l file    -r -d "specify a file path"
-complete -c confidant -n "__fish_seen_subcommand_from config; and __fish_seen_subcommand_from get"  -s s -l section -r -d "section name to search"
 complete -c confidant -n "__fish_seen_subcommand_from config; and __fish_seen_subcommand_from get"  -s f -l file    -r -d "specify a file path"
 
 # subcommand link
 complete -c confidant -n "__fish_seen_subcommand_from link" -s d -l dry-run -d "simulate actions taken"
 complete -c confidant -n "__fish_seen_subcommand_from link" -s f -l file    -d "specify a file path"
-
-# subcommand link-from
-complete -c confidant -n "__fish_seen_subcommand_from link-from" -s d -l dry-run -d "simulate actions taken"
-complete -c confidant -n "__fish_seen_subcommand_from link-from" -s f -l file    -d "specify a file path"

@@ -39,26 +39,20 @@ _confidant () {
     local words cword
     _get_comp_words_by_ref -n "$COMP_WORDBREAKS" words cword
 
-    declare -a literals=(-v --verbose -h --help --usage -V --version version usage init -f --file -v --verbose config get -s --section -h --help -v --verbose dump -g --global -h --help -f --file -v --verbose -h --help -v --verbose link -f --file -n --name -d --dry-run -h --help -v --verbose link-from -f --file -d --dry-run -h --help -v --verbose help init config dump get link link-from)
+    declare -a literals=(-h --help -V --version init -f --file ... config get -f --file dump -f --file link -f --file -d --dry-run help init config dump get link usage version)
     declare -a regexes=()
     declare -A literal_transitions=()
     declare -A nontail_transitions=()
-    literal_transitions[0]="([0]=1 [1]=1 [2]=1 [3]=1 [4]=1 [5]=1 [6]=1 [7]=1 [8]=1 [9]=2 [14]=3 [35]=4 [46]=5 [55]=6)"
-    literal_transitions[2]="([47]=7 [48]=8 [33]=9 [34]=9)"
-    literal_transitions[3]="([15]=16 [22]=17 [51]=1 [52]=1 [33]=1 [34]=1)"
-    literal_transitions[4]="([47]=10 [48]=11 [38]=12 [39]=13 [49]=14 [50]=14 [51]=14 [52]=14 [44]=14 [45]=14)"
-    literal_transitions[5]="([47]=25 [48]=26 [49]=27 [50]=27 [51]=27 [52]=27 [53]=27 [54]=27)"
-    literal_transitions[6]="([56]=28 [57]=29 [60]=28 [61]=28)"
-    literal_transitions[9]="([47]=7 [48]=8 [33]=9 [34]=9)"
-    literal_transitions[14]="([47]=10 [48]=11 [38]=12 [39]=13 [49]=14 [50]=14 [51]=14 [52]=14 [44]=14 [45]=14)"
-    literal_transitions[16]="([16]=21 [17]=22 [51]=23 [52]=23 [33]=23 [34]=23)"
-    literal_transitions[17]="([23]=18 [24]=18 [51]=18 [52]=18 [27]=19 [28]=20 [33]=18 [34]=18)"
-    literal_transitions[18]="([23]=18 [24]=18 [51]=18 [52]=18 [27]=19 [28]=20 [33]=18 [34]=18)"
-    literal_transitions[23]="([16]=21 [17]=22 [51]=23 [52]=23 [33]=23 [34]=23)"
-    literal_transitions[27]="([47]=25 [48]=26 [49]=27 [50]=27 [51]=27 [52]=27 [53]=27 [54]=27)"
-    literal_transitions[28]="([56]=28 [57]=29 [60]=28 [61]=28)"
-    literal_transitions[29]="([58]=28 [59]=28)"
-    declare -A match_anything_transitions=([10]=14 [9]=15 [12]=14 [19]=18 [20]=18 [13]=14 [11]=14 [15]=15 [22]=23 [23]=24 [21]=23 [24]=24 [8]=9 [7]=9 [25]=27 [26]=27)
+    literal_transitions[0]="([0]=1 [1]=1 [2]=1 [3]=1 [4]=2 [8]=3 [15]=4 [20]=5 [26]=1 [27]=1)"
+    literal_transitions[2]="([16]=6 [17]=7)"
+    literal_transitions[3]="([9]=13 [12]=14)"
+    literal_transitions[4]="([16]=11 [17]=12 [18]=1 [19]=1)"
+    literal_transitions[5]="([21]=1 [22]=20 [25]=1)"
+    literal_transitions[8]="([7]=9)"
+    literal_transitions[13]="([13]=15 [14]=16)"
+    literal_transitions[14]="([13]=18 [14]=19)"
+    literal_transitions[20]="([23]=1 [24]=1)"
+    declare -A match_anything_transitions=([7]=8 [9]=10 [10]=10 [11]=1 [12]=1 [13]=1 [16]=17 [17]=1 [15]=17 [19]=1 [18]=1 [6]=8)
     declare -A subword_transitions
 
     local state=0
@@ -95,9 +89,9 @@ _confidant () {
         return 1
     done
 
-    declare -A literal_transitions_level_0=([3]="15 22 51 52 33 34" [23]="16 17 51 52 33 34" [5]="47 48 49 50 51 52 53 54" [29]="58 59" [17]="23 24 51 52 27 28 33 34" [2]="47 48 33 34" [0]="0 1 2 3 4 5 6 7 8 9 14 35 46 55" [9]="47 48 33 34" [14]="47 48 38 39 49 50 51 52 44 45" [27]="47 48 49 50 51 52 53 54" [16]="16 17 51 52 33 34" [28]="56 57 60 61" [4]="47 48 38 39 49 50 51 52 44 45" [6]="56 57 60 61" [18]="23 24 51 52 27 28 33 34")
+    declare -A literal_transitions_level_0=([2]="16 17" [0]="0 1 2 3 4 8 15 20 26 27" [3]="9 12" [8]="7" [13]="13 14" [14]="13 14" [20]="23 24" [5]="21 22 25" [4]="16 17 18 19")
     declare -A subword_transitions_level_0=()
-    declare -A commands_level_0=([9]="1" [8]="0" [20]="0" [10]="0" [11]="0" [19]="0" [26]="0" [15]="1" [7]="0" [25]="0")
+    declare -A commands_level_0=([18]="0" [9]="1" [6]="0" [10]="1" [11]="0" [16]="0" [12]="0" [7]="0" [15]="0" [19]="0")
     declare -A nontail_commands_level_0=()
     declare -A nontail_regexes_level_0=()
 

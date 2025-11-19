@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 
-phonydirs=(
-    foo
+phonys=(
+    foo/foo.conf
     bar
-    fizz
+    fizz/fizz.cfg
     fuzz
-    buzz
-    lorem
+    buzz/buzz.yaml
+    lorem/ipsum
 );
 
-for d in ${phonydirs[@]}; do
-    command readlink ~/.config/${d} || :
+for d in ${phonys[@]}; do
+    if [ -L "${HOME}/.config/${d}" ]; then
+        echo "~/.config/${d}: pass"
+    else
+        echo "~/.config/${d}: fail"
+    fi
 done

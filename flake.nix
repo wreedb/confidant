@@ -16,6 +16,7 @@
         stdenv = pkgs.gcc15Stdenv;
 
         nativeBuildInputs = with pkgs; [
+          scdoc
           pkg-config
           ninja
           meson

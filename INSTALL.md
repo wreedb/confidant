@@ -6,17 +6,16 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 Requirements
 ==================
-
-**Confidant** uses the [Meson](https://mesonbuild.com) build system, and 
+**Confidant** uses the [Meson](https://mesonbuild.com) build system, and  
 therefore also requires [Ninja](https://ninja-build.org).
 
-A compiler with support for at least C++23 is also needed, such as:
-- [GCC](https://gcc.gnu.org) >= version 14,
-- [Clang](https://clang.llvm.org) >= version 18
+A compiler with support for at least C++23 is also needed, such as:  
+- [GCC](https://gcc.gnu.org) >= version 14  
+- [Clang](https://clang.llvm.org) >= version 18  
 
 #### Note: for Clang users
-You may want to add the following argument to `meson setup` or `meson configure` 
-to use [libc++](https://libcxx.llvm.org):
+You may want to add the following argument to `meson setup` or  
+`meson configure` to use [libc++](https://libcxx.llvm.org):  
 ```sh
 -D use-libcxx=true
 ```

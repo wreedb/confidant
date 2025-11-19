@@ -29,8 +29,9 @@
 /_build/
 /_bld/
 
-# sphinx
-doc/build/
+# mkdocs
+_site/
+.site/
 
 deps/
 stage
@@ -53,3 +54,4 @@ result
 test.cpp
 testing/
 .config/
+confidant.ucl

@@ -1,0 +1,66 @@
+docs_dir: doc/site
+site_dir: .site
+site_name: Confidant
+site_url: https://wreedb.github.io
+site_description: Your configuration pal and confidant
+site_author: Will Reed
+copyright: Copyright © Will Reed 2025
+repo_name: wreedb/confidant
+repo_url: https://codeberg.org/wreedb/confidant
+strict: true
+
+validation:
+  omitted_files: warn
+  absolute_links: relative_to_docs
+  unrecognized_links: warn
+  anchors: warn
+
+extra_css:
+- styles/main.css
+- styles/ucl.css
+
+theme:
+  name: material
+  language: en
+  palette:
+  - media: '(prefer-color-scheme: dark)'
+    scheme: slate
+    primary: indigo
+    accent: indigo
+    toggle:
+      icon: material/toggle-switch-off-outline
+      name: switch to light mode
+
+  - media: '(prefer-color-scheme: light)'
+    scheme: default
+    primary: indigo
+    accent: indigo
+    toggle:
+      icon: material/toggle-switch
+      name: switch to dark mode
+  features:
+  - navigation.expand
+  - navigation.indexes
+  - navigation.sections
+  - navigation.tabs
+  - navigation.top
+  - navigation.tracking
+
+nav:
+- Home:
+  - index.md
+  - Install: install.md
+  - User Manual:
+    - Commands: user-manual/commands.md
+    - Configuration:
+      - user-manual/configuration.md
+      - Global Configuration: user-manual/configuration/global.md
+      - Local Configuration: user-manual/configuration/local.md
+  - Licenses:
+    - licensing/index.md
+    - GPL-3.0-or-later: licensing/GPL-3.0-or-later.md
+
+markdown_extensions:
+- admonition
+- attr_list
+- meta

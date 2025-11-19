@@ -130,16 +130,16 @@ section.
 
 # AUTHORS
 
-*Confidant* is written and maintained by *Will Reed* ++
-_<wreed@disroot.org>_. The source code of *Confidant* ++
-is available at _https://codeberg.org/wreedb/confidant_.
+*Confidant* is maintained by *Will Reed* _<wreed@disroot.org>_.++
+Source code is available at _https://codeberg.org/wreedb/confidant_,++
+online documentation can be found at _https://wreedb.github.io/confidant_.
 
 # COPYRIGHT
 
 Copyright © @YEAR@ Will Reed. License GPLv3+:++
-GNU General Public License version 3 or later++
-See _https://gnu.org/licenses/gpl-3.0.html_ or the _LICENSE_ file included in
-the source repository for more information.++
+GNU General Public License version 3 or later.++
+See _https://gnu.org/licenses/gpl-3.0.html_ or the _LICENSE.md_ ++
+file included in the source repository for more information.++
 This is free software: you are free to change and redistribute it.++
 There is NO WARRANTY, to the extent permitted by law.
 

@@ -52,6 +52,16 @@ SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
 SPDX-License-Identifier = "GPL-3.0-or-later"
 
 [[annotations]]
+path = "doc/**"
+SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
 path = "flake.lock"
+SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = "misc/completions/**"
 SPDX-FileCopyrightText = "2025 Will Reed <wreed@disroot.org>"
 SPDX-License-Identifier = "GPL-3.0-or-later"

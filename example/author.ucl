@@ -1,0 +1,114 @@
+repository: {
+    url: https://codeberg.org/wreedb/config.git
+}
+
+links: {
+
+    gnupg: {
+        source: ${repo}/.local/share/gnupg/gpg.conf
+        dest: ${xdg_data_home}/gnupg/gpg.conf
+        type: file
+    }
+
+    dirmngr: {
+        source: ${repo}/.local/share/gnupg/dirmngr.conf
+        dest: ${xdg_data_home}/gnupg/dirmngr.conf
+        type: file
+    }
+    
+    wireplumber: {
+        source: ${repo}/.config/wireplumber/wireplumber.conf.d/51-local.conf.desktop
+        dest: ${xdg_config_home}/wireplumber/wireplumber.conf.d/51-local.conf
+        type: file
+    }
+
+    bashprofile: {
+        source: ${repo}/.bashrc
+        dest: ${home}/.bash_profile
+        type: file
+    }
+
+}
+
+templates: {
+    home: {
+        source: ${repo}/%{item}
+        dest: ${home}/%{item}
+        items: [
+            .bashrc
+            .profile
+        ]
+    }
+
+    config: {
+        source: ${repo}/.config/%{item}
+        dest: ${xdg_config_home}/%{item}
+
+        items: [
+            alacritty/alacritty.toml
+            alacritty/themes
+            bash/aliases.bash
+            bash/functions.bash
+            bat/config
+            bottom/bottom.toml
+            curlrc
+            emacs/early-init.el
+            emacs/init.el
+            fastfetch/config.jsonc
+            fish/config.fish
+            fish/functions
+            fish/conf.d
+            fontconfig/fonts.conf
+            foot/foot.ini
+            foot/themes
+            fuzzel/fuzzel.ini
+            fuzzel/themes
+            ghostty/config
+            ghostty/themes
+            git/config
+            glow/glow.yml
+            guile/init.scm
+            hypr/config.hl
+            hypr/env.hl
+            hypr/keys.hl
+            hypr/lock.hl
+            hypr/rules.hl
+            hypr/theme.hl
+            hypr/themes
+            kanshi/config
+            kitty/kitty.conf
+            kitty/symbols.conf
+            kitty/themes
+            mimeapps.list
+            mpd/mpd.conf
+            mpv/mpv.conf
+            ncdu/config
+            nix/nix.conf
+            nvim/init.lua
+            nvim/lua
+            ov/config.yaml
+            pacman/makepkg.conf
+            rmpc/config.ron
+            rust/config.toml
+            starship/config.toml
+            swhkd/swhkdrc
+            tofi/config
+            tofi/themes
+            tree-sitter/config.json
+            user-dirs.dirs
+            vesktop/themes/fonts.css
+            waybar/config.jsonc
+            waybar/main.sass
+            waybar/style.css
+            waybar/color-schemes
+            wezterm/alice.lua
+            wezterm/wezterm.lua
+            wget/wget2rc
+            zathura/zathurarc
+            zed/settings.json
+            zsh/.zshenv
+            zsh/.zshrc
+            zsh/hooks
+        ]
+    }
+}

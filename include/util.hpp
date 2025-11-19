@@ -6,19 +6,17 @@
 
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 #include <filesystem>
 
-using std::vector;
-using std::string_view;
-
 namespace util {
-    vector<string_view> split(string_view sv, char delimiter = '.');
-    bool perms_to_link(const std::filesystem::path& p);
-    bool perms_to_write(const std::filesystem::path& p);
+    std::vector<std::string_view> split(std::string_view sv, char delimiter = '.');
+    bool hasperms(std::string_view p);
     std::string stripargz(const std::string& arg);
     std::optional<std::string> getenv(const std::string& name);
     bool hasenv(const std::string& name);
     std::string unexpandhome(std::string_view p);
     std::vector<std::filesystem::path> splitpath(const std::string& pathstr);
+    bool usecolorp();
 };

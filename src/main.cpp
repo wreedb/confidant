@@ -7,7 +7,10 @@
 #include <filesystem>
 #include <CLI/CLI.hpp>
 
+#include "settings.hpp"
+#include "settings/global.hpp"
 #include "ucl.hpp"
+#include "parse.hpp"
 #include "util.hpp"
 #include "confidant.hpp"
 #include "logging.hpp"
@@ -15,13 +18,17 @@
 #include "options.hpp"
 #include "config.hpp"
 
-namespace logger = confidant::logging;
+namespace say = confidant::logging;
 namespace fs = std::filesystem;
 
-const static std::string version = std::string(PROJECT_VERSION);
+
+
+const static bool initusecolor = util::usecolorp();
 
 int main(int argc, char *argv[]) {
 
+    if (!initusecolor) confidant::config::global::color = false;
+    
     std::string argz;
 
     if (argc > 0)
@@ -42,7 +49,7 @@ int main(int argc, char *argv[]) {
             return 0;
             
         } else if (topic == "version") {
-            logger::info(argz, "version {}", version);
+            std::println("{}: version {}", say::fg::yellow(PROJECT_NAME), PROJECT_VERSION);
             return 0;
             
         } else if (topic == "config") {
@@ -62,7 +69,7 @@ int main(int argc, char *argv[]) {
             help::config::help(argz);
             return 0;
         } else {
-            logger::error(argz, "help topic '{}' is not recognized", topic);
+            std::println("help topic {} is not recognized", say::bolden(topic));
             return 1;
         }
     }
@@ -83,8 +90,9 @@ int main(int argc, char *argv[]) {
     args.set_help_flag();
     args.set_version_flag();
 
-    int verbosity = settings.loglevel;
-    ansi::loglevel = verbosity;
+    confidant::config::global::loglevel = settings.loglevel;
+    confidant::config::global::color = settings.color;
+    confidant::config::global::createdirs = settings.createdirs;
     
     args.add_flag("-v,--verbose", options::verbosity);
     args.add_flag("-V,--version", options::version);
@@ -99,49 +107,61 @@ int main(int argc, char *argv[]) {
     cmdInit->add_option("path",       options::init::path);
     cmdInit->add_flag("-d,--dry-run", options::init::dryrun);
     cmdInit->add_flag("-h,--help",    options::init::help);
+    cmdInit->add_flag("-q,--quiet",   options::init::quiet);
     
     auto* cmdLink = args.add_subcommand("link", "apply symlinks");
     cmdLink->add_flag("-d,--dry-run", options::link::dryrun);
     cmdLink->add_flag("-h,--help",    options::link::help);
     cmdLink->add_flag("-v,--verbose", options::link::verbosity);
     cmdLink->add_option("-f,--file",  options::link::file);
+    cmdLink->add_option("-q,--quiet",  options::link::quiet);
     
     auto* cmdConfig = args.add_subcommand("config");
     cmdConfig->add_flag("-v,--verbose", options::config::verbosity);
     cmdConfig->add_flag("-h,--help",    options::config::help);
+    cmdConfig->add_flag("-q,--quiet",    options::config::quiet);
         
     auto* cmdConfig_dump = cmdConfig->add_subcommand("dump");
     cmdConfig_dump->add_flag("-h,--help",    options::config::dump::help);
     cmdConfig_dump->add_flag("-g,--global",  options::config::dump::global);
     cmdConfig_dump->add_flag("-v,--verbose", options::config::dump::verbosity);
+    cmdConfig_dump->add_flag("-q,--quiet",   options::config::dump::quiet);
     cmdConfig_dump->add_option("-f,--file",  options::config::dump::file);
     
     auto* cmdConfig_get = cmdConfig->add_subcommand("get");
     cmdConfig_get->add_flag("-h,--help",    options::config::get::help);
     cmdConfig_get->add_flag("-v,--verbose", options::config::get::verbosity);
+    cmdConfig_get->add_flag("-q,--quiet",   options::config::get::quiet);
     cmdConfig_get->add_option("-f,--file",  options::config::get::file);
     cmdConfig_get->add_option("name",       options::config::get::name);
     
     CLI11_PARSE(args, argc, argv);
     
-    // get sum of verbosity flags
-    int sumverbosity =
-        ( options::verbosity
-        + options::config::verbosity
-        + options::config::get::verbosity
-        + options::config::dump::verbosity
-        + options::init::verbosity
-        + options::link::verbosity);
+    // if --quiet, always be quiet, otherwise follow config setting;
+    // if --verbose, set to max verbosity, otherwise follow config setting;
     
-    if (sumverbosity > 0)
-        ansi::loglevel = ansi::verbosity::trace;
-    
-    
-    if (options::quiet)
-        ansi::loglevel = ansi::verbosity::quiet;
+    if (options::quiet ||
+        options::config::quiet ||
+        options::init::quiet ||
+        options::link::quiet ||
+        options::config::dump::quiet ||
+        options::config::get::quiet) {
+        confidant::config::global::loglevel = verbose::quiet;
+    } else {
+        int sumverbosity =
+            ( options::verbosity
+            + options::config::verbosity
+            + options::config::get::verbosity
+            + options::config::dump::verbosity
+            + options::init::verbosity
+            + options::link::verbosity);
+        
+        if (sumverbosity > 0)
+            confidant::config::global::loglevel = verbose::trace;
+    }
     
     if (options::version) {
-        logger::info(argz, "version {}", PROJECT_VERSION);
+        std::println("{}: version {}", say::fg::yellow(PROJECT_NAME), PROJECT_VERSION);
         return 0;
     }
     
@@ -175,7 +195,7 @@ int main(int argc, char *argv[]) {
             return 0;
         }
         
-        confidant::configuration conf = confidant::config::serialize(options::link::file, settings);
+        confidant::configuration conf = confidant::config::local::serialize(options::link::file, settings);
         
         int ecode_link = confidant::link(conf, options::link::dryrun);
         int ecode_linktemplate = confidant::linktemplate(conf, options::link::dryrun);
@@ -185,7 +205,7 @@ int main(int argc, char *argv[]) {
             return 0;
         
     } else if (args.got_subcommand(cmdVersion)) {
-        logger::info(argz, "version {}", version);
+        std::println("{}: version {}", say::fg::yellow(PROJECT_NAME), PROJECT_VERSION);
         return 0;
     
     } else if (args.got_subcommand(cmdConfig)) {
@@ -199,11 +219,11 @@ int main(int argc, char *argv[]) {
                 help::config::get::help(argz);
                 return 0;
             }
-            auto conf = confidant::config::serialize(options::config::get::file, settings);
+            auto conf = confidant::config::local::serialize(options::config::get::file, settings);
             optional<confidant::config::ConfigValue> results = confidant::config::get(conf, options::config::get::name);
             if (!results) {
-                logger::error(argz, "failed to find configuration value for {}",
-                    logger::bolden(options::config::get::name));
+                say::error("failed to find configuration value for {}",
+                    say::bolden(options::config::get::name));
                 return 1;
             }
             cout << confidant::config::formatconfigvalue(results.value()) << std::endl;
@@ -221,14 +241,13 @@ int main(int argc, char *argv[]) {
                 return 0;
             }
             
-            logger::info(argz, "dumping configuration from {}", options::config::dump::file);
-            confidant::debug::dumpConfig(
-                confidant::config::serialize(options::config::dump::file, settings)
-            );
+            say::pretty("dumping {}", util::unexpandhome(options::config::dump::file));
+            confidant::debug::dumpConfig
+                (confidant::config::local::serialize(options::config::dump::file, settings));
             return 0;
         
         } else {
-            logger::error(argz, "unknown subcommand");
+            say::error("unknown subcommand");
             help::config::help(argz);
             return 1;
         }

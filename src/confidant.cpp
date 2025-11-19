@@ -10,17 +10,16 @@
 #include <iostream>
 #include <print>
 
-#include "confidant.hpp"
+#include "settings.hpp"
 #include "util.hpp"
 #include "ucl.hpp"
 #include "logging.hpp"
-#include "config.hpp"
 
 using std::string;
 using std::filesystem::path;
 namespace fs = std::filesystem;
 
-namespace logger = confidant::logging;
+namespace say = confidant::logging;
 
 namespace confidant {
 
@@ -43,67 +42,45 @@ namespace confidant {
                 std::string udeststr = util::unexpandhome(deststr);
                 
                 if (!fs::exists(sourcepath)) {
-                    logger::error(PROJECT_NAME,
-                        "source file {}{}{} does not exist!",
-                        logger::color(1),
-                        usourcestr,
-                        ansi::freset);
+                    say::error("source file {} does not exist!",
+                        say::bolden(udeststr));
                     continue;
                 }
                 
                 if (fs::exists(destpath)) {
                     if (fs::equivalent(sourcepath, destpath)) {
-                        logger::warn(PROJECT_NAME,
-                            "skipping {}{}{}, already linked",
-                            logger::color(1),
-                            udeststr,
-                            ansi::freset);
+                        say::warn("skipping {}, already linked",
+                            say::bolden(udeststr));
                         continue;
                     }
-                    logger::warn(PROJECT_NAME,
-                        "destination {}{}{} already exists, skipping",
-                        logger::color(1),
-                        udeststr,
-                        ansi::freset);
+                    say::warn("destination {} already exists, skipping",
+                        say::bolden(udeststr));
                     continue;
                 }
                 
                 if (!fs::exists(destpath.parent_path())) {
                     if (!conf.create_dirs) {
-                        logger::warn(PROJECT_NAME,
-                            "parent directory for {}{}{} doesn't exist, skipping",
-                            logger::color(1),
-                            udeststr,
-                            ansi::freset);
+                        say::warn("parent directory for {} doesn't exist, skipping", say::bolden(udeststr));
                         continue;
                     } else {
                         if (!dry) {
                             try {
                                 fs::create_directories(destpath.parent_path());
                             } catch (const fs::filesystem_error& err) {
-                                logger::error(PROJECT_NAME,
-                                    "failed to create directory {}{}{}",
-                                    logger::color(1),
-                                    util::unexpandhome(destpath.parent_path().string()),
-                                    ansi::freset);
+                                say::error("failed to create directory {}",
+                                    say::bolden(util::unexpandhome(destpath.parent_path().string())));
                                 cout << err.what() << std::endl;
                                 return 1;
                             }
                         }
-                        logger::extra(PROJECT_NAME,
-                            "created directory {}{}{}",
-                            logger::color(1),
-                            util::unexpandhome(destpath.parent_path().string()),
-                            ansi::freset);
+                        say::extra("created directory {}",
+                            say::bolden(util::unexpandhome(destpath.parent_path().string())));
                     }
                 }
                 
-                if (!util::perms_to_link(destpath) && !dry) {
-                    logger::error(PROJECT_NAME,
-                        "no write permission for directory {}{}{}",
-                        logger::color(1),
-                        util::unexpandhome(destpath.parent_path().string()),
-                        ansi::freset);
+                if (!util::hasperms(deststr) && !dry) {
+                    say::error("no write permissions for directory {}",
+                        say::bolden(util::unexpandhome(destpath.parent_path().string())));
                     continue;
                 }
                 
@@ -113,11 +90,7 @@ namespace confidant {
                             // create the link
                             fs::create_directory_symlink(sourcepath, destpath);
                         } catch (const fs::filesystem_error& err) {
-                            logger::error(PROJECT_NAME,
-                                "failed to create symlink at {}{}{}",
-                                logger::color(1),
-                                udeststr,
-                                ansi::freset);
+                            say::error("failed to create symlink at {}", say::bolden(udeststr));
                             cout << err.what() << std::endl;
                             return 1;
                         }
@@ -129,11 +102,7 @@ namespace confidant {
                             // create the link
                             fs::create_symlink(sourcepath, destpath);
                         } catch (const fs::filesystem_error& err) {
-                            logger::error(PROJECT_NAME,
-                                "failed to create symlink at {}{}{}",
-                                logger::color(1),
-                                udeststr,
-                                ansi::freset);
+                            say::error("failed to create symlink at {}", say::bolden(udeststr));
                             std::cout << err.what() << std::endl;
                             return 1;
                         }
@@ -141,17 +110,15 @@ namespace confidant {
                     processedItems++;
                 }
                 // show message regardless for dry-runs
-                logger::info(PROJECT_NAME,
-                    "linked {}{}{}",
-                    logger::color(1),
-                    udeststr,
-                    ansi::freset);
+                std::println("{} linked {}",
+                    say::fg::magenta(">>>"),
+                    say::bolden(udeststr)
+                );
             }
-            logger::extra(PROJECT_NAME, "processed {} items", processedItems);
+            say::extra("processed {} items", processedItems);
             processedTemplates++;
         }
-        
-        logger::extra(PROJECT_NAME, "processed {} templates", processedTemplates);
+        say::extra("processed {} templates", processedTemplates);
         
         return 0;
     }
@@ -173,14 +140,13 @@ namespace confidant {
             
             confidant::config::linkType linkType = conf.links.at(n).type;
             
-            
             // skip if the source file doesn't exist
             if (!fs::exists(sourcepath)) {
-                logger::error(PROJECT_NAME,
-                    "source file {}{}{} does not exist!",
-                    logger::color(1),
-                    usourcestr,
-                    ansi::freset);
+                std::println(std::cerr,
+                    "{}: source file {} does not exist!",
+                    say::fg::red("error"),
+                    say::bolden(usourcestr)
+                );
                 continue;
             }
             // only after checking the file exists
@@ -190,31 +156,22 @@ namespace confidant {
             if (fs::exists(destpath)) {
                 // if the source and dest are the same file, e.g. the link was (likely) already created by us
                 if (fs::equivalent(sourcepath, destpath)) {
-                    logger::warn(PROJECT_NAME,
-                        "skipping {}{}{}, already linked",
-                        logger::color(1),
-                        udeststr,
-                        ansi::freset);
+                    say::warn("skipping {}, already linked",
+                        say::bolden(udeststr));
                     continue;
                 }
                 
                 // the destination already exists, and isn't identical to our source; we do nothing and skip
-                logger::warn(PROJECT_NAME,
-                    "destination {}{}{}, already exists, skipping",
-                    logger::color(1),
-                    udeststr,
-                    ansi::freset);
+                say::warn("destination {} already exists and is not identical to source, skipping",
+                    say::bolden(udeststr));
                 continue;
             }
             
             if (!fs::exists(destpath.parent_path())) {
                 if (!conf.create_dirs) {
                     // parent path doesn't exist and settings to create dirs is off
-                    logger::warn(PROJECT_NAME,
-                        "parent directory for {}{}{} does not exist, skipping",
-                        logger::color(1),
-                        name,
-                        ansi::freset);
+                    say::warn("parent directory for {} does not exist, skipping",
+                        say::bolden(name));
                     continue;
                 } else {
                     // create dirs unless we are doing a dry run
@@ -222,31 +179,23 @@ namespace confidant {
                         try {
                             fs::create_directories(destpath.parent_path());
                         } catch (const fs::filesystem_error& err) {
-                            logger::error(PROJECT_NAME,
-                                "failed to create directory {}{}{}",
-                                logger::color(1),
-                                unexpandhome(destpath.parent_path().string()),
-                                ansi::freset);
+                            say::error("failed to create directory {}",
+                                say::bolden(unexpandhome(destpath.parent_path().string())));
                             cout << err.what() << "\n";
                             return 1;
                         }
                     }
                     // display extra message regardless, for dry-run verbose
-                    logger::extra(PROJECT_NAME,
-                        "created directory {}{}{}",
-                        logger::color(1),
-                        unexpandhome(destpath.parent_path().string()),
-                        ansi::freset);
+                    say::extra("create directory {}",
+                        say::bolden(unexpandhome(destpath.parent_path().string())));
                 }
             }
             
             // check parent directory for write permission
-            if (!util::perms_to_link(destpath) && !dry) {
-                logger::error(PROJECT_NAME,
-                    "no write permissions for {}{}{}",
-                    logger::color(1),
-                    unexpandhome(destpath.parent_path().string()),
-                    ansi::freset);
+            if (!util::hasperms(deststr) && !dry) {
+                say::error("no write permissions for {}",
+                    say::bolden(unexpandhome(destpath.parent_path().string())));
+                // TODO: add strict setting, continue if true, return 1 if false
                 continue;
             }
             
@@ -257,14 +206,10 @@ namespace confidant {
                 
                 if (sourcefstat.type() != fs::file_type::directory) {
                     // they specified directory, but the source is not a directory
-                    logger::error(PROJECT_NAME,
-                        "link {}{}{} source {}{}{} is not a directory",
-                        logger::color(1),
-                        name,
-                        ansi::freset,
-                        logger::color(3),
-                        usourcestr,
-                        ansi::freset);
+                    say::error("link {} source {} is not a directory",
+                        say::bolden(name),
+                        say::ital(usourcestr));
+                    // TODO: strict return 1
                     continue;
                 }
                 if (!dry) {
@@ -272,15 +217,11 @@ namespace confidant {
                         // create the link
                         fs::create_directory_symlink(sourcepath, destpath);
                     } catch (const fs::filesystem_error& err) {
-                        logger::error(PROJECT_NAME,
-                            "failed to create symlink for {}{}{} at {}{}{}",
-                            logger::color(1),
-                            name,
-                            ansi::freset,
-                            logger::color(3),
-                            udeststr,
-                            ansi::freset);
+                        say::error("failed to create symlink for {} at {}",
+                            say::bolden(name),
+                            say::ital(udeststr));
                         std::cout << err.what() << std::endl;
+                        // TODO: continue when strict == false
                         return 1;
                     }
                 }
@@ -292,34 +233,26 @@ namespace confidant {
                         // create the link
                         fs::create_symlink(sourcepath, destpath);
                     } catch (const fs::filesystem_error& err) {
-                        logger::error(PROJECT_NAME,
-                            "failed to create symlink for {}{}{} at {}{}{}",
-                            logger::color(1),
-                            name,
-                            ansi::freset,
-                            logger::color(3),
-                            udeststr,
-                            ansi::freset);
+                        say::error("failed to create symlink for {} at {}",
+                            say::bolden(name),
+                            say::ital(udeststr));
                         cout << err.what() << std::endl;
+                        // TODO: continue if strict == false
                         return 1;
                     }
                 }
                 // incr the tracking counter
                 linksdone++;
             } else {
-                // cant happen, the linkType will have already been set to 
-                // file by default if it was invalid.
+                // cant happen, the linkType will have already been resolved to a good value 
                 std::unreachable();
             }
             
             // the file was linked
-            logger::info(PROJECT_NAME, "linked {}{}{}",
-                logger::color(1),
-                udeststr,
-                ansi::freset);
+            say::pretty("linked {}", udeststr);
         }
     
-        logger::extra(PROJECT_NAME, "created {} normal links", linksdone);
+        say::extra("created {} normal links", say::bolden(std::to_string(linksdone)));
         return 0;
 
     }
@@ -329,30 +262,31 @@ namespace confidant {
         namespace global {
 
             void dumpConfig(const confidant::settings& conf) {
-                logger::info(PROJECT_NAME, "global configuration");
-                std::println("  create-directories: {}", conf.create_dirs);
-                std::println("  log-level: {}", ansi::verbosity_literal(conf.loglevel));
+                say::pretty("global configuration");
+                std::println("{}: {}", say::fg::blue("create-directories"), conf.createdirs);
+                std::println("{}: {}", say::fg::blue("log-level"), ansi::verbosity_literal(int(conf.loglevel)));
+                std::println("{}: {}", say::fg::blue("color"), conf.color);
             }
 
         }; // END confidant::debug::global
         
         void dumpConfig(const confidant::configuration& conf) {
-            std::println("  repository: ");
-            std::println("    url: {}", conf.repo.url);
+            std::println("{}:", say::fg::blue("repository"));
+            std::println("  {}: {}", say::fg::blue("url"), conf.repo.url);
             int numlinks = conf.links.size();
             int numtemplates = conf.templates.size();
             if (numlinks > 0) {
-                std::println("  link:");
+                std::println("{}:", say::fg::blue("links"));
                 for (int n = 0; n < numlinks; n++) {
-                    std::println("  - name: {}", conf.links.at(n).name);
-                    std::println("    source: {}", conf.links.at(n).source.string());
-                    std::println("    destination: {}", conf.links.at(n).destination.string());
+                    std::println("- {}: {}", say::fg::blue("name"), conf.links.at(n).name);
+                    std::println("  {}: {}", say::fg::blue("source"), conf.links.at(n).name);
+                    std::println("  {}: {}", say::fg::blue("destination"), conf.links.at(n).destination.string());
                     switch (conf.links.at(n).type) {
                         case confidant::config::linkType::file:
-                            std::println("    type: file");
+                            std::println("  {}: file", say::fg::blue("type"));
                             break;
                         case confidant::config::linkType::directory:
-                            std::println("    type: directory");
+                            std::println("  {}: directory", say::fg::blue("type"));
                             break;
                         default:
                             // invalid or absent values will have been replaced with 'file'
@@ -362,14 +296,20 @@ namespace confidant {
             }
             
             if (numtemplates > 0) {
-                std::println("  templates:");
+                std::println("{}:", say::fg::blue("templates"));
                 for (int n = 0; n < numtemplates; n++) {
-                    std::println("    {}:", conf.templates.at(n).name);
-                    std::println("      source: {}", conf.templates.at(n).source.string());
-                    std::println("      destination: {}", conf.templates.at(n).destination.string());
+                    std::string name = conf.templates.at(n).name;
+                    std::string src = conf.templates.at(n).source.string();
+                    std::string dst = conf.templates.at(n).destination.string();
+                    std::println("- {}: {}", say::fg::blue("name"), name);
+                    std::println("  {}: {}", say::fg::blue("source"), src);
+                    std::println("  {}: {}", say::fg::blue("destination"), dst);
                     int numitems = conf.templates.at(n).items.size();
-                    for (int x = 0; x < numitems; x++) {
-                        std::println("      - {}", conf.templates.at(n).items.at(x));
+                    if (numitems > 0) {
+                        std::println("  {}:", say::fg::blue("items"));
+                        for (int x = 0; x < numitems; x++) {
+                            std::println("  - {}", say::fg::green(conf.templates.at(n).items.at(x)));
+                        }
                     }
                 }
             }

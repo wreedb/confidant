@@ -14,20 +14,7 @@
 #include "logging.hpp"
 #include "xdg.hpp"
 
-using std::string_view;
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::format;
-
 namespace fg = confidant::logging::fg;
-
-#define sv  std::string_view
-#define out std::cout
-#define err std::cerr
-#define nl  std::endl
-#define fmt std::format
-
 namespace fs = std::filesystem;
 namespace logger = confidant::logging;
 
@@ -42,87 +29,87 @@ std::string tab(const int& amt) {
 }
     
 namespace general {
-    void help(sv argz) {
+    void help(std::string_view argz) {
         using logger::ul;
-        cout << fg::green(argz) << ":\n\n"
-             << "    your configuration " << logger::ital("pal and confidant") << "\n\n"
-             << fg::magenta("actions") << ":\n\n"
-             << "    " << ul("init") << "                initialize a repository\n"
-             << "    " << ul("config") << "              modify and view configuration\n"
-             << "    " << ul("link") << "                create symlinks\n"
-             << "    " << ul("help") << "                display help for subcommands\n"
-             << "    " << ul("usage") << "               brief command-line usage info\n"
-             << "    " << ul("version") << "             display version info\n\n"
-             << fg::yellow("options") << ":\n\n"
-             << "    -v, --verbose       output more information about actions taken\n"
-             << endl;
+        std::cout << fg::green(argz) << ":\n\n"
+                  << "    your configuration " << logger::ital("pal and confidant") << "\n\n"
+                  << fg::magenta("actions") << ":\n\n"
+                  << "    " << ul("init") << "                initialize a repository\n"
+                  << "    " << ul("config") << "              modify and view configuration\n"
+                  << "    " << ul("link") << "                create symlinks\n"
+                  << "    " << ul("help") << "                display help for subcommands\n"
+                  << "    " << ul("usage") << "               brief command-line usage info\n"
+                  << "    " << ul("version") << "             display version info\n\n"
+                  << fg::yellow("options") << ":\n\n"
+                  << "    -v, --verbose       output more information about actions taken\n"
+                  << std::endl;
     }
-    void usage(sv argz) {
+    void usage(std::string_view argz) {
         using logger::ul;
-        cout << "usage: " << fg::green(argz) << " [" << ul("action") << "] [...options]\n"
-             << fg::magenta("actions") << ": "
-             << ul("init")    << ", "
-             << ul("config")  << ", "
-             << ul("link")    << ", "
-             << ul("help")    << ", "
-             << ul("usage")   << ", "
-             << ul("version") << "\n\n"
-             << "see 'confidant help <" << ul("action") << ">' for more information about a specific action\nand its' respective options."
-             << endl;
+        std::cout << "usage: " << fg::green(argz) << " [" << ul("action") << "] [...options]\n"
+                  << fg::magenta("actions") << ": "
+                  << ul("init")    << ", "
+                  << ul("config")  << ", "
+                  << ul("link")    << ", "
+                  << ul("help")    << ", "
+                  << ul("usage")   << ", "
+                  << ul("version") << "\n\n"
+                  << "see 'confidant help <" << ul("action") << ">' for more information about a specific action\nand its' respective options."
+                  << std::endl;
     }
 };
 
 namespace init {
     void help(std::string_view argz) {
         using logger::ul;
-        cout << fg::green(argz) << " " << ul("init") << ":\n\n"
-             << "    initialize a confidant repository\n\n"
-             << fg::blue("arguments") << ":\n\n"
-             << "    "<< ul("PATH") <<"                specify the path to initialize\n"
-             << "                        default: current working directory\n\n"
-             << fg::yellow("options") << ":\n\n"
-             << "    -v, --verbose       output more information about actions taken\n"
-             << endl;
+        std::cout << fg::green(argz) << " " << ul("init") << ":\n\n"
+                  << "    initialize a confidant repository\n\n"
+                  << fg::blue("arguments") << ":\n\n"
+                  << "    "<< ul("PATH") <<"                specify the path to initialize\n"
+                  << "                        default: current working directory\n\n"
+                  << fg::yellow("options") << ":\n\n"
+                  << "    -v, --verbose       output more information about actions taken\n"
+                  << std::endl;
     }
 };
 
 namespace config {
     void help(std::string_view argz) {
         using logger::ul;
-        cout << fg::green(argz) << " " << ul("config") << ":\n\n"
-            << "    view configuration settings\n\n"
-            << fg::magenta("actions") << ":\n\n"
-            << "    " << ul("dump") << "                display current configuration settings\n"
-            << "    " << ul("get") << "                 find the value of a setting by name\n\n"
-            << fg::yellow("options") << ":\n\n"
-            << "    -v, --verbose       output more information about actions taken\n\n"
-            << "see 'confidant help config <" << ul("action") << ">' for more information about a specific command\nand its' respective options."
-            << endl;
+        std::cout << fg::green(argz) << " " << ul("config") << ":\n\n"
+                  << "    view configuration settings\n\n"
+                  << fg::magenta("actions") << ":\n\n"
+                  << "    " << ul("dump") << "                display current configuration settings\n"
+                  << "    " << ul("get") << "                 find the value of a setting by name\n\n"
+                  << fg::yellow("options") << ":\n\n"
+                  << "    -v, --verbose       output more information about actions taken\n\n"
+                  << "see 'confidant help config <" << ul("action") << ">' for more information about a specific command\nand its' respective options."
+                  << std::endl;
     }
 namespace dump {
     void help(std::string_view argz) {
         using logger::ul;
-        cout << fg::green(argz) << " " << ul("config") << " " << ul("dump") << ":\n\n"
-             << "    display current configuration\n\n"
-             << fg::yellow("options") << ":\n\n"
-             << "    -f, --file " << ul("PATH") << "     specify a configuration file to operate on\n"
-             << "                        default: <current directory>/confidant.ucl\n\n"
-             << "    -v, --verbose       output more information about actions taken\n"
-             << endl;
+        std::cout << fg::green(argz) << " " << ul("config") << " " << ul("dump") << ":\n\n"
+                  << "    display current configuration\n\n"
+                  << fg::yellow("options") << ":\n\n"
+                  << "    -f, --file " << ul("PATH") << "     specify a configuration file to operate on\n"
+                  << "                        default: <current directory>/confidant.ucl\n\n"
+                  << "    -v, --verbose       output more information about actions taken\n"
+                  << std::endl;
     }
 };
 namespace get {
     void help(std::string_view argz) {
         using logger::ul;
-        cout << fg::green(argz) << " " << ul("config") << " " << ul("get") << ":\n\n"
-             << "    find a configuration value by name\n\n"
-             << fg::blue("arguments") << ":\n\n"
-             << "    " << ul("NAME") << "                the configuration setting to search for,\n"
-             << "                        you may search for nested values by using\n"
-             << "                        periods to traverse, e.g.: 'repository.url'\n\n"
-             << fg::yellow("options") << ":\n\n"
-             << "    -v, --verbose       output more information about actions taken\n"
-             << endl;
+        std::cout << fg::green(argz) << " " << ul("config") << " " << ul("get") << ":\n\n"
+                  << "    find a configuration value by name\n\n"
+                  << fg::blue("arguments") << ":\n\n"
+                  << "    " << ul("NAME") << "                the configuration setting to search for,\n"
+                  << "                        you may search for nested values by using\n"
+                  << "                        periods to traverse, e.g.: 'repository.url'\n\n"
+                  << fg::yellow("options") << ":\n\n"
+                  << "    -v, --verbose       output more information about actions taken\n"
+                  << std::endl;
     }
 };
 };
@@ -130,14 +117,14 @@ namespace get {
 namespace link {
 void help(std::string_view argz) {
     using logger::ul;
-    cout << fg::green(argz) << " " << ul("link") << ":\n\n"
-         << "    apply symlinks from your configuration file\n\n"
-         << fg::yellow("options") << ":\n\n"
-         << "    -f, --file " << ul("PATH") << "     specify the configuration file to operate on\n"
-         << "                        default: <current directory>/confidant.ucl\n\n"
-         << "    -d, --dry-run       show what actions " << logger::ital("would") << " be taken\n\n"
-         << "    -v, --verbose       output more information about actions taken\n"
-         << endl;
+    std::cout << fg::green(argz) << " " << ul("link") << ":\n\n"
+              << "    apply symlinks from your configuration file\n\n"
+              << fg::yellow("options") << ":\n\n"
+              << "    -f, --file " << ul("PATH") << "     specify the configuration file to operate on\n"
+              << "                        default: <current directory>/confidant.ucl\n\n"
+              << "    -d, --dry-run       show what actions " << logger::ital("would") << " be taken\n\n"
+              << "    -v, --verbose       output more information about actions taken\n"
+              << std::endl;
 }
     
 }; // END help::link
@@ -165,21 +152,21 @@ repository {
 # your files are handled
 links {
     nvim {
-        source: ${REPO}/.config/nvim/init.lua
+        source: ${repo}/.config/nvim/init.lua
         dest: ${XDG_CONFIG_HOME}/nvim/init.lua
     }
 
     # 'destdir' will reuse the basename of the source, resulting in
     # the full destination path being ${XDG_CONFIG_HOME}/fontconfig
     fontconfig {
-        source: ${REPO}/.config/fontconfig
+        source: ${repo}/.config/fontconfig
         destdir: ${XDG_CONFIG_HOME}
         # by default, type is 'file'
         type: directory
     }
     
     bashrc {
-        source: ${REPO}/.bashrc
+        source: ${repo}/.bashrc
         dest: ${HOME}/.bashrc
     }
     
@@ -191,7 +178,7 @@ links {
 # determined
 templates {
     config {
-        source: ${REPO}/.config/%{item}
+        source: ${repo}/.config/%{item}
         dest: ${XDG_CONFIG_HOME}/%{item}
         # each item will be substituted into the 'from' and 'to'
         # values, and then will be symlinked accordingly
@@ -202,9 +189,9 @@ templates {
         ]
     }
     # the resulting links would be:
-    # ${REPO}/.config/kitty/kitty.conf -> ${XDG_CONFIG_HOME}/kitty/kitty.conf
-    # ${REPO}/.config/fish/conf.d      -> ${XDG_CONFIG_HOME}/fish/conf.d
-    # ${REPO}/.config/fish/config.fish -> ${XDG_CONFIG_HOME}/fish/config.fish
+    # ${repo}/.config/kitty/kitty.conf -> ${XDG_CONFIG_HOME}/kitty/kitty.conf
+    # ${repo}/.config/fish/conf.d      -> ${XDG_CONFIG_HOME}/fish/conf.d
+    # ${repo}/.config/fish/config.fish -> ${XDG_CONFIG_HOME}/fish/config.fish
 }
 */)";
         return s;
@@ -218,10 +205,16 @@ templates {
 # to disable, set this to false.
 create-directories: true
 
-# the default verbosity level, before command-line options are parsed
+# the default verbosity level, before command-line options are parsed.
 # valid values:
 # [quiet, normal, info, debug, trace] or [0, 1, 2, 3, 4]
 log-level: normal
+
+# whether or not to use ansi escape sequences for colored and formatted 
+# command-line output, default is true. The `NO_COLOR` environment variable 
+# being present as anything other than an empty string will override a true
+# value here.
+color: true
 )";
 
     }
@@ -232,28 +225,28 @@ log-level: normal
             try {
                 fs::create_directories(parent_dir);
             } catch (const fs::filesystem_error& e) {
-                logger::error(PROJECT_NAME, "failed to create directory {}", parent_dir.string());
+                logger::error("failed to create directory {}", parent_dir.string());
                 std::cerr << e.what() << std::endl;
             }
-            logger::info(PROJECT_NAME, "created directory {}", parent_dir.string());
+            logger::info("created directory {}", parent_dir.string());
         }
         
-        if (!util::perms_to_write(parent_dir))
-            logger::fatal(PROJECT_NAME, 1, "no permission to write files to {}", parent_dir.string());
+        if (!util::hasperms(parent_dir.string()))
+            logger::fatal(1, "no permission to write files to {}", parent_dir.string());
         
         if (fs::exists(p)) {
-            logger::warn(PROJECT_NAME, "file {} already exists, not overwriting", p);
-            std::exit(0);
+            logger::warn("file {} already exists, not overwriting", logger::bolden(p));
+            return;
         }
         
         std::ofstream handle((fs::path(p)));
         if (!handle.is_open())
-            logger::fatal(PROJECT_NAME, 1, "failed to open {} for writing", p);
+            logger::fatal(1, "failed to open {} for writing", logger::bolden(p));
         
         handle << help::defaults::global_config();
         handle.close();
         
-        logger::info(PROJECT_NAME, "write configuration to file {}", util::unexpandhome(p));
+        logger::info("wrote configuration to file {}", logger::bolden(util::unexpandhome(p)));
     }
     
     void write_local_config(std::string_view dir) {
@@ -261,19 +254,19 @@ log-level: normal
         std::string outpath = std::format("{}/confidant.ucl", dir);
         
         if (fs::exists(outpath)) {
-             logger::warn(PROJECT_NAME, "file '{}' already exists, not overwriting.", outpath);
-             std::exit(1);
+             logger::warn("file {} already exists, not overwriting.", logger::bolden(outpath));
+             return;
         }
         
         std::ofstream handle(outpath);
         
         if (!handle.is_open())
-            logger::fatal(PROJECT_NAME, 1, "unable to open '{}' for writing", outpath);
+            logger::fatal(1, "unable to open {} for writing", logger::bolden(outpath));
         
         handle << help::defaults::local_config();
         handle.close();
         
-        logger::info(PROJECT_NAME, "wrote configuration to file {}", fs::relative(outpath).string());
+        logger::info("wrote configuration to file {}", logger::bolden(fs::relative(outpath).string()));
         
     }
 };

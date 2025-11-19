@@ -31,11 +31,11 @@ namespace ucl {
     }; // END ucl::var
 
     namespace get {
-        optional<bool> boolean(const ucl::Ucl& object, const std::string& key);
-        optional<int> integer(const ucl::Ucl& object, const std::string& key);
-        optional<string> str(const ucl::Ucl& object, const std::string& key);
-        optional<ucl::Ucl> list(const ucl::Ucl& object, const std::string& key);
-        optional<ucl::Ucl> node(const ucl::Ucl& object, const std::string& key);
+        std::optional<bool> boolean(const ucl::Ucl& object, const std::string& key);
+        std::optional<int> integer(const ucl::Ucl& object, const std::string& key);
+        std::optional<std::string> str(const ucl::Ucl& object, const std::string& key);
+        std::optional<ucl::Ucl> list(const ucl::Ucl& object, const std::string& key);
+        std::optional<ucl::Ucl> node(const ucl::Ucl& object, const std::string& key);
     };
     
     bool check(const ucl::Ucl& obj, const std::string& key);
@@ -49,15 +49,15 @@ namespace confidant {
         using ConfigValue = std::variant<
             bool,
             string,
-            vector<string>,
-            vector<confidant::config::link>,
-            vector<confidant::config::templatelink>,
+            std::vector<std::string>,
+            std::vector<confidant::config::link>,
+            std::vector<confidant::config::templatelink>,
             confidant::config::link,
             confidant::config::templatelink
         >;
         
-        optional<ConfigValue> get(const confidant::configuration& conf, string_view qry);
-        string formatconfigvalue(const ConfigValue& val);
+        std::optional<ConfigValue> get(const confidant::configuration& conf, std::string_view qry);
+        std::string formatconfigvalue(const ConfigValue& val);
         
         confidant::configuration serialize(std::string_view path, const confidant::settings& globals);
         namespace global {

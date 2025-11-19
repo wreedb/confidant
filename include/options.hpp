@@ -16,18 +16,21 @@ namespace options {
     namespace config {
         inline int verbosity = 0;
         inline bool help = false;
+        inline bool quiet = false;
     
         namespace dump {
             inline bool global = false;
             inline bool help = false;
             inline int verbosity = 0;
-            inline string file = fs::current_path().string();
+            inline bool quiet = false;
+            inline string file = fs::current_path().string() + "/confidant.ucl";
         };
     
         namespace get {
             inline bool global = false;
             inline bool help = false;
             inline int verbosity = 0;
+            inline bool quiet = false;
             inline string file = fs::current_path().string() + "/confidant.ucl";
             inline string name;
         };
@@ -38,6 +41,7 @@ namespace options {
         inline bool help = false;
         inline bool dryrun = false;
         inline int verbosity = 0;
+        inline bool quiet = false;
         inline string file = fs::current_path().string() + "/confidant.ucl";
     };
     
@@ -46,6 +50,7 @@ namespace options {
         inline int verbosity = 0;
         inline bool dryrun = false;
         inline bool help = false;
+        inline bool quiet = false;
     };
     
     inline bool version = false;
@@ -57,11 +62,13 @@ namespace options {
     namespace global {
         inline bool create_dirs = true;
         inline int verbosity = ansi::verbosity::normal;
-        inline confidant::settings defaults() {
-            return confidant::settings{
-                .create_dirs = create_dirs,
-                .loglevel = verbosity
-            };
-        }
+        inline bool color = true;
+        // inline confidant::settings defaults() {
+        //     return confidant::settings{
+        //         .create_dirs = create_dirs,
+        //         .loglevel = verbosity,
+        //         .color = color
+        //     };
+        // }
     };
 };

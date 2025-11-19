@@ -4,10 +4,13 @@
 
 #pragma once
 
+#include <format>
 #include <string>
 #include <string_view>
 #include <iostream>
 #include "util.hpp"
+#include "settings.hpp"
+#include "settings/global.hpp"
 
 using std::string;
 using std::string_view;
@@ -36,7 +39,7 @@ namespace ansi {
     std::string verbosity_literal(const int& v);
 
     inline bool useColor = util::hasenv("NO_COLOR") ? false : true;
-    inline int loglevel = ansi::verbosity::normal;
+    inline verbose loglevel = confidant::config::global::loglevel;
 
     constexpr std::string_view freset     = "\033[0m";
     constexpr std::string_view bold       = "\033[1m";
@@ -98,111 +101,111 @@ namespace confidant {
         std::string sthru(std::string_view str);
         std::string color(const int& num);
         
-        template <typename... Args>
-        void error(std::string_view argz, std::string_view msg, Args&&... fmt) {
-            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
-            std::cerr
-            << logging::color(31)
-            << argz
-            << logging::color(0)
-            << ": "
-            << fmtMsg
-            << "\n";
-        }
-
-        template <typename... Args>
-        void info (std::string_view argz, std::string_view msg, Args&&... fmt) {
-            if (ansi::loglevel == ansi::verbosity::quiet) return;
-            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
-            std::cout
-            << logging::color(34)
-            << argz
-            << logging::color(0)
-            << ": "
-            << fmtMsg
-            << "\n";
-        }
-
-        template <typename... Args>
-        void warn (std::string_view argz, std::string_view msg, Args&&... fmt) {
-            if (ansi::loglevel == ansi::verbosity::quiet) return;
-            if (ansi::loglevel < int(ansi::verbosity::normal)) return;
-            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
-            std::cout
-            << logging::color(33)
-            << argz
-            << logging::color(0)
-            << ": "
-            << fmtMsg
-            << std::endl;
-        }
-
-        template <typename... Args>
-        void warnextra (std::string_view argz, std::string_view msg, Args&&... fmt) {
-            if (ansi::loglevel == ansi::verbosity::quiet) return;
-            if (ansi::loglevel < ansi::verbosity::info) return;
-            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
-            std::cout
-            << logging::color(33)
-            << argz
-            << logging::color(0)
-            << ": "
-            << fmtMsg
-            << std::endl;
-        }
-
-        template <typename... Args>
-        void extra (std::string_view argz, std::string_view msg, Args&&... fmt) {
-            if (ansi::loglevel == ansi::verbosity::quiet) return;
-            if (ansi::loglevel < ansi::verbosity::debug) return;
-            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
-            std::cout
-            << logging::color(35)
-            << argz
-            << logging::color(0)
-            << ": "
-            << fmtMsg
-            << std::endl;
-        }
-
-        template <typename... Args>
-        [[noreturn]] void fatal(std::string_view argz, int exitCode, std::string_view msg, Args&&... fmt) {
-            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
-            std::cerr
-            << logging::color(31)
-            << argz
-            << logging::color(0)
-            << " (fatal): "
-            << fmtMsg
-            << std::endl;
-            std::exit(exitCode);
-        }
-
         namespace fg {
             
-            string black(string_view s);
-            string red(string_view s);
-            string green(string_view s);
-            string yellow(string_view s);
-            string blue(string_view s);
-            string magenta(string_view s);
-            string cyan(string_view s);
-            string white(string_view s);
+            std::string black(std::string_view s);
+            std::string red(std::string_view s);
+            std::string green(std::string_view s);
+            std::string yellow(std::string_view s);
+            std::string blue(std::string_view s);
+            std::string magenta(std::string_view s);
+            std::string cyan(std::string_view s);
+            std::string white(std::string_view s);
         
         }; // END confidant::logging::fg
         
         namespace bg {
             
-            string black(string_view s);
-            string red(string_view s);
-            string green(string_view s);
-            string yellow(string_view s);
-            string blue(string_view s);
-            string magenta(string_view s);
-            string cyan(string_view s);
-            string white(string_view s);
+            std::string black(std::string_view s);
+            std::string red(std::string_view s);
+            std::string green(std::string_view s);
+            std::string yellow(std::string_view s);
+            std::string blue(std::string_view s);
+            std::string magenta(std::string_view s);
+            std::string cyan(std::string_view s);
+            std::string white(std::string_view s);
         
         }; // END confidant::logging::bg
+        
+        template <typename... Args>
+        void pretty(std::string_view msg, Args&&... fmt) {
+            if (confidant::config::global::loglevel == verbose::quiet) return;
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cout
+            << fg::magenta(">>>")
+            << " "
+            << fmtMsg
+            << "\n";
+        }
+        
+        template <typename... Args>
+        void error(std::string_view msg, Args&&... fmt) {
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cerr
+            << fg::red("error")
+            << ": "
+            << fmtMsg
+            << "\n";
+        }
+
+        template <typename... Args>
+        void info (std::string_view msg, Args&&... fmt) {
+            if (confidant::config::global::loglevel == verbose::quiet) return;
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cout
+            << fg::blue("info")
+            << ": "
+            << fmtMsg
+            << "\n";
+        }
+
+        template <typename... Args>
+        void warn (std::string_view msg, Args&&... fmt) {
+            if (confidant::config::global::loglevel == verbose::quiet) return;
+            if (confidant::config::global::loglevel < verbose::normal) return;
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cout
+            << fg::yellow("warn")
+            << ": "
+            << fmtMsg
+            << std::endl;
+        }
+
+        template <typename... Args>
+        void warnextra (std::string_view msg, Args&&... fmt) {
+            if (confidant::config::global::loglevel == verbose::quiet) return;
+            if (confidant::config::global::loglevel < verbose::info) return;
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cout
+            << fg::yellow("warn")
+            << ": "
+            << fmtMsg
+            << std::endl;
+        }
+
+        template <typename... Args>
+        void extra (std::string_view msg, Args&&... fmt) {
+            if (confidant::config::global::loglevel == verbose::quiet) return;
+            if (confidant::config::global::loglevel < verbose::debug) return;
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cout
+            << fg::cyan("debug")
+            << ": "
+            << fmtMsg
+            << std::endl;
+        }
+
+        template <typename... Args>
+        [[noreturn]] void fatal(int exitCode, std::string_view msg, Args&&... fmt) {
+            std::string fmtMsg = std::vformat(msg.data(), std::make_format_args(fmt...));
+            std::cerr
+            << fg::red("fatal")
+            << ": "
+            << fmtMsg
+            << std::endl;
+            std::exit(exitCode);
+        }
+
         
     }; // END confidant::logging
 

@@ -4,14 +4,15 @@
 
 #pragma once
 
-#include "logging.hpp"
-#include <filesystem>
+// #include <filesystem>
 #include <vector>
 #include <string>
 #include <map>
 #include <optional>
 #include <iostream>
 #include <utility>
+
+#include "settings.hpp"
 
 using std::cout;
 using std::cerr;
@@ -21,47 +22,17 @@ using std::vector;
 using std::map;
 using std::pair;
 
-namespace fs = std::filesystem;
+// namespace fs = std::filesystem;
 
 namespace confidant {
 
     // represents the global config file
-    struct settings {
-        bool create_dirs = true; // overridden by the local setting
-        int loglevel = ansi::verbosity::normal; // increases base-level verbosity, before cli options
-    };
-
-    namespace config {
-    
-        enum linkType { directory, file };
-
-        struct repository {
-            std::string url;
-        };
-
-        struct link {
-            std::string name;
-            fs::path source;
-            fs::path destination;
-            confidant::config::linkType type;
-        };
-
-        struct templatelink {
-            std::string name;
-            fs::path source;
-            fs::path destination;
-            std::vector<std::string> items;
-        };
-
-    }; // END confidant::config
-
-    struct configuration {
-        bool create_dirs;
-        config::repository repo;
-        vector<config::link> links;
-        vector<config::templatelink> templates;
-    };
-
+    // struct settings {
+    //     bool create_dirs = true; // overridden by the local setting
+    //     int loglevel = ansi::verbosity::normal; // increases base-level verbosity, before cli options
+    //     bool color = true;
+    // };
+    // 
     namespace debug {
         
         namespace global {

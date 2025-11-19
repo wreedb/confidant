@@ -54,34 +54,35 @@ repository {
     url: https://github.com/user/dotfiles.git
 }
 
-link {
+links {
     nvim {
         type: directory
-        source: ${REPO}/.config/nvim
-        destdir: ${XDG_CONFIG_HOME}
+        source: ${repo}/.config/nvim
+        destdir: ${xdg_config_home}
     }
     
     emacs {
-        source: ${REPO}/.config/emacs/init.el
-        dest: ${XDG_CONFIG_HOME}/emacs/init.el
+        source: ${repo}/.config/emacs/init.el
+        dest: ${xdg_config_home}/emacs/init.el
     }
 }
 
-link-from {
-    from: ${REPO}/.config/%{item}
-    to: ${HOME}/%{item}
-    items: [
-        .bashrc
-        .profile
-        .config/zsh
-        .config/fontconfig/fonts.conf
-    ]
+templates: {
+    config: {
+        from: ${repo}/.config/%{item}
+        to: ${home}/%{item}
+        items: [
+            .bashrc
+            .profile
+            .config/zsh
+            .config/fontconfig/fonts.conf
+        ]
+    }
 }
 ```
 With a configuration file (like the above example), you would run:
 ```
 confidant link
-confidant link-from
 ```
 To apply the configuration. The above example would result in the following 
 (where `${REPO}` expands to the repository directory you've made):
@@ -101,5 +102,5 @@ many files using a shared prefix, such as `${HOME}`, where the `%{item}` is
 substituted for each name in `items`.
 
 If you are unsure about your configuration, you may issue the `-d, --dry-run` 
-flags to both `link` and `link-from` on the command line to see what actions
-would be taken before applying them.
+flags to `link` on the command line to see what actions *would* be taken 
+before applying them.

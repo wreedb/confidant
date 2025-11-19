@@ -36,3 +36,4 @@ changelog:
 completions:
     complgen misc/completions/confidant.usage --bash misc/completions/bash/confidant.bash
     complgen misc/completions/confidant.usage --zsh  misc/completions/zsh/_confidant
+    complgen misc/completions/confidant.usage --fish misc/completions/fish/confidant.fish

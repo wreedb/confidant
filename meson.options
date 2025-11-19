@@ -22,3 +22,8 @@ option('build-tests',
        type: 'boolean',
        value: false,
        description: 'build tests for confidant')
+
+option('man-pages',
+       type: 'feature',
+       value: 'auto',
+       description: 'build and install manual pages, requires scdoc')

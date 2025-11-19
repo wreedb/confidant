@@ -1,0 +1,152 @@
+confidant.ucl(5) "Confidant @VERSION@"
+; vim:ft=scdoc
+# NAME
+
+confidant.ucl - local configuration file for *Confidant*
+
+# Synopsis
+
+_confidant.ucl_
+
+# DESCRIPTION
+
+_confidant.ucl_ is read when *Confidant* is invoked, unless otherwise specified
+on the command-line with *-f* or *--file*.
+
+The format comes from *libucl*, and consists of up to three nodes
+
+# REPOSITORY
+
+[[ *field*
+:[ *type*
+:[ *default*
+:[ *required?*
+|  _url_
+:  string
+:  empty
+:  *false*
+
+# LINKS
+
+[[ *field*
+:[ *type*
+:[ *default*
+:[ *required?*
+|  _source_
+:  path
+:  none
+:  *true*
+|  _dest_
+:  path
+:  none
+:  mutually exclusive with _destdir_
+|  _destdir_
+:  path
+:  none
+:  mutually exclusive with _dest_
+|  _type_
+:  string
+:  file
+:  only for directory symlinks
+
+# TEMPLATES
+
+[[ *field*
+:[ *type*
+:[ *default*
+:[ *required?*
+|  _source_
+:  path
+:  none
+:  *true*
+|  _dest_
+:  path
+:  none
+:  *true*
+|  _items_
+:  list of paths
+:  none
+:  *true*
+
+
+# VARIABLES
+
+Other than _REPO_, all of the following are determined by reading the
+environment first, before falling back to the values displayed here.
+All of these variables may be written fully in upper or lower case.
+
+[[ *name*
+:[ *value*
+|  REPO
+:  The directory your *confidant.ucl* is in
+|  XDG_CONFIG_HOME
+:  ${HOME}/.config
+|  XDG_CACHE_HOME
+:  ${HOME}/.cache
+|  XDG_STATE_HOME
+:  ${HOME}/.local/state
+|  XDG_DATA_HOME
+:  ${HOME}/.local/share
+|  XDG_RUNTIME_DIR
+:  /run/user/$(id -u)
+|  USER
+:  your username
+|  HOME
+:  your home directory
+
+# EXAMPLE
+
+```
+repository: {
+	url: https://codeberg.org/wreedb/config.git
+}
+
+links: {
+	nvim: {
+		source: ${repo}/.config/nvim
+		dest: ${xdg_config_home}/.config/nvim
+		type: directory
+	}
+}
+
+templates: {
+	home: {
+		source: ${repo}/%{item}
+		dest: ${home}/%{item}
+		items: [
+			.bashrc
+			.profile
+		]
+	}
+}
+```
+
+# BUGS
+
+Please report any issues to the project's issue page at ++
+_https://codeberg.org/wreedb/confidant/issues_, or contact ++
+the author via email using the address listed in the *AUTHORS* ++
+section.
+
+# AUTHORS
+
+*Confidant* is written and maintained by *Will Reed* ++
+_<wreed@disroot.org>_. The source code of *Confidant* ++
+is available at _https://codeberg.org/wreedb/confidant_.
+
+# COPYRIGHT
+
+Copyright © @YEAR@ Will Reed. License GPLv3+:++
+GNU General Public License version 3 or later++
+See _https://gnu.org/licenses/gpl-3.0.html_ or the _LICENSE_ file included in
+the source repository for more information.++
+This is free software: you are free to change and redistribute it.++
+There is NO WARRANTY, to the extent permitted by law.
+
+# VERSION
+
+*Confidant* version @VERSION@, released in @MONTH@ @YEAR@
+
+# SEE ALSO
+
+	_confidant_(1)

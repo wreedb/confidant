@@ -43,6 +43,35 @@ if 'zsh' in get_option('shell-completions')
     install_data('misc/completions/fish/confidant.fish', install_dir: get_option('datadir') / 'fish' / 'vendor_completions.d')
 endif
 
+manpages_feat = get_option('man-pages')
+
+scdoc = find_program('scdoc', required: manpages_feat)
+
+date_month = run_command('date', '+%B', check: true).stdout().strip()
+date_year = run_command('date', '+%Y', check: true).stdout().strip()
+
+if scdoc.found() and manpages_feat.enabled()
+    manconf = configuration_data()
+    manconf.set('MONTH', date_month)
+    manconf.set('YEAR', date_year)
+    manconf.set('VERSION', meson.project_version())
+
+    confidant_ucl_5 = configure_file(
+        input: 'doc/man/confidant.ucl.5.scd.in',
+        output: 'confidant.ucl.5.scd',
+        configuration: manconf)
+
+    custom_target(
+        'confidant.ucl.5',
+        input: confidant_ucl_5,
+        output: 'confidant.ucl.5',
+        command: [scdoc],
+        feed: true,
+        capture: true,
+        install: true,
+        install_dir: get_option('mandir') / 'man5')
+
+endif
 
 cli11_dep = dependency(
     'CLI11',
@@ -57,6 +86,9 @@ libucl_dep = dependency(
 )
 
 sources = files(
+    'src/parse.cpp',
+    'src/settings.cpp',
+    'src/settings/global.cpp',
     'src/xdg.cpp',
     'src/util.cpp',
     'src/ucl.cpp',

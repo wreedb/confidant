@@ -21,7 +21,6 @@ validation:
 
 extra_css:
 - styles/main.css
-- styles/ucl.css
 
 theme:
   name: material

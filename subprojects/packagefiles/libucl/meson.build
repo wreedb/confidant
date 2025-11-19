@@ -17,13 +17,10 @@ libucl_sources = files(
     'src/ucl_util.c',
 )
 
-install_headers(['include/ucl.h', 'include/ucl++.h'])
-
 libucl = library(
-    'libucl',
+    'ucl',
     libucl_sources,
-    include_directories: incdirs,
-    install: true)
+    include_directories: incdirs)
 
 libucl_dep = declare_dependency(
     link_with: libucl,

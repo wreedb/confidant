@@ -35,14 +35,17 @@
 
           meta = {
             description = "Your configuration pal and confidant";
-            homepage = "https://codeberg.org/wreedb/confidant";
+            homepage = "https://wreedb.github.io/confidant";
             license = lib.licenses.gpl3Plus;
           };
 
           inherit nativeBuildInputs buildInputs;
 
           mesonBuildType = "release";
-          mesonFlags = ["-D strip=true"];
+          mesonFlags = [
+            "-D man-pages=enabled"
+            "-D strip=true"
+          ];
 
         };
 

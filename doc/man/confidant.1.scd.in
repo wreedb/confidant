@@ -1,0 +1,121 @@
+confidant(1) "Confidant @VERSION@"
+; vim:ft=scdoc
+# NAME
+
+confidant - Your configuration pal and _confidant_
+
+# SYNOPSIS
+
+*confidant* [_action_] [..._options_]
+
+# DESCRIPTION
+
+*confidant* is a configuration file (or _dotfile_) manager, designed to ++
+be focused, fast and easy to use; combining the practical ++ 
+symlink-based approach of _GNU Stow_ with simple (but powerful) templating ++
+syntax inspired by _Ansible_.
+
+# SUBCOMMANDS
+
+*init* [_path_]
+	Initialize your dotfiles repository with a documented sample ++
+	configuration file. The default is to operate on the current ++
+	working directory.
+
+*link* [_-f_, _--file_, _-d_, _--dry-run_]
+	Apply symlinks from your configuration file. To test and see ++
+	what actions _would_ be taken, pass _-d_ or _--dry-run_. To specify ++
+	a file other than the default (_./confidant.ucl_), pass the _-f_ ++
+	or _--file_ options with the path to your desired file.
+
+*config*
+	View and introspect your configuration
+
+*config dump* [_-g_, _--global_]
+	Pretty-print your current configuration in full. To print out ++
+	your global configuration, pass the _-g_ or _--global_ options.
+
+*config get* _name_
+	Query your configuration file for the value of specific fields.++
+	The _name_ may use periods to traverse nested fields, such as ++
+	_repository.url_ or _links.foo.source_.
+
+*help* [_subcommand_]
+	Display general help, or _subcommand_ specific help info by ++
+	passing the name of a subcommand as an argument, for example++
+	*confidant help config get*.
+
+*usage*
+	Display brief command-line usage info.
+
+*version*
+	Display version info.
+
+# OPTIONS
+These options may be passed anywhere in the command-line
+
+*-v, --verbose*
+	Overrides the global configuration setting to set _log-level_++
+	to *trace*, outputting full debugging messages for all actions.
+
+*-q, --quiet*
+	Suppress all (non-fatal) messages from being displayed.
+
+*-h, --help*
+	Display help information, may be _subcommand_ specific when ++
+	passed after a subcommand.
+
+
+# ENVIRONMENT
+
+*NO_COLOR*
+	When present and set to any value other than an empty string,++
+	overrides your global _color_ setting, and disable the use of++
+	any ansi escape sequences for color and/or text formatting. See++
+	_https://no-color.org_ for more information about this community++
+	standard.
+
+
+# EXAMPLES
+
+Finding the value of the _links_ node in your local configuration
+
+```
+confidant config get links
+```
+
+Testing your local configuration with a dry-run
+
+```
+confidant link --dry-run
+```
+
+# BUGS
+
+Please report any issues to the project's issue page at ++
+_https://codeberg.org/wreedb/confidant/issues_, or contact ++
+the author via email using the address listed in the *AUTHORS* ++
+section.
+
+# AUTHORS
+
+*Confidant* is maintained by *Will Reed* _<wreed@disroot.org>_.++
+Source code is available at _https://codeberg.org/wreedb/confidant_,++
+and online documentation at _https://wreedb.github.io/confidant_.
+
+# COPYRIGHT
+
+Copyright © @YEAR@ Will Reed. License GPLv3+:++
+GNU General Public License version 3 or later.++
+See _https://gnu.org/licenses/gpl-3.0.html_ or the _LICENSE.md_ ++
+file included in the source repository for more information.++
+This is free software: you are free to change and redistribute it.++
+There is NO WARRANTY, to the extent permitted by law.
+
+# VERSION
+
+*Confidant* version @VERSION@, released in @MONTH@ @YEAR@
+
+# SEE ALSO
+
+	_confidant.ucl_(5), _stow_(8), _ansible-playbook_(1), _ln_(1)

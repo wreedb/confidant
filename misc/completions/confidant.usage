@@ -1,5 +1,6 @@
 confidant ( ( -h | --help ) "help information"
           | ( -V | --version ) "version information"
+          | ( -q | --quiet ) "suppress most messages"
           | ( init "initialize a confidant repository" ( -f <PATH> | --file <PATH> ) "specify a file path" ... <DIRECTORY> ... )
           | ( config "view configuration"
             ( ( get "find a value by name" [( -f <PATH> | --file <PATH> )] <NAME> )

@@ -4,8 +4,11 @@ SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
+Building
+========
+
 Requirements
-==================
+------------
 **Confidant** uses the [Meson](https://mesonbuild.com) build system, and  
 therefore also requires [Ninja](https://ninja-build.org).
 
@@ -20,8 +23,6 @@ You may want to add the following argument to `meson setup` or
 -D use-libcxx=true
 ```
 
-Building
-========
 ```sh
 git clone https://codeberg.org/wreedb/confidant.git && cd confidant
 
@@ -38,10 +39,10 @@ confidant version
 
 Runtime dependencies
 ====================
+
 - [libucl](https://github.com/vstakhov/libucl)
 
 Meson will attempt to build *libucl* on-demand if not found on your system.
-
 
 Flake
 =====

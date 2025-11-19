@@ -146,7 +146,7 @@ if get_option('build-tests')
             n,
             dependencies: deps,
             include_directories: ['include'],
-            link_with: support_lib)
+            link_with: confidant_lib)
         test(name, test_exe)
     endforeach
 

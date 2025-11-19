@@ -49,13 +49,27 @@ namespace confidant {
                 
                 if (fs::exists(destpath)) {
                     if (fs::equivalent(sourcepath, destpath)) {
-                        say::warn("skipping {}, already linked",
+                        say::warnextra("skipping {}, already linked",
                             say::bolden(udeststr));
                         continue;
                     }
                     say::warn("destination {} already exists, skipping",
                         say::bolden(udeststr));
                     continue;
+                
+                } else if (fs::is_symlink(destpath) && !fs::exists(destpath)) {
+                    // it's a broken symlink, remove it
+                    if (!dry) {
+                        try {
+                            fs::remove(destpath);
+                        } catch (const fs::filesystem_error& e) {
+                            say::error("failed to remove broken symlink at {}", say::bolden(deststr));
+                            std::cout << e.what() << std::endl;
+                            std::exit(1);
+                        }
+                    } else {
+                        say::warnextra("removing broken symlink at {}", say::bolden(deststr));
+                    }
                 }
                 
                 if (!fs::exists(destpath.parent_path())) {
@@ -156,7 +170,7 @@ namespace confidant {
             if (fs::exists(destpath)) {
                 // if the source and dest are the same file, e.g. the link was (likely) already created by us
                 if (fs::equivalent(sourcepath, destpath)) {
-                    say::warn("skipping {}, already linked",
+                    say::warnextra("skipping {}, already linked",
                         say::bolden(udeststr));
                     continue;
                 }
@@ -165,6 +179,20 @@ namespace confidant {
                 say::warn("destination {} already exists and is not identical to source, skipping",
                     say::bolden(udeststr));
                 continue;
+                
+            } else if (fs::is_symlink(destpath) && !fs::exists(destpath)) {
+                // it's a broken symlink, remove it
+                if (!dry) {
+                    try {
+                        fs::remove(destpath);
+                    } catch (const fs::filesystem_error& e) {
+                        say::error("failed to remove broken symlink at {}", say::bolden(deststr));
+                        std::cout << e.what() << std::endl;
+                        std::exit(1);
+                    }
+                } else {
+                    say::warnextra("removing broken symlink at {}", say::bolden(deststr));
+                }
             }
             
             if (!fs::exists(destpath.parent_path())) {
@@ -249,7 +277,7 @@ namespace confidant {
             }
             
             // the file was linked
-            say::pretty("linked {}", udeststr);
+            say::pretty("linked {}", say::bolden(udeststr));
         }
     
         say::extra("created {} normal links", say::bolden(std::to_string(linksdone)));

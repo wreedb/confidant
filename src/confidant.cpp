@@ -307,7 +307,7 @@ namespace confidant {
                 std::println("{}:", say::fg::blue("links"));
                 for (int n = 0; n < numlinks; n++) {
                     std::println("- {}: {}", say::fg::blue("name"), conf.links.at(n).name);
-                    std::println("  {}: {}", say::fg::blue("source"), conf.links.at(n).name);
+                    std::println("  {}: {}", say::fg::blue("source"), conf.links.at(n).source.string());
                     std::println("  {}: {}", say::fg::blue("destination"), conf.links.at(n).destination.string());
                     switch (conf.links.at(n).type) {
                         case confidant::config::linkType::file:

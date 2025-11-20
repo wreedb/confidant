@@ -4,6 +4,28 @@ SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 # Changelog
+## [v0.1.1] - 2025-11-19
+
+
+### Changed
+
+-  Added section 1 manual page
+
+-  Added CHANGELOG post 0.1.0, update install.md for site v.s. repo
+
+-  REUSE upkeep
+
+-  Update nix flake to include manpages, add man(1) page to meson.build
+
+-  Fixed some formatting for the mkdocs site
+
+-  Bump to 0.1.1
+
+
+### Fixed
+
+-  Correctly handle broken symlink destination paths
+
 ## [v0.1.0] - 2025-11-19
 
 

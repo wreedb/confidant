@@ -3,10 +3,9 @@ Installation
 
 Head to the [releases page](https://codeberg.org/wreedb/confidant/releases) and grab the latest binary, currently only 
 AMD64 (or 86_64 if you *love* underscores), are provided in binary form. The 
-`-static` option is the simplest, since it has no runtime dependencies. The 
-`.package.tar.xz` on the other hand contains the static binary, shell 
-completions and manual page, which may be very useful; especially the 
-completions.
+`-static` option is the simplest, since it has no runtime dependencies. You 
+may also be interested in the shell completions and manual pages, which are 
+also available to download.
 
 Manual Installation
 -------------------

@@ -6,8 +6,7 @@
 
 #include <cstdlib>
 #include <string>
-
-#include "settings.hpp"
+#include "util.hpp"
 
 inline bool usecolor = []() {
     char* value = std::getenv("NO_COLOR");
@@ -21,10 +20,18 @@ inline bool usecolor = []() {
 namespace confidant {
     namespace config {
         namespace global {
-            confidant::settings defaults();
-            inline bool color = defaults().color;
-            inline bool createdirs = defaults().createdirs;
-            inline verbose loglevel = defaults().loglevel;
+            struct settings {
+                bool color = true;
+                bool createdirs = true;
+                util::verbose loglevel = util::verbose::normal;
+            };
+            
+            // confidant::settings defaults();
+            inline bool color = true;
+            inline bool createdirs = true;
+            inline util::verbose loglevel = util::verbose::normal;
+            
+            confidant::config::global::settings serialize(std::string_view path);
         }; // END confidant::config::global
     }; // END confidant::config
 }; // END confidant

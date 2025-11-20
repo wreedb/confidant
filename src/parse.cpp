@@ -12,7 +12,6 @@
 #include <format>
 #include <print>
 
-#include "confidant.hpp"
 #include "util.hpp"
 
 #include "parse.hpp"
@@ -70,7 +69,7 @@ namespace ucl {
                 return std::nullopt;
         }
         
-        std::optional<string> str(const ucl::Ucl& object, const std::string& key) {
+        std::optional<std::string> str(const ucl::Ucl& object, const std::string& key) {
             if (object.lookup(key).type() == ucl::String)
                 return object.lookup(key).string_value();
             else

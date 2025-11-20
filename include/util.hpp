@@ -11,7 +11,17 @@
 #include <filesystem>
 
 namespace util {
-    std::vector<std::string_view> split(std::string_view sv, char delimiter = '.');
+    
+    enum verbose : int {
+        quiet = 0,
+        normal = 1,
+        info = 2,
+        debug = 3,
+        trace = 4
+    };
+    std::string verboseliteral(const verbose& v);
+    std::string substitute(const std::string &tmpl, const std::string &item);
+    std::vector<std::string_view> split(std::string_view sv);
     bool hasperms(std::string_view p);
     std::string stripargz(const std::string& arg);
     std::optional<std::string> getenv(const std::string& name);

@@ -10,17 +10,50 @@
 #include <ranges>
 #include <string_view>
 
+#include "msg.hpp"
+#include "util.hpp"
+
 namespace fs = std::filesystem;
 using std::vector;
 using std::string;
 using std::string_view;
 
-
 namespace util {
+    
+    std::string verboseliteral(const verbose& v) {
+        switch (v) {
+            case verbose::quiet:
+                return "quiet";
+            case verbose::normal:
+                return "normal";
+            case verbose::info:
+                return "info";
+            case verbose::debug:
+                return "debug";
+            case verbose::trace:
+                return "trace";
+            default:
+                msg::fatal("log-level {} is invalid!", int(v));
+        }
+        
+    }
 
+    std::string substitute(const std::string& tmpl, const std::string& item) {
+        const std::string placeholder = "%{item}";
+        std::string result = tmpl;
+        
+        size_t pos = 0;
+        while ((pos = result.find(placeholder, pos)) != std::string::npos) {
+            result.replace(pos, placeholder.length(), item);
+            pos += item.length();
+        }
+        return result;
+    }
 
-    std::vector<std::string_view> split(std::string_view sv, char delimiter = '.') {
+    std::vector<std::string_view> split(std::string_view sv) {
         std::vector<std::string_view> result;
+        
+        char delimiter = '.';
         
         size_t start = 0;
         size_t end = sv.find(delimiter);
@@ -93,9 +126,9 @@ namespace util {
     }
     
     bool usecolorp() {
-        auto optEnvNoColor = util::getenv("NO_COLOR");
-        if (!optEnvNoColor) return true;
-        else if (optEnvNoColor->empty()) return true;
+        std::optional<std::string> envnocolor = util::getenv("NO_COLOR");
+        if (!envnocolor) return true;
+        else if (envnocolor->empty()) return true;
         else return false;
     }
 

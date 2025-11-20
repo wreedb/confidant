@@ -7,28 +7,28 @@
 #include <filesystem>
 #include <CLI/CLI.hpp>
 
-#include "settings.hpp"
 #include "settings/global.hpp"
-#include "ucl.hpp"
-#include "parse.hpp"
+#include "settings/local.hpp"
+
+#include "actions/get.hpp"
+#include "actions/dump.hpp"
+#include "actions/link.hpp"
+
 #include "util.hpp"
-#include "confidant.hpp"
-#include "logging.hpp"
 #include "help.hpp"
 #include "options.hpp"
+
+#include "fmt.hpp"
+#include "msg.hpp"
+
 #include "config.hpp"
 
-namespace say = confidant::logging;
 namespace fs = std::filesystem;
-
-
 
 const static bool initusecolor = util::usecolorp();
 
 int main(int argc, char *argv[]) {
 
-    if (!initusecolor) confidant::config::global::color = false;
-    
     std::string argz;
 
     if (argc > 0)
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
             return 0;
             
         } else if (topic == "version") {
-            std::println("{}: version {}", say::fg::yellow(PROJECT_NAME), PROJECT_VERSION);
+            std::println("{}: version {}", fmt::fg::yellow(PROJECT_NAME), PROJECT_VERSION);
             return 0;
             
         } else if (topic == "config") {
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
             help::config::help(argz);
             return 0;
         } else {
-            std::println("help topic {} is not recognized", say::bolden(topic));
+            std::println("help topic {} is not recognized", fmt::bolden(topic));
             return 1;
         }
     }
@@ -83,16 +83,21 @@ int main(int argc, char *argv[]) {
     if (!fs::exists(help::defaults::global_config_path()))
         help::defaults::write_global_config(help::defaults::global_config_path());
     
-    confidant::settings settings = confidant::config::global::serialize(help::defaults::global_config_path());
+    confidant::config::global::settings globals = confidant::config::global::serialize(help::defaults::global_config_path());
     
     CLI::App args{"your configuration confidant"};
     argv = args.ensure_utf8(argv);
     args.set_help_flag();
     args.set_version_flag();
 
-    confidant::config::global::loglevel = settings.loglevel;
-    confidant::config::global::color = settings.color;
-    confidant::config::global::createdirs = settings.createdirs;
+    confidant::config::global::loglevel = globals.loglevel;
+    
+    if (!initusecolor)
+        confidant::config::global::color = false;
+    else
+        confidant::config::global::color = globals.color;
+    
+    confidant::config::global::createdirs = globals.createdirs;
     
     args.add_flag("-v,--verbose", options::verbosity);
     args.add_flag("-V,--version", options::version);
@@ -139,14 +144,13 @@ int main(int argc, char *argv[]) {
     
     // if --quiet, always be quiet, otherwise follow config setting;
     // if --verbose, set to max verbosity, otherwise follow config setting;
-    
     if (options::quiet ||
         options::config::quiet ||
         options::init::quiet ||
         options::link::quiet ||
         options::config::dump::quiet ||
         options::config::get::quiet) {
-        confidant::config::global::loglevel = verbose::quiet;
+        confidant::config::global::loglevel = util::verbose::quiet;
     } else {
         int sumverbosity =
             ( options::verbosity
@@ -157,11 +161,12 @@ int main(int argc, char *argv[]) {
             + options::link::verbosity);
         
         if (sumverbosity > 0)
-            confidant::config::global::loglevel = verbose::trace;
+            confidant::config::global::loglevel = util::verbose::trace;
     }
     
+    
     if (options::version) {
-        std::println("{}: version {}", say::fg::yellow(PROJECT_NAME), PROJECT_VERSION);
+        std::println("{}: version {}", fmt::fg::yellow(PROJECT_NAME), PROJECT_VERSION);
         return 0;
     }
     
@@ -181,7 +186,7 @@ int main(int argc, char *argv[]) {
         }
         
         if (options::init::dryrun) {
-            std::println("writing default configuration to: {}/confidant.ucl", options::init::path);
+            msg::pretty("wrote sample config to {}", fmt::bolden(fs::relative(options::init::path).string()));
             return 0;
         
         } else {
@@ -190,64 +195,67 @@ int main(int argc, char *argv[]) {
         }
     
     } else if (args.got_subcommand(cmdLink)) {
+        // link [--help,-h]
         if (options::link::help) {
             help::link::help(argz);
             return 0;
         }
         
-        confidant::configuration conf = confidant::config::local::serialize(options::link::file, settings);
-        
-        int ecode_link = confidant::link(conf, options::link::dryrun);
-        int ecode_linktemplate = confidant::linktemplate(conf, options::link::dryrun);
-        if (ecode_link + ecode_linktemplate >= 1)
-            return 1;
-        else
-            return 0;
+        confidant::config::local::settings conf = confidant::config::local::serialize(options::link::file, globals);
+        int ecode_link = confidant::actions::link::linknormal(conf, globals, options::link::dryrun);
+        if (ecode_link != 0) return ecode_link;
+        int ecode_linktemplate = confidant::actions::link::linktemplate(conf, globals, options::link::dryrun);
+        if (ecode_linktemplate != 0) return ecode_link;
+        return 0;
         
     } else if (args.got_subcommand(cmdVersion)) {
-        std::println("{}: version {}", say::fg::yellow(PROJECT_NAME), PROJECT_VERSION);
+        std::println("{}: version {}", fmt::fg::yellow(PROJECT_NAME), PROJECT_VERSION);
         return 0;
     
     } else if (args.got_subcommand(cmdConfig)) {
+        
         if (options::config::help) {
+            // config --help
             help::config::help(argz);
             return 0;
         }
         
         if (cmdConfig->got_subcommand(cmdConfig_get)) {
             if (options::config::get::help) {
+                // config get --help
                 help::config::get::help(argz);
                 return 0;
             }
-            auto conf = confidant::config::local::serialize(options::config::get::file, settings);
-            optional<confidant::config::ConfigValue> results = confidant::config::get(conf, options::config::get::name);
+            confidant::config::local::settings conf = confidant::config::local::serialize(options::config::get::file, globals);
+            std::optional<confidant::actions::get::value> results = confidant::actions::get::get(conf, options::config::get::name);
             if (!results) {
-                say::error("failed to find configuration value for {}",
-                    say::bolden(options::config::get::name));
+                msg::error("failed to find configuration value for {}",
+                    fmt::bolden(options::config::get::name));
                 return 1;
             }
-            cout << confidant::config::formatconfigvalue(results.value()) << std::endl;
+            std::cout << confidant::actions::get::formatvalue(results.value()) << std::endl;
             return 0;
         }
         
         if (cmdConfig->got_subcommand(cmdConfig_dump)) {
             if (options::config::dump::help) {
+                // config dump --help
                 help::config::dump::help(argz);
                 return 0;
             }
             
             if (options::config::dump::global) {
-                confidant::debug::global::dumpConfig(settings);
+                // config dump [--global,-g]
+                confidant::actions::dump::global(globals);
                 return 0;
             }
             
-            say::pretty("dumping {}", util::unexpandhome(options::config::dump::file));
-            confidant::debug::dumpConfig
-                (confidant::config::local::serialize(options::config::dump::file, settings));
+            msg::pretty("dumping {}", util::unexpandhome(options::config::dump::file));
+            confidant::actions::dump::local(confidant::config::local::serialize(options::config::dump::file, globals));
             return 0;
         
         } else {
-            say::error("unknown subcommand");
+            msg::error("unknown subcommand");
             help::config::help(argz);
             return 1;
         }

@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "confidant.hpp"
-#include "logging.hpp"
 #include <string>
 #include <filesystem>
+
+#include "util.hpp"
 
 namespace fs = std::filesystem;
 
@@ -23,7 +23,7 @@ namespace options {
             inline bool help = false;
             inline int verbosity = 0;
             inline bool quiet = false;
-            inline string file = fs::current_path().string() + "/confidant.ucl";
+            inline std::string file = fs::current_path().string() + "/confidant.ucl";
         };
     
         namespace get {
@@ -31,8 +31,8 @@ namespace options {
             inline bool help = false;
             inline int verbosity = 0;
             inline bool quiet = false;
-            inline string file = fs::current_path().string() + "/confidant.ucl";
-            inline string name;
+            inline std::string file = fs::current_path().string() + "/confidant.ucl";
+            inline std::string name;
         };
     
     };
@@ -42,11 +42,11 @@ namespace options {
         inline bool dryrun = false;
         inline int verbosity = 0;
         inline bool quiet = false;
-        inline string file = fs::current_path().string() + "/confidant.ucl";
+        inline std::string file = fs::current_path().string() + "/confidant.ucl";
     };
     
     namespace init {
-        inline string path = fs::current_path().string();
+        inline std::string path = fs::current_path().string();
         inline int verbosity = 0;
         inline bool dryrun = false;
         inline bool help = false;
@@ -61,14 +61,7 @@ namespace options {
     
     namespace global {
         inline bool create_dirs = true;
-        inline int verbosity = ansi::verbosity::normal;
-        inline bool color = true;
-        // inline confidant::settings defaults() {
-        //     return confidant::settings{
-        //         .create_dirs = create_dirs,
-        //         .loglevel = verbosity,
-        //         .color = color
-        //     };
-        // }
+        inline int verbosity = util::verbose::normal;
+        inline bool color = util::usecolorp();
     };
 };

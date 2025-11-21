@@ -4,8 +4,7 @@ SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-Confidant
-=========
+# Confidant
 *Your configuration pal and confidant*
 
 What is it?
@@ -92,15 +91,14 @@ To apply the configuration. The above example would result in the following
 - directory `~/.config/zsh` symlinked from `${REPO}/.config/zsh`
 - file `~/.config/fontconfig/fonts.conf` symlinked from `${REPO}/.config/fontconfig/fonts.conf`
 
-Note: The usage of `destdir` instead of `dest` in the `link` section will tell 
-**Confidant** to reuse the *basename* of the source file or directory and place 
-it inside the `destdir` directory.
+For more documentation and examples, see the [website](https://wreedb.github.io/confidant)!
 
-As you can see, `link` entries are an explicit declaration of source to 
-destination, and `link-from` is a more implicit approach to simplify linking 
-many files using a shared prefix, such as `${HOME}`, where the `%{item}` is 
-substituted for each name in `items`.
+#### See Also
 
-If you are unsure about your configuration, you may issue the `-d, --dry-run` 
-flags to `link` on the command line to see what actions *would* be taken 
-before applying them.
+[Install/build instructions](INSTALL.md)
+
+[Contibutor info](CONTRIBUTING.md)
+[Releases](https://codeberg.org/wreedb/confidant/releases)
+[Inspirations and acknowledgments](THANKS.md)
+[Contact information](AUTHORS.md)
+[The license](LICENSE.md)

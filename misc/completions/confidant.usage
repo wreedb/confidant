@@ -11,6 +11,10 @@ confidant ( ( -h | --help ) "display help info"
             ( ( get "find a value by name" [ ( -f <PATH> | --file <PATH> ) "specify a file path" ] <NAME> )
             | ( dump "display current configuration" [ ( -f <PATH> | --file <PATH> "specify a file path" ) | ( -g | --global ) "display global configuration" ] ) ) ] )
           
-          | ( link [ ( ( -f <PATH> | --file <PATH> ) "specify a file path" | ( -d | --dry-run ) "simulate actions" ) ] ) "apply symlinks" );
+          | ( link
+            [ ( ( -f <PATH> | --file <PATH> ) "specify a file path"
+              | ( -d | --dry-run ) "simulate actions"
+              | ( -t <TAGS> | --tags <TAGS> ) "specify tagged entries to apply" )
+            ] ) "apply symlinks" );
           
           

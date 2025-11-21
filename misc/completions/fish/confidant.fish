@@ -130,5 +130,6 @@ complete -c confidant -n "__fish_seen_subcommand_from init" -s h -l help -d "dis
 complete -c confidant -n __fish_use_subcommand -a link -d "apply symlinks"
 complete -c confidant -n "__fish_seen_subcommand_from link" -s h -l help -d "display help info"
 
+complete -c confidant -n "__fish_seen_subcommand_from link" -s t -l tags -d "specify tagged entries to apply"
 complete -c confidant -n "__fish_seen_subcommand_from link" -s f -l file -d "specify a file path"
 complete -c confidant -n "__fish_seen_subcommand_from link" -s d -l dry-run -d "simulate actions only"

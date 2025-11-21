@@ -1,15 +1,15 @@
 #compdef confidant
 
 _confidant_cmd_0 () {
-    _path_files -/
-}
-
-_confidant_cmd_1 () {
     _path_files
 }
 
+_confidant_cmd_1 () {
+    _path_files -/
+}
+
 _confidant () {
-    declare -a literals=("-h" "--help" "-V" "--version" "-q" "--quiet" "usage" "version" "help" "init" "config" "dump" "get" "link" "init" "config" "get" "-f" "--file" "dump" "-f" "--file" "-g" "--global" "link" "-f" "--file" "-d" "--dry-run")
+    declare -a literals=("-h" "--help" "-V" "--version" "-q" "--quiet" "usage" "version" "help" "init" "config" "dump" "get" "link" "init" "config" "get" "-f" "--file" "dump" "-f" "--file" "-g" "--global" "link" "-f" "--file" "-d" "--dry-run" "-t" "--tags")
     declare -A descrs=()
     descrs[0]="display help info"
     descrs[1]="display version info"
@@ -25,19 +25,20 @@ _confidant () {
     descrs[11]="display global configuration"
     descrs[12]="apply symlinks"
     descrs[13]="simulate actions"
-    declare -A descr_id_from_literal_id=([1]=0 [2]=0 [3]=1 [4]=1 [5]=2 [6]=2 [7]=3 [8]=4 [9]=5 [15]=6 [16]=7 [17]=8 [18]=9 [19]=9 [20]=10 [23]=11 [24]=11 [25]=12 [26]=9 [27]=9 [28]=13 [29]=13)
+    descrs[14]="specify tagged entries to apply"
+    declare -A descr_id_from_literal_id=([1]=0 [2]=0 [3]=1 [4]=1 [5]=2 [6]=2 [7]=3 [8]=4 [9]=5 [15]=6 [16]=7 [17]=8 [18]=9 [19]=9 [20]=10 [23]=11 [24]=11 [25]=12 [26]=9 [27]=9 [28]=13 [29]=13 [30]=14 [31]=14)
     declare -a regexes=()
     declare -A literal_transitions=()
     literal_transitions[1]="([1]=2 [2]=2 [3]=2 [4]=2 [5]=2 [6]=2 [7]=2 [8]=2 [9]=3 [15]=4 [16]=5 [25]=6)"
-    literal_transitions[3]="([10]=2 [11]=8 [14]=2)"
+    literal_transitions[3]="([10]=2 [11]=15 [14]=2)"
     literal_transitions[4]="([15]=4)"
-    literal_transitions[5]="([17]=9 [20]=10)"
-    literal_transitions[6]="([26]=16 [27]=17 [28]=2 [29]=2)"
-    literal_transitions[8]="([12]=2 [13]=2)"
-    literal_transitions[9]="([26]=13 [27]=14)"
-    literal_transitions[10]="([21]=11 [22]=12 [23]=2 [24]=2)"
+    literal_transitions[5]="([17]=7 [20]=8)"
+    literal_transitions[6]="([26]=16 [27]=17 [28]=2 [29]=2 [30]=18 [31]=19)"
+    literal_transitions[7]="([26]=11 [27]=12)"
+    literal_transitions[8]="([21]=9 [22]=10 [23]=2 [24]=2)"
+    literal_transitions[15]="([12]=2 [13]=2)"
     declare -A nontail_transitions=()
-    declare -A match_anything_transitions=([4]=7 [7]=7 [11]=2 [9]=2 [13]=15 [15]=2 [14]=15 [12]=2 [16]=2 [17]=2)
+    declare -A match_anything_transitions=([9]=2 [10]=2 [7]=2 [11]=13 [13]=2 [12]=13 [4]=14 [14]=14 [19]=2 [16]=2 [18]=2 [17]=2)
     declare -A subword_transitions=()
 
     declare state=1
@@ -92,12 +93,12 @@ _confidant () {
         return 1
     done
 
-    declare -A literal_transitions_level_0=([3]="10 11 14" [1]="1 2 3 4 5 6 7 8 9 15 16 25" [4]="15" [10]="21 22 23 24" [9]="26 27" [6]="26 27 28 29" [5]="17 20" [8]="12 13")
+    declare -A literal_transitions_level_0=([3]="10 11 14" [1]="1 2 3 4 5 6 7 8 9 15 16 25" [4]="15" [15]="12 13" [6]="26 27 28 29 30 31" [5]="17 20" [8]="21 22 23 24" [7]="26 27")
     declare -A subword_transitions_level_0=()
     declare -A commands_level_0=()
     declare -A nontail_commands_level_0=()
     declare -A nontail_regexes_level_0=()
-    declare -A specialized_commands_level_0=([4]="0" [14]="1" [11]="1" [12]="1" [17]="1" [13]="1" [16]="1" [7]="0")
+    declare -A specialized_commands_level_0=([10]="0" [4]="1" [9]="0" [14]="1" [11]="0" [12]="0" [17]="0" [16]="0")
 
     declare max_fallback_level=0
     for (( fallback_level=0; fallback_level <= max_fallback_level; fallback_level++ )); do

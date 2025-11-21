@@ -48,6 +48,10 @@ The format comes from *libucl*, and consists of up to three nodes
 :  string
 :  file
 :  only for directory symlinks
+|  _tag_
+:  string
+:  none
+:  *false*
 
 # TEMPLATES
 
@@ -67,6 +71,10 @@ The format comes from *libucl*, and consists of up to three nodes
 :  list of paths
 :  none
 :  *true*
+|  _tag_
+:  string
+:  none
+:  *false*
 
 
 # VARIABLES

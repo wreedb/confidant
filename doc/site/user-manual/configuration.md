@@ -18,6 +18,7 @@ links: {
         source: ${repo}/.config/nvim
         dest: ${HOME}/.config
         type: directory
+        tag: work
     }
 }
 ```

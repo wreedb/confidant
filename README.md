@@ -26,8 +26,8 @@ them in your `confidant.ucl`, and **Confidant** will do the rest!
 The underlying method of management is the use of symbolic links, similar to 
 what [GNU Stow](https://gnu.org/software/stow) does, but with a slightly more 
 user-friendly interface, and tailored especially towards managing configuration 
-files. In some ways it is also influence by [Ansible playbooks](https://redhat.com/en/topics/automation/what-is-an-ansible-playbook), in that there is
-(some) support for template syntax, to make your time writing `confidant.ucl` 
+files. In some ways it is also influenced by [Ansible playbooks](https://redhat.com/en/topics/automation/what-is-an-ansible-playbook), in that there is
+(simple) support for template syntax, to make your time writing `confidant.ucl` 
 less verbose. See [THANKS.md](THANKS.md) for more attribution about influences 
 and inspirations.
 
@@ -37,6 +37,8 @@ See [INSTALL.md](INSTALL.md) for instructions on installing and/or building
 
 Example Usage
 -------------
+For a real-world example, [my dotfiles](https://codeberg.org/wreedb/config.git) are using already. 
+
 You will first want to initialize a repository:
 ```sh
 mkdir ~/projects/dotfiles
@@ -63,6 +65,7 @@ links {
     emacs {
         source: ${repo}/.config/emacs/init.el
         dest: ${xdg_config_home}/emacs/init.el
+        tag: work
     }
 }
 
@@ -86,10 +89,14 @@ confidant link
 To apply the configuration. The above example would result in the following 
 (where `${REPO}` expands to the repository directory you've made):
 - directory `~/.config/nvim` symlinked from `${REPO}/.config/nvim`
-- file `~/.config/emacs/init.el` symlinked from `${REPO}/.config/emacs/init.el`
 - files `~/.bashrc` and `~/.profile` symlinked from `${REPO}/.bashrc` and `${REPO}/.profile`
 - directory `~/.config/zsh` symlinked from `${REPO}/.config/zsh`
 - file `~/.config/fontconfig/fonts.conf` symlinked from `${REPO}/.config/fontconfig/fonts.conf`
+
+To apply tagged links, such as the `emacs` node; you would pass:
+```
+confidant link --tags work
+```
 
 For more documentation and examples, see the [website](https://wreedb.github.io/confidant)!
 

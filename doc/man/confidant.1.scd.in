@@ -22,16 +22,18 @@ syntax inspired by _Ansible_.
 	configuration file. The default is to operate on the current ++
 	working directory.
 
-*link* [_-f_, _--file_, _-d_, _--dry-run_]
+*link* [_-f,--file_ *PATH*, _-d,--dry-run_, _-t,--tags_ *X,Y,Z*]
 	Apply symlinks from your configuration file. To test and see ++
 	what actions _would_ be taken, pass _-d_ or _--dry-run_. To specify ++
 	a file other than the default (_./confidant.ucl_), pass the _-f_ ++
-	or _--file_ options with the path to your desired file.
+	or _--file_ options with the path to your desired file. ++
+	You may apply tagged links and templates by passing _-t,--tags_ ++
+	followed by a tag name or comma separated list of tag names.
 
 *config*
 	View and introspect your configuration
 
-*config dump* [_-g_, _--global_]
+*config dump* [_-g,--global_]
 	Pretty-print your current configuration in full. To print out ++
 	your global configuration, pass the _-g_ or _--global_ options.
 
@@ -88,6 +90,12 @@ Testing your local configuration with a dry-run
 
 ```
 confidant link --dry-run
+```
+
+Applying normal entries and those tagged with _desktop_ and _work_
+
+```
+confidant link -t desktop,work
 ```
 
 # BUGS

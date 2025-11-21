@@ -42,6 +42,17 @@ about the correctness of your declarations, pass the `-d,--dry-run` flag
 alongside the command to simulate the actions that *would* be taken before 
 really applying them.
 
+For use of tags, pass the `-t,--tags` option with a tag name or comma 
+separated list of names, such as:
+```
+confidant link -t desktop,work
+```
+This will include links and templates containing the `desktop` or `work` tag.
+This is particularly useful for situations where you have multiple files that 
+would occupy the same destination, but are meant to be used on different 
+machines or contexts, see [tags](configuration/local.md#tags) for more 
+information and examples of tag usage.
+
 ### `config`
 
 Allows you to display your configuration and get a *birds-eye* view of 
@@ -57,11 +68,11 @@ Pretty-prints your local configuration settings, though you may also pass
 Queries your configuration settings given the name of a section, such as 
 `repository`, `links` or `templates`. Also allows you to query nested sections 
 by separating the section names with periods; for example:
-
 ```sh
 confidant config get repository.url
 confidant config get templates.config.items
 ```
+To query your global configuration settings, pass `-g,--global`
 
 ### `help <command>`
 

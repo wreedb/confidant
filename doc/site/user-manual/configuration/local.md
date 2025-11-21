@@ -66,7 +66,7 @@ links: {
 ```
 In this example, the symlink will be placed at `${HOME}/.config/emacs/init.el`.
 
-!!! warning "conflict"
+!!! warning "Conflict"
     `dest` and `destdir` are mutually exclusive; meaning in any one `links` node,
     you must use at least one, but never both.
 
@@ -130,3 +130,52 @@ ${repo}/.config/fish/config.fish -> ${XDG_CONFIG_HOME}/fish/config.fish
     Template node items are automatically inferred as a `directory` or `file` 
     based on the type of file the item would point to after being substituted 
     into the `source` path.
+
+
+## tags
+#### (since 0.3.0)
+Both `templates` and `links` nodes may optionally contain a `tag` field. The value 
+specified for a tag is a simple string name, such as `desktop` or `work`. These 
+entries are skipped when running `confidant link`, and are only used when you
+provide the `-t,--tags` argument, specifying them by name.
+
+Tags are particularly useful when you have multiple versions of a file, which 
+would all occupy the same destination, but in different contexts or on different
+machines. Here is a quick example:
+
+```
+links: {
+    wireplumber-laptop: {
+        source: ${repo}/.config/wireplumber/wireplumber.conf.d/51-local.conf.laptop
+        dest: ${xdg_config_home}/.config/wireplumber/wireplumber.conf.d/51-local.conf
+        tag: laptop
+    };
+
+    wireplumber-desktop: {
+        source: ${repo}/.config/wireplumber/wireplumber.conf.d/51-local.conf.desktop
+        dest: ${xdg_config_home}/.config/wireplumber/wireplumber.conf.d/51-local.conf
+        tag: desktop
+    };
+};
+```
+My desktop and laptop have different audio hardware configurations, and thus I 
+use two different wireplumber configuration files. Given that my local 
+configuration contains the above snippet, I would run:
+
+```sh
+confidant link -t desktop
+```
+on my desktop computer, and:
+```sh
+confidant link -t laptop
+```
+on my laptop. The two files can coexist peacefully in my repository and be 
+properly managed on a contextual basis.
+
+!!! warning "Conflicting Tags"
+    Since **Confidant** does no state management, this means that it is 
+    possible to specify two tags which would place different files in the 
+    same destination, which will result in an error. Since tags are never 
+    utilized without explicitly passing them on the command-line; this is 
+    expected behavior, as this action would be attempting to overwrite an 
+    existing link.

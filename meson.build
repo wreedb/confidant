@@ -6,21 +6,34 @@ project(
     meson_version: '>= 1.4.0',
     default_options: ['cpp_std=c++23'])
 
+deps = []
 cxx = meson.get_compiler('cpp')
 
-if get_option('static-stdlib')
-    if get_option('use-libcxx') and cxx.get_id() == 'clang'
-        # clang doesn't have a nice -static-libc++ flag sadly
-        add_project_link_arguments('-l:libc++.a', '-l:libc++abi.a', language: 'cpp')
-    else
-        add_project_link_arguments('-static-libstdc++', language: 'cpp')
-    endif
-    add_project_link_arguments('-static-libgcc', language: 'cpp')
+opt_staticstdlib = get_option('static-stdlib')
+opt_libcxx = get_option('use-libcxx')
+opt_static = get_option('static')
+
+if opt_static
+    add_project_link_arguments('-static', language: 'cpp')
 endif
 
-if get_option('use-libcxx') and cxx.get_id() == 'clang'
+cxxid = cxx.get_id()
+
+if cxxid == 'clang' and opt_libcxx
     add_project_arguments('-stdlib=libc++', language: 'cpp')
     add_project_link_arguments('-stdlib=libc++', language: 'cpp')
+    libcxx = cxx.find_library('c++', required: true, static: opt_staticstdlib or opt_static)
+    libcxxabi = cxx.find_library('c++abi', required: true, static: opt_staticstdlib or opt_static)
+    deps += libcxx
+    deps += libcxxabi
+    if opt_staticstdlib
+        add_project_link_arguments('-static-libgcc', language: 'cpp')
+    endif
+endif
+
+if cxxid == 'gcc' and opt_staticstdlib
+    add_project_link_arguments('-static-libgcc', language: 'cpp')
+    add_project_link_arguments('-static-libstdc++', language: 'cpp')
 endif
 
 config_hpp = configuration_data()
@@ -51,44 +64,43 @@ if 'zsh' in get_option('shell-completions')
 endif
 
 manpages_feat = get_option('man-pages')
+scdoc = find_program('scdoc', required: manpages_feat)
 
-if manpages_feat.enabled()
-    scdoc = find_program('scdoc', required: true)
-    if scdoc.found()
-        date_month = run_command('date', '+%B', check: true).stdout().strip()
-        date_year = run_command('date', '+%Y', check: true).stdout().strip()
-        manconf = configuration_data()
-        manconf.set('MONTH', date_month)
-        manconf.set('YEAR', date_year)
-        manconf.set('VERSION', meson.project_version())
-        confidant_ucl_5 = configure_file(
-            input: 'doc/man/confidant.ucl.5.scd.in',
-            output: 'confidant.ucl.5.scd',
-            configuration: manconf)
-        confidant_1 = configure_file(
-            input: 'doc/man/confidant.1.scd.in',
-            output: 'confidant.1.scd',
-            configuration: manconf)
-        custom_target(
-            'confidant.ucl.5',
-            input: confidant_ucl_5,
-            output: 'confidant.ucl.5',
-            command: [scdoc],
-            feed: true,
-            capture: true,
-            install: true,
-            install_dir: get_option('mandir') / 'man5')
-        custom_target(
-            'confidant.1',
-            input: confidant_1,
-            output: 'confidant.1',
-            command: [scdoc],
-            feed: true,
-            capture: true,
-            install: true,
-            install_dir: get_option('mandir') / 'man1')
-    endif
+if scdoc.found() and manpages_feat.allowed()
+    date_month = run_command('date', '+%B', check: true).stdout().strip()
+    date_year = run_command('date', '+%Y', check: true).stdout().strip()
+    manconf = configuration_data()
+    manconf.set('MONTH', date_month)
+    manconf.set('YEAR', date_year)
+    manconf.set('VERSION', meson.project_version())
+    confidant_ucl_5 = configure_file(
+        input: 'doc/man/confidant.ucl.5.scd.in',
+        output: 'confidant.ucl.5.scd',
+        configuration: manconf)
+    confidant_1 = configure_file(
+        input: 'doc/man/confidant.1.scd.in',
+        output: 'confidant.1.scd',
+        configuration: manconf)
+    custom_target(
+        'confidant.ucl.5',
+        input: confidant_ucl_5,
+        output: 'confidant.ucl.5',
+        command: [scdoc],
+        feed: true,
+        capture: true,
+        install: true,
+        install_dir: get_option('mandir') / 'man5')
+    custom_target(
+        'confidant.1',
+        input: confidant_1,
+        output: 'confidant.1',
+        command: [scdoc],
+        feed: true,
+        capture: true,
+        install: true,
+        install_dir: get_option('mandir') / 'man1')
 endif
+
 
 cli11_dep = dependency(
     'CLI11',
@@ -99,22 +111,25 @@ cli11_dep = dependency(
 libucl_dep = dependency(
     'libucl',
     required: false,
-    fallback: ['libucl', 'libucl_dep']
-)
+    fallback: ['libucl', 'libucl_dep'],
+    static: opt_static or get_option('static-libucl'))
 
 sources = files(
-    'src/parse.cpp',
-    'src/settings.cpp',
-    'src/settings/global.cpp',
-    'src/xdg.cpp',
     'src/util.cpp',
-    'src/ucl.cpp',
-    'src/confidant.cpp',
-    'src/logging.cpp',
+    'src/fmt.cpp',
+    'src/msg.cpp',
+    'src/xdg.cpp',
     'src/help.cpp',
+    'src/parse.cpp',
+    'src/settings/local.cpp',
+    'src/settings/global.cpp',
+    'src/actions/get.cpp',
+    'src/actions/link.cpp',
+    'src/actions/dump.cpp'
 )
 
-deps = [libucl_dep, cli11_dep]
+deps += libucl_dep
+deps += cli11_dep
 
 confidant_lib = static_library(
     'confidant',
@@ -149,5 +164,4 @@ if get_option('build-tests')
             link_with: confidant_lib)
         test(name, test_exe)
     endforeach
-
 endif

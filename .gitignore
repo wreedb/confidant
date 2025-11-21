@@ -22,6 +22,11 @@
 *.tzst
 *.tz
 
+*.pch
+*.gch
+
+/rel/
+/obj/
 /.build/
 /.bld/
 /build/
@@ -54,4 +59,4 @@ result
 test.cpp
 testing/
 .config/
-confidant.ucl
+/confidant.ucl

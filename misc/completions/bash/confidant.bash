@@ -23,11 +23,11 @@ __complgen_match () {
 }
 
 _confidant_cmd_0 () {
-    compgen -A file "$1"
+    compgen -A directory "$1"
 }
 
 _confidant_cmd_1 () {
-    compgen -A directory "$1"
+    compgen -A file "$1"
 }
 
 _confidant () {
@@ -39,20 +39,19 @@ _confidant () {
     local words cword
     _get_comp_words_by_ref -n "$COMP_WORDBREAKS" words cword
 
-    declare -a literals=(-h --help -V --version -q --quiet init -f --file ... config get -f --file dump -f --file link -f --file -d --dry-run help init config dump get link usage version)
+    declare -a literals=(-h --help -V --version -q --quiet usage version help init config dump get link init config get -f --file dump -f --file -g --global link -f --file -d --dry-run)
     declare -a regexes=()
     declare -A literal_transitions=()
     declare -A nontail_transitions=()
-    literal_transitions[0]="([0]=1 [1]=1 [2]=1 [3]=1 [4]=1 [5]=1 [6]=2 [10]=3 [17]=4 [22]=5 [28]=1 [29]=1)"
-    literal_transitions[2]="([18]=15 [19]=16)"
-    literal_transitions[3]="([11]=6 [14]=7)"
-    literal_transitions[4]="([18]=8 [19]=9 [20]=1 [21]=1)"
-    literal_transitions[5]="([23]=1 [24]=20 [27]=1)"
-    literal_transitions[6]="([15]=12 [16]=13)"
-    literal_transitions[7]="([15]=10 [16]=11)"
-    literal_transitions[17]="([9]=18)"
-    literal_transitions[20]="([25]=1 [26]=1)"
-    declare -A match_anything_transitions=([9]=1 [10]=1 [11]=1 [6]=1 [13]=14 [12]=14 [14]=1 [16]=17 [15]=17 [18]=19 [19]=19 [8]=1)
+    literal_transitions[0]="([0]=1 [1]=1 [2]=1 [3]=1 [4]=1 [5]=1 [6]=1 [7]=1 [8]=2 [14]=3 [15]=4 [24]=5)"
+    literal_transitions[2]="([9]=1 [10]=7 [13]=1)"
+    literal_transitions[3]="([14]=3)"
+    literal_transitions[4]="([16]=8 [19]=9)"
+    literal_transitions[5]="([25]=15 [26]=16 [27]=1 [28]=1)"
+    literal_transitions[7]="([11]=1 [12]=1)"
+    literal_transitions[8]="([25]=12 [26]=13)"
+    literal_transitions[9]="([20]=10 [21]=11 [22]=1 [23]=1)"
+    declare -A match_anything_transitions=([3]=6 [6]=6 [10]=1 [8]=1 [12]=14 [14]=1 [13]=14 [11]=1 [15]=1 [16]=1)
     declare -A subword_transitions
 
     local state=0
@@ -89,9 +88,9 @@ _confidant () {
         return 1
     done
 
-    declare -A literal_transitions_level_0=([2]="18 19" [0]="0 1 2 3 4 5 6 10 17 22 28 29" [3]="11 14" [20]="25 26" [5]="23 24 27" [4]="18 19 20 21" [7]="15 16" [6]="15 16" [17]="9")
+    declare -A literal_transitions_level_0=([2]="9 10 13" [0]="0 1 2 3 4 5 6 7 8 14 15 24" [3]="14" [9]="20 21 22 23" [8]="25 26" [5]="25 26 27 28" [4]="16 19" [7]="11 12")
     declare -A subword_transitions_level_0=()
-    declare -A commands_level_0=([9]="0" [8]="0" [13]="0" [10]="0" [11]="0" [16]="0" [12]="0" [15]="0" [18]="1" [19]="1")
+    declare -A commands_level_0=([3]="0" [13]="1" [10]="1" [11]="1" [16]="1" [12]="1" [15]="1" [6]="0")
     declare -A nontail_commands_level_0=()
     declare -A nontail_regexes_level_0=()
 

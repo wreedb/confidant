@@ -27,3 +27,13 @@ option('man-pages',
        type: 'feature',
        value: 'auto',
        description: 'build and install manual pages, requires scdoc')
+
+option('static',
+       type: 'boolean',
+       value: false,
+       description: 'link completely static')
+
+option('static-libucl',
+       type: 'boolean',
+       value: false,
+       description: 'link libucl statically')

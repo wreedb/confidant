@@ -1,12 +1,16 @@
-confidant ( ( -h | --help ) "help information"
-          | ( -V | --version ) "version information"
-          | ( -q | --quiet ) "suppress most messages"
-          | ( init "initialize a confidant repository" ( -f <PATH> | --file <PATH> ) "specify a file path" ... <DIRECTORY> ... )
-          | ( config "view configuration"
-            ( ( get "find a value by name" [( -f <PATH> | --file <PATH> )] <NAME> )
-            | ( dump "display current configuration" [( -f <PATH> | --file <PATH> )] ) )
-            )
-          | ( link "apply symlinks" ( ( -f <PATH> | --file <PATH> ) "specify a file path" | ( -d | --dry-run ) "simulate actions" ) )
-          | ( help "display help for subcommands" ( init | config ( dump | get ) | link ) )
+confidant ( ( -h | --help ) "display help info"
+          | ( -V | --version ) "display version info"
+          | ( -q | --quiet ) "suppress non-error messages"
           | usage "brief usage info"
-          | version "version info" );
+          | version "version info"
+          | ( help ( init | config ( dump | get ) | link ) ) "display help for subcommands"
+          
+          | ( init "initialize a repository" ... <DIRECTORY> ... )
+          
+          | ( config "view configuration" [
+            ( ( get "find a value by name" [ ( -f <PATH> | --file <PATH> ) "specify a file path" ] <NAME> )
+            | ( dump "display current configuration" [ ( -f <PATH> | --file <PATH> "specify a file path" ) | ( -g | --global ) "display global configuration" ] ) ) ] )
+          
+          | ( link [ ( ( -f <PATH> | --file <PATH> ) "specify a file path" | ( -d | --dry-run ) "simulate actions" ) ] ) "apply symlinks" );
+          
+          

@@ -4,6 +4,28 @@ SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 # Changelog
+## [v0.2.0] - 2025-11-21
+
+
+### Changed
+
+-  Update install instructions
+
+-  PKGBUILD added
+
+-  Add scripts for clang compilation testing
+
+-  Logging now fmt and msg, ansi header separate
+
+-  Add fully static meson option, update clang build process
+
+-  Bump to 0.2.0, updated readme
+
+
+### Fixed
+
+-  Fix config-dump displaying incorrect source for links
+
 ## [v0.1.1] - 2025-11-19
 
 

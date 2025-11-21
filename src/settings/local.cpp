@@ -91,10 +91,22 @@ namespace confidant {
                         int numlinks = ucl::members(obj);
                         conf.links.reserve(numlinks);
                         
+                        // iterate over links
                         for (const auto& n : obj) {
                             confidant::config::local::link link;
                             
                             link.name = n.key();
+                            
+                            // BEGIN tag
+                            if (ucl::check(n, "tag") && n["tag"].type() == ucl::String) {
+                                auto s = ucl::get::str(n, "tag");
+                                if (!s)
+                                    msg::fatal("failed to parse {} field {} as a string!", fmt::bolden(link.name),
+                                                                                           fmt::bolden("tag"));
+                                else
+                                    link.tag = s.value();                                
+                            }
+                            // END tag
                             
                             // BEGIN source
                             if (ucl::check(n, "source") && n["source"].type() == ucl::String) {
@@ -158,10 +170,21 @@ namespace confidant {
                         int numtemplates = ucl::members(obj);
                         conf.templates.reserve(numtemplates);
                         
+                        // iterate over templates
                         for (const auto& tmpl : obj) {
                             confidant::config::local::templatelink t;
                             
                             t.name = tmpl.key();
+                            
+                            // optional condition tag
+                            if (ucl::check(tmpl, "tag") && tmpl["tag"].type() == ucl::String) {
+                                auto s = ucl::get::str(tmpl, "tag");
+                                if (!s)
+                                    msg::fatal("failed to parse {} field {} as a string!", fmt::bolden(t.name),
+                                                                                           fmt::bolden("tag"));
+                                else
+                                    t.tag = s.value();                                
+                            }
                             
                             if (ucl::check(tmpl, "source")) {
                                 t.source = fs::path(tmpl["source"].string_value());
@@ -187,6 +210,7 @@ namespace confidant {
                                 int numitems = tmpl["items"].size();
                                 t.items.reserve(numitems);
                                 
+                                // iterate over items
                                 for (int i = 0; i < numitems; i++) {
                                     auto lst = ucl::get::list(tmpl, "items");
                                     if (!lst) {

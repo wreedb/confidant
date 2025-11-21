@@ -105,6 +105,7 @@ void help(std::string_view argz) {
     std::cout << fg::green(argz) << " " << fmt::ul("link") << ":\n\n"
               << "    apply symlinks from your configuration file\n\n"
               << fg::yellow("options") << ":\n\n"
+              << "    -t, --tags " << fmt::ul("X,Y,Z") << "    specify a set of tagged links to apply, separated by commas\n\n"
               << "    -f, --file " << fmt::ul("PATH") << "     specify the configuration file to operate on\n"
               << "                        default: <current directory>/confidant.ucl\n\n"
               << "    -d, --dry-run       show what actions " << fmt::ital("would") << " be taken\n\n"

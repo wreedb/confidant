@@ -38,6 +38,7 @@ namespace options {
     };
     
     namespace link {
+        inline std::string tags;
         inline bool help = false;
         inline bool dryrun = false;
         inline int verbosity = 0;

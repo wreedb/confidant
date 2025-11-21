@@ -2,8 +2,11 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+#include "settings/global.hpp"
 #include "settings/local.hpp"
 #include "util.hpp"
+#include <glob.h>
+#include <type_traits>
 #include <vector>
 #include <variant>
 #include <string>
@@ -16,8 +19,20 @@ namespace confidant {
     namespace actions {
         
         namespace get {
+            std::optional<globalvalue> global(const confidant::config::global::settings& conf, std::string_view qry) {
+                auto parts = util::split(qry);
+                if (parts.empty()) return std::nullopt;
+                if (parts.at(0) == "create-directories")
+                    return conf.createdirs;
+                else if (parts.at(0) == "log-level")
+                    return conf.loglevel;
+                else if (parts.at(0) == "color")
+                    return conf.color;
+                else
+                    return std::nullopt;
+            }
             
-            std::optional<value> get(const confidant::config::local::settings& conf, std::string_view qry) {
+            std::optional<localvalue> local(const confidant::config::local::settings& conf, std::string_view qry) {
                 auto parts = util::split(qry);
                 if (parts.empty()) return std::nullopt;
                 if (parts.at(0) == "repository") {
@@ -67,7 +82,23 @@ namespace confidant {
                 }
                 return std::nullopt;
             }
-            std::string formatvalue(const value& v) {
+            
+            std::string formatglobalvalue(const globalvalue& v) {
+                return std::visit([](auto&& arg) -> std::string {
+                    using T = std::decay_t<decltype(arg)>;
+                    if constexpr (std::is_same_v<T, bool>)
+                        return arg ? "true" : "false";
+                    else if constexpr (std::is_same_v<T, std::string>)
+                        return arg;
+                    else if constexpr (std::is_same_v<T, util::verbose>)
+                        return util::verboseliteral(arg);
+                    else if constexpr (std::is_same_v<T, int>)
+                        return std::to_string(arg);
+                    return "unknown";
+                }, v);
+            }
+            
+            std::string formatlocalvalue(const localvalue& v) {
                 return std::visit([](auto&& arg) -> std::string {
                     using T = std::decay_t<decltype(arg)>;
                     

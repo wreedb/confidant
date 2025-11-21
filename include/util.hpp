@@ -22,6 +22,7 @@ namespace util {
     std::string verboseliteral(const verbose& v);
     std::string substitute(const std::string &tmpl, const std::string &item);
     std::vector<std::string_view> split(std::string_view sv);
+    std::vector<std::string_view> splittags(std::string_view sv);
     bool hasperms(std::string_view p);
     std::string stripargz(const std::string& arg);
     std::optional<std::string> getenv(const std::string& name);

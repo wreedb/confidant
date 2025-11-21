@@ -70,6 +70,26 @@ namespace util {
         return result;
     }
     
+    std::vector<std::string_view> splittags(std::string_view sv) {
+        std::vector<std::string_view> result;
+        
+        char delimiter = ',';
+        
+        size_t start = 0;
+        size_t end = sv.find(delimiter);
+        
+        while (end != std::string_view::npos) {
+            result.push_back(sv.substr(start, end - start));
+            start = end + 1;
+            end = sv.find(delimiter, start);
+        }
+        
+        // Add the last (or only) part
+        result.push_back(sv.substr(start));
+        
+        return result;
+    }
+    
     bool hasperms(std::string_view p)
     {
         fs::path path = fs::path(p);

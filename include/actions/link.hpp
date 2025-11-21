@@ -10,8 +10,8 @@
 namespace confidant {
     namespace actions {
         namespace link {
-            int linktemplate(const confidant::config::local::settings& conf, const confidant::config::global::settings& globals, const bool& dry);
-            int linknormal(const confidant::config::local::settings& conf, const confidant::config::global::settings& globals, const bool& dry);
+            int linktemplate(const confidant::config::local::settings& conf, const confidant::config::global::settings& globals, const std::vector<std::string_view>& tags, bool dry);
+            int linknormal(const confidant::config::local::settings& conf, const confidant::config::global::settings& globals, const std::vector<std::string_view>& tags, bool dry);
         }
     }
 }

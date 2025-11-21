@@ -115,16 +115,17 @@ int main(int argc, char *argv[]) {
     cmdInit->add_flag("-q,--quiet",   options::init::quiet);
     
     auto* cmdLink = args.add_subcommand("link", "apply symlinks");
+    cmdLink->add_option("-t,--tags",  options::link::tags);
     cmdLink->add_flag("-d,--dry-run", options::link::dryrun);
     cmdLink->add_flag("-h,--help",    options::link::help);
     cmdLink->add_flag("-v,--verbose", options::link::verbosity);
+    cmdLink->add_flag("-q,--quiet",   options::link::quiet);
     cmdLink->add_option("-f,--file",  options::link::file);
-    cmdLink->add_option("-q,--quiet",  options::link::quiet);
     
     auto* cmdConfig = args.add_subcommand("config");
     cmdConfig->add_flag("-v,--verbose", options::config::verbosity);
     cmdConfig->add_flag("-h,--help",    options::config::help);
-    cmdConfig->add_flag("-q,--quiet",    options::config::quiet);
+    cmdConfig->add_flag("-q,--quiet",   options::config::quiet);
         
     auto* cmdConfig_dump = cmdConfig->add_subcommand("dump");
     cmdConfig_dump->add_flag("-h,--help",    options::config::dump::help);
@@ -134,22 +135,23 @@ int main(int argc, char *argv[]) {
     cmdConfig_dump->add_option("-f,--file",  options::config::dump::file);
     
     auto* cmdConfig_get = cmdConfig->add_subcommand("get");
-    cmdConfig_get->add_flag("-h,--help",    options::config::get::help);
-    cmdConfig_get->add_flag("-v,--verbose", options::config::get::verbosity);
-    cmdConfig_get->add_flag("-q,--quiet",   options::config::get::quiet);
-    cmdConfig_get->add_option("-f,--file",  options::config::get::file);
-    cmdConfig_get->add_option("name",       options::config::get::name);
+    cmdConfig_get->add_flag("-h,--help",     options::config::get::help);
+    cmdConfig_get->add_flag("-v,--verbose",  options::config::get::verbosity);
+    cmdConfig_get->add_flag("-q,--quiet",    options::config::get::quiet);
+    cmdConfig_get->add_flag("-g,--global",   options::config::get::global);
+    cmdConfig_get->add_option("-f,--file",   options::config::get::file);
+    cmdConfig_get->add_option("name",        options::config::get::name);
     
     CLI11_PARSE(args, argc, argv);
     
     // if --quiet, always be quiet, otherwise follow config setting;
     // if --verbose, set to max verbosity, otherwise follow config setting;
-    if (options::quiet ||
-        options::config::quiet ||
-        options::init::quiet ||
-        options::link::quiet ||
-        options::config::dump::quiet ||
-        options::config::get::quiet) {
+    if (options::quiet
+    ||  options::config::quiet
+    ||  options::init::quiet
+    ||  options::link::quiet
+    ||  options::config::dump::quiet
+    ||  options::config::get::quiet) {
         confidant::config::global::loglevel = util::verbose::quiet;
     } else {
         int sumverbosity =
@@ -201,10 +203,16 @@ int main(int argc, char *argv[]) {
             return 0;
         }
         
+        std::vector<std::string_view> tags;
+        
+        if (!options::link::tags.empty()) {
+            tags = util::splittags(options::link::tags);
+        }
+        
         confidant::config::local::settings conf = confidant::config::local::serialize(options::link::file, globals);
-        int ecode_link = confidant::actions::link::linknormal(conf, globals, options::link::dryrun);
+        int ecode_link = confidant::actions::link::linknormal(conf, globals, tags, options::link::dryrun);
         if (ecode_link != 0) return ecode_link;
-        int ecode_linktemplate = confidant::actions::link::linktemplate(conf, globals, options::link::dryrun);
+        int ecode_linktemplate = confidant::actions::link::linktemplate(conf, globals, tags, options::link::dryrun);
         if (ecode_linktemplate != 0) return ecode_link;
         return 0;
         
@@ -226,15 +234,18 @@ int main(int argc, char *argv[]) {
                 help::config::get::help(argz);
                 return 0;
             }
-            confidant::config::local::settings conf = confidant::config::local::serialize(options::config::get::file, globals);
-            std::optional<confidant::actions::get::value> results = confidant::actions::get::get(conf, options::config::get::name);
-            if (!results) {
-                msg::error("failed to find configuration value for {}",
-                    fmt::bolden(options::config::get::name));
-                return 1;
+            if (options::config::get::global) {
+                auto res = confidant::actions::get::global(globals, options::config::get::name);
+                if (!res) msg::fatal("no configuration value for {}", fmt::bolden(options::config::get::name));
+                else std::cout << confidant::actions::get::formatglobalvalue(res.value()) << std::endl;
+                return 0;                
+            } else {
+                auto conf = confidant::config::local::serialize(options::config::get::file, globals);
+                auto res = confidant::actions::get::local(conf, options::config::get::name);
+                if (!res) msg::fatal("no configuration value for {}", fmt::bolden(options::config::get::name));
+                else std::cout << confidant::actions::get::formatlocalvalue(res.value()) << std::endl;
+                return 0;                
             }
-            std::cout << confidant::actions::get::formatvalue(results.value()) << std::endl;
-            return 0;
         }
         
         if (cmdConfig->got_subcommand(cmdConfig_dump)) {

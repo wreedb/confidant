@@ -26,6 +26,7 @@ namespace confidant {
             
             struct link {
                 std::string name;
+                std::string tag;
                 fs::path source;
                 fs::path destination;
                 linktype type;
@@ -33,6 +34,7 @@ namespace confidant {
             
             struct templatelink {
                 std::string name;
+                std::string tag;
                 fs::path source;
                 fs::path destination;
                 std::vector<std::string> items;

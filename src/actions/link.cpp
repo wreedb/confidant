@@ -20,12 +20,18 @@ namespace confidant {
         
         namespace link {
         
-            int linktemplate(const confidant::config::local::settings& conf, const confidant::config::global::settings& globals, const bool& dry) {
+            int linktemplate(const confidant::config::local::settings& conf, const confidant::config::global::settings& globals, const std::vector<std::string_view>& tags, bool dry) {
                 int processedTemplates = 0;
                 for (auto& tmpl : conf.templates) {
               
                     int processedItems = 0;
                     int numitems = tmpl.items.size();
+                    
+                    if (!tmpl.tag.empty() && tags.size() == 0) continue;
+                    if (!tmpl.tag.empty() && tags.size() > 0) {
+                        bool matches = std::find(tags.begin(), tags.end(), tmpl.tag) != tags.end();
+                        if (!matches) continue;
+                    }
                     
                     for (int n = 0; n < numitems; n++) {
                         
@@ -131,7 +137,7 @@ namespace confidant {
                 return 0;
             }
             
-            int linknormal(const config::local::settings& conf, const config::global::settings& globals, const bool& dry) {
+            int linknormal(const config::local::settings& conf, const config::global::settings& globals, const std::vector<std::string_view>& tags, bool dry) {
                 using util::unexpandhome;
                 int numlinks = conf.links.size();
                 int linksdone = 0;
@@ -139,6 +145,7 @@ namespace confidant {
                 for (int n = 0; n < numlinks; n++) {
                     
                     std::string name       = conf.links.at(n).name;
+                    std::string tag        = conf.links.at(n).tag;
                     fs::path sourcepath    = conf.links.at(n).source;
                     fs::path destpath      = conf.links.at(n).destination;
                     std::string sourcestr  = sourcepath.string();
@@ -147,6 +154,14 @@ namespace confidant {
                     std::string udeststr   = util::unexpandhome(deststr);
                     
                     config::local::linktype lt = conf.links.at(n).type;
+                
+                    if (!tag.empty() && tags.size() == 0) continue;
+                    
+                    // skip entry when tag wasn't specified
+                    if (!tag.empty() && tags.size() > 0) {
+                        bool matches = std::find(tags.begin(), tags.end(), tag) != tags.end();
+                        if (!matches) continue;
+                    }
                     
                     // skip if the source file doesn't exist
                     if (!fs::exists(sourcepath)) {

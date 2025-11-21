@@ -12,7 +12,7 @@ namespace confidant {
     namespace actions {
         namespace get {
             
-            using value = std::variant<
+            using localvalue = std::variant<
                 bool,
                 std::string,
                 std::vector<std::string>,
@@ -21,8 +21,18 @@ namespace confidant {
                 confidant::config::local::link,
                 confidant::config::local::templatelink
             >;
-            std::optional<value> get(const confidant::config::local::settings& conf, std::string_view qry);
-            std::string formatvalue(const value& v);
+            
+            using globalvalue = std::variant<
+                bool,
+                util::verbose,
+                std::string,
+                int
+            >;
+            
+            std::optional<localvalue> local(const confidant::config::local::settings& conf, std::string_view qry);
+            std::optional<globalvalue> global(const confidant::config::global::settings& conf, std::string_view qry);
+            std::string formatlocalvalue(const localvalue& v);
+            std::string formatglobalvalue(const globalvalue& v);
         }
     }
 }

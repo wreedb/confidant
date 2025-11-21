@@ -57,6 +57,8 @@ namespace confidant {
                                 if (parts.at(2) == "dest") return link.destination.string();
                                 if (parts.at(2) == "type")
                                     return link.type == config::local::linktype::file ? "file" : "directory";
+                                if (parts.at(2) == "tag" && !link.tag.empty())
+                                    return link.tag;
                             }
                         }
                     }
@@ -74,6 +76,8 @@ namespace confidant {
                                     if (parts.at(2) == "source") return tmpl.source.string();
                                     if (parts.at(2) == "dest") return tmpl.destination.string();
                                     if (parts.at(2) == "items") return tmpl.items;
+                                    if (parts.at(2) == "tag" && !tmpl.tag.empty())
+                                        return tmpl.tag;
                                 }
                             }
                         }
@@ -124,6 +128,7 @@ namespace confidant {
                             oss << "  source: " << link.source.string() << "\n";
                             oss << "  dest: " << link.destination.string() << "\n";
                             oss << "  type: " << (link.type == config::local::linktype::file ? "file" : "directory") << "\n";
+                            if (!link.tag.empty()) oss << "  tag: " << link.tag << "\n";
                         }
                         return oss.str();
                     }
@@ -131,6 +136,7 @@ namespace confidant {
                         std::ostringstream oss;
                         oss << "source: " << arg.source.string() << "\n";
                         oss << "dest: " << arg.destination.string() << "\n";
+                        if (!arg.tag.empty()) oss << "tag: " << arg.tag << "\n";
                         oss << "type: " << (arg.type == config::local::linktype::file ? "file" : "directory");
                         return oss.str();
                     }
@@ -140,6 +146,7 @@ namespace confidant {
                             oss << tmpl.name << ":\n";
                             oss << "  source: " << tmpl.source.string() << "\n";
                             oss << "  dest: " << tmpl.destination.string() << "\n";
+                            if (!tmpl.tag.empty()) oss << "  tag: " << tmpl.tag << "\n";
                             oss << "  items: [" << tmpl.items.size() << " items]\n";
                         }
                         return oss.str();
@@ -148,6 +155,7 @@ namespace confidant {
                         std::ostringstream oss;
                         oss << "source: " << arg.source.string() << "\n";
                         oss << "dest: " << arg.destination.string() << "\n";
+                        if (!arg.tag.empty()) oss << "tag: " << arg.tag << "\n";
                         oss << "items:\n";
                         for (const auto& item : arg.items) {
                             oss << "  - " << item << "\n";

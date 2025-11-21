@@ -95,10 +95,9 @@ For more documentation and examples, see the [website](https://wreedb.github.io/
 
 #### See Also
 
-[Install/build instructions](INSTALL.md)
-
-[Contibutor info](CONTRIBUTING.md)
-[Releases](https://codeberg.org/wreedb/confidant/releases)
-[Inspirations and acknowledgments](THANKS.md)
-[Contact information](AUTHORS.md)
-[The license](LICENSE.md)
+[Install/build instructions](INSTALL.md)  
+[Contibutor info](CONTRIBUTING.md)  
+[Releases](https://codeberg.org/wreedb/confidant/releases)  
+[Inspirations and acknowledgments](THANKS.md)  
+[Contact information](AUTHORS.md)  
+[The license](LICENSE.md)  

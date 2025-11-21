@@ -1,14 +1,14 @@
 # Maintainer: Will Reed <wreed@disroot.org>
 
 pkgname=confidant
-pkgver=0.1.1
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="Dotfile manager; your configuration pal and confidant"
 arch=('x86_64')
 url="https://wreedb.github.io/confidant"
 license=('GPL-3.0-or-later')
 source=("https://codeberg.org/wreedb/${pkgname}/releases/download/v${pkgver}/${pkgname}-${pkgver}.source.tar.gz")
-b2sums=('6e299bfeeedb4548c732d64b07fc430738c57a41c7bf2d766f9c9ed24ebd1ba540c66a2979062e7fc4bf9d67ff080bb7ee456d7948ebc3eec65fa382972ad9bc')
+b2sums=('f3366840e045bea526e8e84497f3a57995fd9097d6b427efd9b74fa4ff4be7f8264e6e2428519d9464f4a6790c74372ba537686ca814cfd2761eb8945cd3718a')
 provides=('confidant')
 depends=(libucl cli11)
 makedepends=(
@@ -16,7 +16,7 @@ makedepends=(
     scdoc
 )
 
-_srcdir="${pkgname}-${pkgver}.source"
+_srcdir="${pkgname}-${pkgver}"
 _builddir=${_srcdir}/build
 
 prepare() {
@@ -25,8 +25,7 @@ prepare() {
         --prefix=/usr                  \
         --buildtype release            \
         -D cpp_args="${CXXFLAGS}"      \
-        -D cpp_link_args="${LDFLAGS}"  \
-        -D man-pages=enabled
+        -D cpp_link_args="${LDFLAGS}"
 }
 
 build() {

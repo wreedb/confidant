@@ -4,6 +4,30 @@ SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 # Changelog
+## [v0.3.0] - 2025-11-21
+
+
+### Changed
+
+-  Update changelog for 0.2.0
+
+-  Fix README formatting
+
+-  Added tests for local and global config serializing
+
+-  Update docs for tag feature
+
+-  Update completions with --tags,-t option
+
+-  Update get function to handle tags
+
+-  Reuse upkeep, bump to 0.3.0
+
+
+### Feat
+
+-  Conditional tags added to support multiple versions of the same file
+
 ## [v0.2.0] - 2025-11-21
 
 

@@ -5,8 +5,13 @@
 version := `cat .version`
 
 [group("build")]
+build-static: clean-build
+    meson setup .build --prefix=/ --buildtype=release -D static=true -D static-stdlib=true --wrap-mode=forcefallback
+    meson compile -C .build
+
+[group("build")]
 build: clean-build
-    meson setup .build --prefix=/usr --buildtype=release --strip -D static-stdlib=true
+    meson setup .build --prefix=/ --buildtype=release --strip
     meson compile -C .build
     
 [group("clean")]
@@ -36,4 +41,3 @@ changelog:
 completions:
     complgen misc/completions/confidant.usage --bash misc/completions/bash/confidant.bash
     complgen misc/completions/confidant.usage --zsh  misc/completions/zsh/_confidant
-    complgen misc/completions/confidant.usage --fish misc/completions/fish/confidant.fish

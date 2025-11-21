@@ -1,0 +1,3 @@
+create-directories: on
+log-level: trace
+color: on

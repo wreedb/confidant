@@ -152,7 +152,10 @@ if get_option('build-tests')
     test_hpp.set_quoted('PROJECT_ROOT', meson.project_source_root())
     configure_file(output: 'test.hpp', configuration: test_hpp)
     
-    test_sources = files('test/config-createdirs.cpp')
+    test_sources = files(
+        'test/config-serialize-local.cpp',
+        'test/config-serialize-global.cpp'
+    )
 
     foreach n : test_sources
         name = n.full_path().split('/')[-1].split('.')[0]

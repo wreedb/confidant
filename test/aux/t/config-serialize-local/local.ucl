@@ -1,0 +1,35 @@
+links = {
+
+    wireplumber-desktop = {
+        source: ${repo}/.config/wireplumber/wireplumber.conf.d/51-local.conf.desktop
+        dest: ${xdg_config_home}/.config/wireplumber/wireplumber.conf.d/51-local.conf
+    };
+        
+    wireplumber-laptop = {
+        source = ${repo}/.config/wireplumber/wireplumber.conf.d/51-local.conf.laptop
+        dest = ${xdg_config_home}/.config/wireplumber/wireplumber.conf.d/51-local.conf
+        tag = laptop
+    };    
+    
+};
+
+templates: {
+    foo: {
+        source: ${repo}/foo
+        dest: ${home}/foo
+        items: [
+            buzz
+            bizz
+        ]
+    };
+    
+    bar: {
+        source: ${repo}/bar
+        dest: ${home}/bar
+        tag: desktop
+        items: [
+            fuzz
+            fizz
+        ]
+    };
+};

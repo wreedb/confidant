@@ -9,7 +9,10 @@
 #include <filesystem>
 #include <ranges>
 #include <string_view>
+#include <map>
 
+#include "parse.hpp"
+#include "xdg.hpp"
 #include "msg.hpp"
 #include "util.hpp"
 
@@ -19,6 +22,46 @@ using std::string;
 using std::string_view;
 
 namespace util {
+    
+    std::map<std::string, std::string> makevarmap(std::string_view path) {
+        std::map<std::string, std::string> vars;
+        std::map<std::string, fs::path> xdghomes = xdg::homes();
+        vars = ucl::var::add("XDG_CONFIG_HOME", xdghomes["XDG_CONFIG_HOME"].string(), vars);
+        vars = ucl::var::add("XDG_CACHE_HOME",  xdghomes["XDG_CACHE_HOME"].string(),  vars);
+        vars = ucl::var::add("XDG_DATA_HOME",   xdghomes["XDG_DATA_HOME"].string(),   vars);
+        vars = ucl::var::add("XDG_STATE_HOME",  xdghomes["XDG_STATE_HOME"].string(),  vars);
+        
+        vars = ucl::var::add("xdg_config_home", xdghomes["XDG_CONFIG_HOME"].string(), vars);
+        vars = ucl::var::add("xdg_cache_home",  xdghomes["XDG_CACHE_HOME"].string(),  vars);
+        vars = ucl::var::add("xdg_data_home",   xdghomes["XDG_DATA_HOME"].string(),   vars);
+        vars = ucl::var::add("xdg_state_home",  xdghomes["XDG_STATE_HOME"].string(),  vars);
+        
+        vars = ucl::var::add("XDG_RUNTIME_DIR", xdghomes["XDG_RUNTIME_DIR"].string(), vars);
+        vars = ucl::var::add("xdg_runtime_dir", xdghomes["XDG_RUNTIME_DIR"].string(), vars);
+ 
+        std::optional<std::string> homedir = util::getenv("HOME");
+        if (!homedir)
+            throw std::runtime_error("HOME is not set in the environment!");
+     
+        vars = ucl::var::add("HOME", homedir.value(), vars);
+        vars = ucl::var::add("home", homedir.value(), vars);
+        vars = ucl::var::add("REPO", fs::path(path).parent_path().string(), vars);
+        vars = ucl::var::add("repo", fs::path(path).parent_path().string(), vars);
+        
+        std::optional<std::string> username = util::getenv("USER");
+        if (username) {
+            vars = ucl::var::add("user", username.value(), vars);
+            vars = ucl::var::add("USER", username.value(), vars);
+        }
+        
+        std::optional<std::string> email = util::getenv("EMAIL");
+        if (email) {
+            vars = ucl::var::add("email", email.value(), vars);
+            vars = ucl::var::add("EMAIL", email.value(), vars);
+        }
+        
+        return vars;
+    }
     
     std::string verboseliteral(const verbose& v) {
         switch (v) {

@@ -9,6 +9,7 @@
 #include <string_view>
 #include <vector>
 #include <filesystem>
+#include <map>
 
 namespace util {
     
@@ -19,6 +20,7 @@ namespace util {
         debug = 3,
         trace = 4
     };
+    std::map<std::string, std::string> makevarmap(std::string_view path);
     std::string verboseliteral(const verbose& v);
     std::string substitute(const std::string &tmpl, const std::string &item);
     std::vector<std::string_view> split(std::string_view sv);

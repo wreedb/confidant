@@ -10,6 +10,10 @@
 namespace confidant {
     namespace actions {
         namespace dump {
+            namespace json {
+                void global(std::string_view path);
+                void local(std::string_view path);
+            }
             void global(const confidant::config::global::settings& conf);
             void local(const confidant::config::local::settings& conf);
         } // END confidant::actions::dump

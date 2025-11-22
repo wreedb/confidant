@@ -2,277 +2,425 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <string>
+// cli
+#include <lyra/lyra.hpp>
+#include <lyra/group.hpp>
+#include <lyra/parser.hpp>
+#include <lyra/help.hpp>
+
+// std
 #include <print>
 #include <filesystem>
-#include <CLI/CLI.hpp>
+#include <string>
+#include <string_view>
 
-#include "settings/global.hpp"
+// project-local
 #include "settings/local.hpp"
-
-#include "actions/get.hpp"
-#include "actions/dump.hpp"
-#include "actions/link.hpp"
-
+#include "settings/global.hpp"
 #include "util.hpp"
 #include "help.hpp"
 #include "options.hpp"
-
 #include "fmt.hpp"
 #include "msg.hpp"
+#include "actions/dump.hpp"
+#include "actions/link.hpp"
+#include "actions/get.hpp"
 
+// meson
 #include "config.hpp"
+
+const static bool usecolorp = util::usecolorp();
+
+namespace gconfig = confidant::config::global;
+namespace lconfig = confidant::config::local;
+
+namespace actions = confidant::actions;
 
 namespace fs = std::filesystem;
 
-const static bool initusecolor = util::usecolorp();
-
-int main(int argc, char *argv[]) {
-
-    std::string argz;
-
-    if (argc > 0)
-        argz = util::stripargz(argv[0]);
-    else
-        argz = std::string(PROJECT_NAME);
-
-    if (argc >= 3 && std::string(argv[1]) == "help") {
+namespace args {
+    
+    namespace link {
         
-        std::string topic = argv[2];
+        bool self = false;
+        bool help = false;
+        bool dry = false;
+        std::string tags;
+        std::string file = fs::current_path().string() + "/confidant.ucl";
+    
+    };
+    
+    namespace config {
+        bool self = false;
+        bool help = false;
         
-        if (topic == "init") {
-            help::init::help(argz);
-            return 0;
+        namespace dump {
+            bool self = false;
+            bool help = false;
+            bool json = false;
+            bool global = false;
+            std::string file = fs::current_path().string() + "/confidant.ucl";
+        };
+        
+        namespace get {
+            bool self = false;
+            bool help = false;
+            bool global = false;
+            std::string query;
+            std::string file = fs::current_path().string() + "/confidant.ucl";
+        };
+    };
+    
+    bool usage = false;
+    bool version = false;
+    bool verbose = false;
+    bool quiet = false;
+    
+    namespace help {
+        bool self = false;
+        namespace config {
+            bool self = false;
+            bool dump = false;
+            bool get = false;
+        };
+        bool init = false;
+        bool link = false;
+    };
+    
+    namespace init {
+        std::string path = fs::current_path().string();
+        std::string file = std::format("{}/confidant.ucl", path);
+        bool self = false;
+        bool help = false;
+        bool dry = false;
+    };  
+};
+
+namespace opts {
+    namespace cmd {
+        namespace link {
+            lyra::command self = lyra::command("link", [](const lyra::group&) { args::link::self = true; }).help("apply symlinks");
+            lyra::help help = lyra::help(args::link::help);
+            lyra::opt dry = lyra::opt(args::link::dry)["-d"]["--dry-run"]("simulate actions only");
+            lyra::opt tags = lyra::opt(args::link::tags, "tags")["-t"]["--tags"]("apply tagged links");
+            lyra::opt file = lyra::opt(args::link::file, "path")["-f"]["--file"]("specify a file path to read");
+        };
+        namespace help {
+            lyra::command self = lyra::command("help", [](const lyra::group&) { args::help::self = true; }).help("display help for subcommands");
+            namespace config {
+                lyra::command self = lyra::command("config", [](const lyra::group&) { args::config::help = true; });
+                lyra::command dump = lyra::command("dump", [](const lyra::group&) { args::config::dump::help = true; });
+                lyra::command get  = lyra::command("get", [](const lyra::group&) { args::config::get::help = true; });
+            };
+            lyra::command init = lyra::command("init", [](const lyra::group&) { args::init::help = true; });
+            lyra::command link = lyra::command("link", [](const lyra::group&) { args::link::help = true; });
+        };
+        lyra::command usage = lyra::command("usage", [](const lyra::group&) { args::usage = true; }).help("display brief usage info");
+        lyra::command version = lyra::command("version", [](const lyra::group&) { args::version = true; }).help("display version info");
+        namespace init {
+            lyra::command self = lyra::command("init", [](const lyra::group&) { args::init::self = true; }).help("initialize a repository");
+            lyra::help help = lyra::help(args::init::help);
+            lyra::arg path = lyra::arg(args::init::path, "path")("the directory path to initialize");
+            lyra::opt dry = lyra::opt(args::init::dry)["-d"]["--dry-run"]("simulate actions only");
+        };
+        namespace config {
+            lyra::command self = lyra::command("config", [](const lyra::group&) { args::config::self = true; }).help("introspect configuration settings");
+            lyra::opt help = lyra::opt(args::config::help).name("-h").name("--help").name("-?").optional();
+            namespace dump {
+                lyra::command self = lyra::command("dump", [](const lyra::group&) { args::config::dump::self = true; }).help("display current configuration settings").optional();
+                lyra::help help = lyra::help(args::config::dump::help);
+                lyra::opt global = lyra::opt(args::config::dump::global)["-g"]["--global"]("display global configuration").optional();
+                lyra::opt json = lyra::opt(args::config::dump::json)["-j"]["--json"]("display configuration in JSON format").optional();
+                lyra::opt file = lyra::opt(args::config::dump::file, "path")["-f"]["--file"]("specify a file path");
+            };
+            namespace get {
+                lyra::command self = lyra::command("get", [](const lyra::group&) { args::config::get::self = true; }).help("find configuration value by name").optional();
+                lyra::arg query = lyra::arg(args::config::get::query, "query").help("setting to search for");
+                lyra::help help = lyra::help(args::config::get::help);
+                lyra::opt global = lyra::opt(args::config::get::global)["-g"]["--global"]("query from global configuration");
+                lyra::opt file = lyra::opt(args::config::get::file, "path")["-f"]["--file"]("specify a file path");
+            };
+        };
+    };
+
+}; 
+
+namespace flags {
+    lyra::help help = lyra::help(args::help::self).description("display help information");
+    lyra::opt usage = lyra::opt(args::usage)["-u"]["--usage"]("display brief usage info");
+    lyra::opt version = lyra::opt(args::version)["-V"]["--version"]("display version info");
+    lyra::opt verbose = lyra::opt(args::verbose)["-v"]["--verbose"]("increase verbosity");
+    lyra::opt quiet = lyra::opt(args::quiet)["-q"]["--quiet"]("supress non-error messages");
+};
+
+int main(int argc, const char *argv[]) {
+    
+    std::string version = PROJECT_VERSION;
+    std::string argz = util::stripargz(argv[0]);
+    
+    gconfig::settings gconf = gconfig::serialize(help::defaults::global_config_path());
+    
+    opts::cmd::link::self |= flags::quiet;
+    opts::cmd::link::self |= flags::verbose;
+    
+    opts::cmd::init::self |= flags::quiet;
+    opts::cmd::init::self |= flags::verbose;
+    
+    opts::cmd::config::self |= flags::quiet;
+    opts::cmd::config::self |= flags::verbose;
+    
+    opts::cmd::config::get::self |= flags::quiet;
+    opts::cmd::config::get::self |= flags::verbose;
+    
+    opts::cmd::config::dump::self |= flags::quiet;
+    opts::cmd::config::dump::self |= flags::verbose;
+    
+    opts::cmd::link::self
+        |= opts::cmd::link::dry;
+    
+    opts::cmd::link::self
+        |= opts::cmd::link::tags;
+    
+    opts::cmd::link::self
+        |= opts::cmd::link::file;
+    
+    opts::cmd::link::self
+        |= opts::cmd::link::help;
+    
+    opts::cmd::help::self
+        |= opts::cmd::help::link;
+    
+    opts::cmd::help::config::self
+        |= opts::cmd::help::config::dump;
+    
+    opts::cmd::help::config::self
+        |= opts::cmd::help::config::get;
+    
+    opts::cmd::help::self
+        |= opts::cmd::help::config::self;
+    
+    opts::cmd::help::self
+        |= opts::cmd::help::init;
+    
+    opts::cmd::config::self
+        |= opts::cmd::config::help;
+    
+    opts::cmd::config::dump::self
+        |= opts::cmd::config::dump::help;
+    
+    opts::cmd::config::dump::self
+        |= opts::cmd::config::dump::global;
+    
+    opts::cmd::config::dump::self
+        |= opts::cmd::config::dump::json;
+    
+    opts::cmd::config::dump::self
+        |= opts::cmd::config::dump::file;
             
-        } else if (topic == "link") {
-            help::link::help(argz);
-            return 0;
-            
-        } else if (topic == "version") {
-            std::println("{}: version {}", fmt::fg::yellow(PROJECT_NAME), PROJECT_VERSION);
-            return 0;
-            
-        } else if (topic == "config") {
-            if (argc >= 4) {
-        
-                if (std::string(argv[3]) == "dump") {
-                    help::config::dump::help(argz);
-                    return 0;
-                }
-                
-                if (std::string(argv[3]) == "get") {
-                    help::config::get::help(argz);
-                    return 0;
-                }
-        
-            }
-            help::config::help(argz);
-            return 0;
-        } else {
-            std::println("help topic {} is not recognized", fmt::bolden(topic));
-            return 1;
-        }
-    }
+    opts::cmd::config::get::self
+        |= opts::cmd::config::get::help;
     
-    if (argc == 2 && std::string(argv[1]) == "help") {
-        help::general::help(argz);
-        return 0;
-    }
+    opts::cmd::config::get::self
+        |= opts::cmd::config::get::global;
     
-    // before setting up the argument parser, read the global config so the settings apply.
-    if (!fs::exists(help::defaults::global_config_path()))
-        help::defaults::write_global_config(help::defaults::global_config_path());
+    opts::cmd::config::get::self
+        |= opts::cmd::config::get::file;
     
-    confidant::config::global::settings globals = confidant::config::global::serialize(help::defaults::global_config_path());
+    opts::cmd::config::get::self
+        |= opts::cmd::config::get::query;
     
-    CLI::App args{"your configuration confidant"};
-    argv = args.ensure_utf8(argv);
-    args.set_help_flag();
-    args.set_version_flag();
-
-    confidant::config::global::loglevel = globals.loglevel;
+    opts::cmd::config::self
+        |= opts::cmd::config::dump::self;
     
-    if (!initusecolor)
-        confidant::config::global::color = false;
-    else
-        confidant::config::global::color = globals.color;
+    opts::cmd::config::self
+        |= opts::cmd::config::get::self;
     
-    confidant::config::global::createdirs = globals.createdirs;
+    opts::cmd::init::self
+        |= opts::cmd::init::dry;
     
-    args.add_flag("-v,--verbose", options::verbosity);
-    args.add_flag("-V,--version", options::version);
-    args.add_flag("-h,--help",    options::help);
-    args.add_flag("-u,--usage",   options::usage);
-    args.add_flag("-q,--quiet",   options::quiet);
+    opts::cmd::init::self
+        |= opts::cmd::init::path;
     
-    auto* cmdVersion = args.add_subcommand("version");
-    auto* cmdUsage   = args.add_subcommand("usage");
+    opts::cmd::init::self
+        |= opts::cmd::init::help;
     
-    auto* cmdInit = args.add_subcommand("init", "initialize a confidant repository");
-    cmdInit->add_option("path",       options::init::path);
-    cmdInit->add_flag("-d,--dry-run", options::init::dryrun);
-    cmdInit->add_flag("-h,--help",    options::init::help);
-    cmdInit->add_flag("-q,--quiet",   options::init::quiet);
+    lyra::cli cli;
+    cli |= opts::cmd::link::self;
+    cli |= opts::cmd::config::self;
+    cli |= opts::cmd::init::self;
+    cli |= opts::cmd::help::self;
+    cli |= opts::cmd::usage;
+    cli |= opts::cmd::version;
+    cli |= flags::help;
+    cli |= flags::usage;
+    cli |= flags::version;
+    cli |= flags::quiet;
+    cli |= flags::verbose;
     
-    auto* cmdLink = args.add_subcommand("link", "apply symlinks");
-    cmdLink->add_option("-t,--tags",  options::link::tags);
-    cmdLink->add_flag("-d,--dry-run", options::link::dryrun);
-    cmdLink->add_flag("-h,--help",    options::link::help);
-    cmdLink->add_flag("-v,--verbose", options::link::verbosity);
-    cmdLink->add_flag("-q,--quiet",   options::link::quiet);
-    cmdLink->add_option("-f,--file",  options::link::file);
+    lyra::parse_result res = cli.parse ({ argc, argv });
     
-    auto* cmdConfig = args.add_subcommand("config");
-    cmdConfig->add_flag("-v,--verbose", options::config::verbosity);
-    cmdConfig->add_flag("-h,--help",    options::config::help);
-    cmdConfig->add_flag("-q,--quiet",   options::config::quiet);
-        
-    auto* cmdConfig_dump = cmdConfig->add_subcommand("dump");
-    cmdConfig_dump->add_flag("-h,--help",    options::config::dump::help);
-    cmdConfig_dump->add_flag("-g,--global",  options::config::dump::global);
-    cmdConfig_dump->add_flag("-v,--verbose", options::config::dump::verbosity);
-    cmdConfig_dump->add_flag("-q,--quiet",   options::config::dump::quiet);
-    cmdConfig_dump->add_option("-f,--file",  options::config::dump::file);
-    
-    auto* cmdConfig_get = cmdConfig->add_subcommand("get");
-    cmdConfig_get->add_flag("-h,--help",     options::config::get::help);
-    cmdConfig_get->add_flag("-v,--verbose",  options::config::get::verbosity);
-    cmdConfig_get->add_flag("-q,--quiet",    options::config::get::quiet);
-    cmdConfig_get->add_flag("-g,--global",   options::config::get::global);
-    cmdConfig_get->add_option("-f,--file",   options::config::get::file);
-    cmdConfig_get->add_option("name",        options::config::get::name);
-    
-    CLI11_PARSE(args, argc, argv);
-    
-    // if --quiet, always be quiet, otherwise follow config setting;
-    // if --verbose, set to max verbosity, otherwise follow config setting;
-    if (options::quiet
-    ||  options::config::quiet
-    ||  options::init::quiet
-    ||  options::link::quiet
-    ||  options::config::dump::quiet
-    ||  options::config::get::quiet) {
-        confidant::config::global::loglevel = util::verbose::quiet;
+    if (!usecolorp) {
+        // environment NO_COLOR presence always honored
+        options::global::color = false;
+        gconfig::color = false;
     } else {
-        int sumverbosity =
-            ( options::verbosity
-            + options::config::verbosity
-            + options::config::get::verbosity
-            + options::config::dump::verbosity
-            + options::init::verbosity
-            + options::link::verbosity);
-        
-        if (sumverbosity > 0)
-            confidant::config::global::loglevel = util::verbose::trace;
+        options::global::color = gconf.color;
+        gconfig::color = gconf.color;
     }
     
+    if (args::quiet && args::verbose) {
+        msg::error("--quiet and --verbose are mutually exclusive.");
+        return 1;
+    } else if (args::quiet && !args::verbose) {    
+        gconfig::loglevel = util::verbose::quiet;
+    } else if (args::verbose && !args::quiet) {
+        gconfig::loglevel = util::verbose::trace;
+    } else {
+        // only override the config setting when options are passed
+        gconfig::loglevel = gconf.loglevel;
+    }
     
-    if (options::version) {
-        std::println("{}: version {}", fmt::fg::yellow(PROJECT_NAME), PROJECT_VERSION);
+    gconfig::createdirs = gconf.createdirs;
+    
+    if (!res) {
+        msg::error("unable to parse command line");
+        std::print("{}: [", fmt::fg::red("arguments"));
+        for (int n = 1; n < argc; n++) {
+            std::print("{}{}", argv[n],
+                (n == (argc - 1) ? "" : " "));
+        }
+        std::println("]\n");
+        help::general::usage(argz);
+        return 1;
+    }
+    
+    if (args::config::get::query.starts_with('-')) {
+        args::config::get::query = "";
+        args::config::get::help = true;
+    }
+    
+    if (args::init::path.starts_with('-') || args::init::path == "-d" || args::init::path == "--dry-run") {
+        args::init::path = "";
+        args::init::help = true;
+    }
+    
+    if (args::help::self) {
+        if (args::init::help) help::init::help(argz);
+        else if (args::link::help) help::link::help(argz);
+        else if (args::config::help) {
+            if (args::config::dump::help) help::config::dump::help(argz);
+            else if (args::config::get::help) help::config::get::help(argz);
+            else help::config::help(argz);
+        }
+        else help::general::help(argz);
         return 0;
     }
     
-    if (options::help) {
-        help::general::help(argz);
-        return 0;
-    }
-    
-    if (args.got_subcommand(cmdUsage) || options::usage) {
+    if (args::usage) {
         help::general::usage(argz);
         return 0;
-        
-    } else if (args.got_subcommand(cmdInit)) {
-        if (options::init::help) {
-            help::init::help(argz);
-            return 0;
-        }
-        
-        if (options::init::dryrun) {
-            msg::pretty("wrote sample config to {}", fmt::bolden(fs::relative(options::init::path).string()));
-            return 0;
-        
-        } else {
-            help::defaults::write_local_config(options::init::path);
-            return 0;
-        }
+    }
     
-    } else if (args.got_subcommand(cmdLink)) {
-        // link [--help,-h]
-        if (options::link::help) {
-            help::link::help(argz);
-            return 0;
-        }
+    if (args::version) {
+        msg::pretty("version {}", version);
+        return 0;
+    }
+    
+    if (args::config::help) {
+        help::config::help(argz);
+        return 0;
+    }
+    
+    if (args::config::get::help) {
+        help::config::get::help(argz);
+        return 0;
+    }
+    
+    if (args::config::dump::help) {
+        help::config::dump::help(argz);
+        return 0;    
+    }
+    
+    if (args::init::help) {
+        help::init::help(argz);
+        return 0;
+    }
+    
+    if (args::link::help) {
+        help::link::help(argz);
+        return 0;
+    }
+    
+    if (args::config::self) {
         
+        if (args::config::dump::self) {
+            
+            if (args::config::dump::global) {
+                if (args::config::dump::json) {
+                    actions::dump::json::global(help::defaults::global_config_path());
+                    return 0;
+                } else {
+                    actions::dump::global(gconf);
+                    return 0;
+                }
+            } else {
+                if (args::config::dump::json) {
+                    actions::dump::json::local(args::config::dump::file);
+                    return 0;
+                } else {
+                    lconfig::settings lconf = lconfig::serialize(args::config::dump::file, gconf);
+                    actions::dump::local(lconf);
+                    return 0;
+                }
+            }
+            
+        } else if (args::config::get::self) {
+            if (args::config::get::global) {
+                auto res = actions::get::global(gconf, args::config::get::query);
+                if (!res) {
+                    msg::error("setting {} not found in configuration", fmt::bolden(args::config::get::query));
+                    return 1;
+                }
+                std::println("{}", actions::get::formatglobalvalue(res.value()));
+                return 0;
+            } else {
+                lconfig::settings lconf = lconfig::serialize(args::config::dump::file, gconf);
+                auto res = actions::get::local(lconf, args::config::get::query);
+                if (!res) {
+                    msg::error("setting {} not found in configuration", fmt::bolden(args::config::get::query));
+                    return 1;
+                }
+                std::println("{}", actions::get::formatlocalvalue(res.value()));
+                return 0;
+            }
+        }
+    }
+    
+    if (args::link::self) {
         std::vector<std::string_view> tags;
         
-        if (!options::link::tags.empty()) {
-            tags = util::splittags(options::link::tags);
-        }
+        if (!args::link::tags.empty())
+            tags = util::splittags(args::link::tags);
         
-        confidant::config::local::settings conf = confidant::config::local::serialize(options::link::file, globals);
-        int ecode_link = confidant::actions::link::linknormal(conf, globals, tags, options::link::dryrun);
-        if (ecode_link != 0) return ecode_link;
-        int ecode_linktemplate = confidant::actions::link::linktemplate(conf, globals, tags, options::link::dryrun);
-        if (ecode_linktemplate != 0) return ecode_link;
-        return 0;
-        
-    } else if (args.got_subcommand(cmdVersion)) {
-        std::println("{}: version {}", fmt::fg::yellow(PROJECT_NAME), PROJECT_VERSION);
-        return 0;
-    
-    } else if (args.got_subcommand(cmdConfig)) {
-        
-        if (options::config::help) {
-            // config --help
-            help::config::help(argz);
-            return 0;
-        }
-        
-        if (cmdConfig->got_subcommand(cmdConfig_get)) {
-            if (options::config::get::help) {
-                // config get --help
-                help::config::get::help(argz);
-                return 0;
-            }
-            if (options::config::get::global) {
-                auto res = confidant::actions::get::global(globals, options::config::get::name);
-                if (!res) msg::fatal("no configuration value for {}", fmt::bolden(options::config::get::name));
-                else std::cout << confidant::actions::get::formatglobalvalue(res.value()) << std::endl;
-                return 0;                
-            } else {
-                auto conf = confidant::config::local::serialize(options::config::get::file, globals);
-                auto res = confidant::actions::get::local(conf, options::config::get::name);
-                if (!res) msg::fatal("no configuration value for {}", fmt::bolden(options::config::get::name));
-                else std::cout << confidant::actions::get::formatlocalvalue(res.value()) << std::endl;
-                return 0;                
-            }
-        }
-        
-        if (cmdConfig->got_subcommand(cmdConfig_dump)) {
-            if (options::config::dump::help) {
-                // config dump --help
-                help::config::dump::help(argz);
-                return 0;
-            }
-            
-            if (options::config::dump::global) {
-                // config dump [--global,-g]
-                confidant::actions::dump::global(globals);
-                return 0;
-            }
-            
-            msg::pretty("dumping {}", util::unexpandhome(options::config::dump::file));
-            confidant::actions::dump::local(confidant::config::local::serialize(options::config::dump::file, globals));
-            return 0;
-        
-        } else {
-            msg::error("unknown subcommand");
-            help::config::help(argz);
-            return 1;
-        }
-    
+        lconfig::settings lconf = lconfig::serialize(args::link::file, gconf);
+        int n = actions::link::linknormal(lconf, gconf, tags, args::link::dry);
+        if (n != 0) return n;
+        int t = actions::link::linktemplate(lconf, gconf, tags, args::link::dry);
+        if (t != 0) return n;
+        return n + t;
     }
+    
+    if (args::init::self) {
+        if (args::init::dry) {
+            msg::pretty("wrote sample config file to {}", args::init::file);
+            return 0;
+        } else {
+            msg::pretty("wrote sample config file to {}", args::init::file);
+            help::defaults::write_local_config(args::init::path);
+            return 0;
+        }
+    }
+    
     help::general::usage(argz);
-    return 0;
-
+    return 1;
 }

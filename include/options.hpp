@@ -14,22 +14,25 @@ using std::string;
 namespace options {
     
     namespace config {
-        inline int verbosity = 0;
+        inline bool invoked = false;
+        inline bool verbose = false;
         inline bool help = false;
         inline bool quiet = false;
     
         namespace dump {
+            inline bool invoked = false;
             inline bool global = false;
             inline bool help = false;
-            inline int verbosity = 0;
+            inline bool verbose = false;
             inline bool quiet = false;
             inline std::string file = fs::current_path().string() + "/confidant.ucl";
         };
     
         namespace get {
+            inline bool invoked = false;
             inline bool global = false;
             inline bool help = false;
-            inline int verbosity = 0;
+            inline bool verbose = false;
             inline bool quiet = false;
             inline std::string file = fs::current_path().string() + "/confidant.ucl";
             inline std::string name;
@@ -38,17 +41,19 @@ namespace options {
     };
     
     namespace link {
+        inline bool invoked = false;
         inline std::string tags;
         inline bool help = false;
         inline bool dryrun = false;
-        inline int verbosity = 0;
+        inline bool verbose = false;
         inline bool quiet = false;
         inline std::string file = fs::current_path().string() + "/confidant.ucl";
     };
     
     namespace init {
+        inline bool invoked = false;
         inline std::string path = fs::current_path().string();
-        inline int verbosity = 0;
+        inline bool verbose = false;
         inline bool dryrun = false;
         inline bool help = false;
         inline bool quiet = false;
@@ -56,9 +61,19 @@ namespace options {
     
     inline bool version = false;
     inline bool usage = false;
-    inline bool help = false;
-    inline int verbosity = 0;
-    inline bool quiet;
+    inline bool verbose = false;
+    inline bool quiet = false;
+    
+    namespace help {
+        inline bool invoked = false;
+        inline bool link = false;
+        inline bool init = false;
+        namespace config {
+            inline bool invoked = false;
+            inline bool get = false;
+            inline bool dump = false;
+        };
+    };
     
     namespace global {
         inline bool create_dirs = true;

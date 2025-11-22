@@ -1,0 +1,6 @@
+[wrap-git]
+url = https://github.com/bfgroup/lyra
+revision = 1.7.0
+
+[provide]
+lyra = lyra_dep

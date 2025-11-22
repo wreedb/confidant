@@ -102,22 +102,19 @@ if scdoc.found() and manpages_feat.allowed()
 endif
 
 
-cli11_dep = dependency(
-    'CLI11',
-    required: false,
-    fallback: ['cli11', 'CLI11_dep']
-)
-
 libucl_dep = dependency(
     'libucl',
     required: false,
     fallback: ['libucl', 'libucl_dep'],
     static: opt_static or get_option('static-libucl'))
 
+lyra_dep = dependency('lyra',
+    required: false,
+    fallback: ['lyra', 'lyra_dep'])
+
 sources = files(
     'src/util.cpp',
     'src/fmt.cpp',
-    'src/msg.cpp',
     'src/xdg.cpp',
     'src/help.cpp',
     'src/parse.cpp',
@@ -129,7 +126,7 @@ sources = files(
 )
 
 deps += libucl_dep
-deps += cli11_dep
+deps += lyra_dep
 
 confidant_lib = static_library(
     'confidant',

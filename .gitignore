@@ -41,7 +41,7 @@ _site/
 deps/
 stage
 
-subprojects/CLI11-2.6.1/
+subprojects/lyra/
 subprojects/libucl/
 subprojects/packagecache/
 subprojects/.wraplock

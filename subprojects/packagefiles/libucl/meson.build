@@ -17,7 +17,7 @@ libucl_sources = files(
     'src/ucl_util.c',
 )
 
-libucl = library(
+libucl = static_library(
     'ucl',
     libucl_sources,
     include_directories: incdirs)

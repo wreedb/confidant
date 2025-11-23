@@ -17,7 +17,7 @@ syntax inspired by _Ansible_.
 
 # SUBCOMMANDS
 
-*init* [_path_]
+*init* [_path_] [_-d_,_--dry-run_]
 	Initialize your dotfiles repository with a documented sample ++
 	configuration file. The default is to operate on the current ++
 	working directory.
@@ -30,27 +30,28 @@ syntax inspired by _Ansible_.
 	You may apply tagged links and templates by passing _-t,--tags_ ++
 	followed by a tag name or comma separated list of tag names.
 
-*config*
+*config* [_dump_, _get_]
 	View and introspect your configuration
 
-*config dump* [_-g,--global_]
+*config dump* [_-g,--global_, _j,--json_]
 	Pretty-print your current configuration in full. To print out ++
-	your global configuration, pass the _-g_ or _--global_ options.
+	your global configuration, pass the _-g_ or _--global_ options. ++
+	Passing _-j,--json_ outputs configuration in JSON format.
 
-*config get* _name_
+*config get* _name_ [_-g,--global_]
 	Query your configuration file for the value of specific fields.++
 	The _name_ may use periods to traverse nested fields, such as ++
 	_repository.url_ or _links.foo.source_.
 
-*help* [_subcommand_]
+*help* [_subcommand_] [_init_, _link_, _config_ [_get_, _dump_]]
 	Display general help, or _subcommand_ specific help info by ++
 	passing the name of a subcommand as an argument, for example++
 	*confidant help config get*.
 
-*usage*
+*usage, -u,--usage*
 	Display brief command-line usage info.
 
-*version*
+*version, -V,--version*
 	Display version info.
 
 # OPTIONS
@@ -63,7 +64,7 @@ These options may be passed anywhere in the command-line
 *-q, --quiet*
 	Suppress all (non-fatal) messages from being displayed.
 
-*-h, --help*
+*-?, -h, --help*
 	Display help information, may be _subcommand_ specific when ++
 	passed after a subcommand.
 
@@ -98,6 +99,12 @@ Applying normal entries and those tagged with _desktop_ and _work_
 confidant link -t desktop,work
 ```
 
+Displaying your global configuration in JSON format
+
+```
+confidant config dump -gj
+```
+
 # BUGS
 
 Please report any issues to the project's issue page at ++
@@ -126,4 +133,4 @@ There is NO WARRANTY, to the extent permitted by law.
 
 # SEE ALSO
 
-	_confidant.ucl_(5), _stow_(8), _ansible-playbook_(1), _ln_(1)
+	_confidant.ucl_(5), _ln_(1)

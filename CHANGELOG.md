@@ -4,6 +4,45 @@ SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 # Changelog
+## [v0.4.0] - 2025-11-23
+
+
+### Changed
+
+-  Update CHANGELOG and arch PKGBUILD
+
+-  Set up build infra for migration to lyra
+
+-  Fully switch out main to use lyra
+
+-  Separate variable map creation for UCL parsing
+
+-  Add -g --global to help messages
+
+-  Update manpage with json options
+
+-  Add 'vhs' tape demo gif and mp4
+
+-  Update flake
+
+-  Updated completions and usage grammar
+
+-  Add documentation for the json dump flag, add demonstration gif to site
+
+-  Bump to 0.4.0
+
+
+### Fixed
+
+-  Detect when stdout is not a terminal and omit ansi escapes
+
+-  Amend incorrect init file path output message
+
+
+### Feat
+
+-  Dump output to JSON option added
+
 ## [v0.3.0] - 2025-11-21
 
 

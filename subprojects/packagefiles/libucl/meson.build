@@ -1,7 +1,12 @@
 project('libucl', 'c', 
         meson_version: '>= 1.1',
         version: '0.9.2',
-        default_options: ['default_library=static', 'strip=true'])
+        default_options: [
+            'default_library=static',
+            'strip=true',
+            'warning_level=2',
+            'c_args=-Wno-pointer-sign'
+        ])
 
 incdirs = ['src', 'include', 'klib', 'uthash']
 

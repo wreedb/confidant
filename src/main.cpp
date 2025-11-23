@@ -29,6 +29,7 @@
 // meson
 #include "config.hpp"
 
+// detect: NO_COLOR env var, output is not a terminal, etc.
 const static bool usecolorp = util::usecolorp();
 
 namespace gconfig = confidant::config::global;

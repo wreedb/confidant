@@ -5,6 +5,7 @@
 #include <optional>
 #include <string>
 #include <cstdlib>
+#include <unistd.h>
 #include <vector>
 #include <filesystem>
 #include <ranges>
@@ -190,7 +191,9 @@ namespace util {
     
     bool usecolorp() {
         std::optional<std::string> envnocolor = util::getenv("NO_COLOR");
-        if (!envnocolor) return true;
+        bool tty = (isatty(STDOUT_FILENO) == 1);
+        if (!envnocolor && tty) return true;
+        else if (!envnocolor && !tty) return false;
         else if (envnocolor->empty()) return true;
         else return false;
     }

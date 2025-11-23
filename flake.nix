@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2025 Will Reed
-#
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 {
   description = "Your configuration pal and confidant";
 
@@ -14,6 +14,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
         lib = nixpkgs.legacyPackages.${system}.lib;
         stdenv = pkgs.gcc15Stdenv;
+        version = builtins.readFile ./.version;
 
         nativeBuildInputs = with pkgs; [
           scdoc
@@ -25,18 +26,25 @@
 
         buildInputs = with pkgs; [
           libucl
-          cli11
+          lyra
         ];
 
         confidant-package = stdenv.mkDerivation {
           pname = "confidant";
-          version = "0.1.0";
+          inherit version;
           src = ./.;
 
           meta = {
             description = "Your configuration pal and confidant";
+            long-description = ''
+              Confidant is a configuration (or dotfile) management tool, which combines the
+              practical symlink-based approach of tools like GNU Stow with simple (but powerful)
+              templating syntax inspired by Ansible. The result is an easy to use, fast and reliable
+              dotfile management workflow.
+            '';
             homepage = "https://wreedb.github.io/confidant";
             license = lib.licenses.gpl3Plus;
+            mainProgram = "confidant";
           };
 
           inherit nativeBuildInputs buildInputs;

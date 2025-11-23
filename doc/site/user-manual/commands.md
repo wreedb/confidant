@@ -17,7 +17,7 @@ Silence most (non-fatal) message output.
 ### `-v,--verbose`
 Immediately sets `log-level` to `trace`, producing all possible output.
 
-### `-h,--help`
+### `-?,-h,--help`
 Display help information for **Confidant** or one of its' subcommands.
 
 
@@ -33,6 +33,7 @@ Will provide you a sample (local) configuration file in your current directory,
 or a directory you specify at the end of the command. The sample is documented 
 with comments explaining how the different parts work, though if you need 
 further guidance, see the [global](configuration/global.md) and [local](configuration/local.md) configuration pages.
+May be passed `-d,--dry-run` to simulate actions.
 
 ### `link`
 
@@ -62,6 +63,8 @@ your settings
 
 Pretty-prints your local configuration settings, though you may also pass
 `-g,--global` to display the settings of your global configuration instead.
+(since 0.4.0) You may pass the `-j,--json` option to output either configuration
+in [JSON](https://json.org) format.
 
 #### `get`
 

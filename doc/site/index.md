@@ -6,12 +6,7 @@ Your configuration *pal and confidant*.
 A configuration (or *dotfile*) management tool, designed to be easy to use, 
 fast, focused and reliable.
 
-```sh
-$ confidant link
->>> linked ~/.bashrc
->>> linked ~/.config/nvim
->>> linked ~/.config/kitty/kitty.conf
-```
+![demonstration](assets/demo.gif)
 
 The Problem
 -----------

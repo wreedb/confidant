@@ -90,7 +90,7 @@ namespace args {
     
     namespace init {
         std::string path = fs::current_path().string();
-        std::string file = std::format("{}/confidant.ucl", path);
+        std::string file = std::format("{}/confidant.ucl", args::init::path);
         bool self = false;
         bool help = false;
         bool dry = false;
@@ -413,10 +413,10 @@ int main(int argc, const char *argv[]) {
     
     if (args::init::self) {
         if (args::init::dry) {
-            msg::pretty("wrote sample config file to {}", args::init::file);
+            msg::pretty("wrote sample config file to {}", fs::relative(args::init::path).string() + "/confidant.ucl");
             return 0;
         } else {
-            msg::pretty("wrote sample config file to {}", args::init::file);
+            msg::pretty("wrote sample config file to {}", fs::relative(args::init::path).string() + "/confidant.ucl");
             help::defaults::write_local_config(args::init::path);
             return 0;
         }

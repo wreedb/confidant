@@ -20,7 +20,7 @@ sourcefiles=(
     flake.nix
     flake.lock
     subprojects/libucl.wrap
-    subprojects/cli11.wrap
+    subprojects/lyra.wrap
     subprojects/packagefiles/libucl/meson.build
 )
 

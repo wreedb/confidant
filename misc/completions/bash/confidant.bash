@@ -39,19 +39,23 @@ _confidant () {
     local words cword
     _get_comp_words_by_ref -n "$COMP_WORDBREAKS" words cword
 
-    declare -a literals=(-h --help -V --version -q --quiet usage version help init config dump get link init config get -f --file dump -f --file -g --global link -f --file -d --dry-run -t --tags)
+    declare -a literals=(help init link config dump get config get -g --global create-directories color log-level repository repository.url links templates -? -h --help -v --verbose -q --quiet dump -f --file -g --global -j --json link -t --tags -f --file -d --dry-run init -d --dry-run usage version -V --version -u --usage -? -h --help -v --verbose -q --quiet)
     declare -a regexes=()
     declare -A literal_transitions=()
     declare -A nontail_transitions=()
-    literal_transitions[0]="([0]=1 [1]=1 [2]=1 [3]=1 [4]=1 [5]=1 [6]=1 [7]=1 [8]=2 [14]=3 [15]=4 [24]=5)"
-    literal_transitions[2]="([9]=1 [10]=14 [13]=1)"
-    literal_transitions[3]="([14]=3)"
-    literal_transitions[4]="([16]=6 [19]=7)"
-    literal_transitions[5]="([25]=15 [26]=16 [27]=1 [28]=1 [29]=17 [30]=18)"
-    literal_transitions[6]="([25]=10 [26]=11)"
-    literal_transitions[7]="([20]=8 [21]=9 [22]=1 [23]=1)"
-    literal_transitions[14]="([11]=1 [12]=1)"
-    declare -A match_anything_transitions=([8]=1 [9]=1 [6]=1 [10]=12 [12]=1 [11]=12 [3]=13 [13]=13 [18]=1 [15]=1 [17]=1 [16]=1)
+    literal_transitions[0]="([0]=1 [6]=2 [31]=3 [38]=4 [41]=5 [42]=5 [43]=5 [44]=5 [45]=5 [46]=5 [47]=5 [48]=5 [49]=5 [50]=5 [51]=5 [52]=5 [53]=5)"
+    literal_transitions[1]="([38]=5 [31]=5 [6]=17)"
+    literal_transitions[2]="([7]=10 [47]=5 [48]=5 [49]=5 [50]=5 [51]=5 [52]=5 [53]=5 [24]=11)"
+    literal_transitions[3]="([47]=5 [48]=5 [49]=5 [50]=5 [51]=5 [52]=5 [53]=5 [32]=6 [33]=7 [34]=8 [35]=9 [39]=3 [40]=3)"
+    literal_transitions[4]="([47]=5 [48]=5 [49]=5 [50]=5 [51]=5 [52]=5 [53]=5 [39]=18 [40]=18)"
+    literal_transitions[10]="([27]=16 [28]=16 [13]=15 [14]=15 [15]=15 [16]=15 [47]=12 [48]=12 [49]=12 [50]=12 [51]=12 [52]=12 [53]=12)"
+    literal_transitions[11]="([47]=12 [48]=12 [49]=12 [50]=12 [51]=12 [52]=12 [53]=12 [34]=13 [35]=14 [27]=15 [28]=15 [29]=15 [30]=15)"
+    literal_transitions[12]="([47]=5 [48]=5 [49]=5 [50]=5 [51]=5 [52]=5 [53]=5)"
+    literal_transitions[15]="([47]=12 [48]=12 [49]=12 [50]=12 [51]=12 [52]=12 [53]=12)"
+    literal_transitions[16]="([10]=15 [11]=15 [12]=15)"
+    literal_transitions[17]="([24]=5 [7]=5)"
+    literal_transitions[18]="([47]=5 [48]=5 [49]=5 [50]=5 [51]=5 [52]=5 [53]=5)"
+    declare -A match_anything_transitions=([6]=3 [7]=3 [8]=3 [9]=3 [4]=12 [13]=15 [14]=15 [18]=12)
     declare -A subword_transitions
 
     local state=0
@@ -88,16 +92,21 @@ _confidant () {
         return 1
     done
 
-    declare -A literal_transitions_level_0=([2]="9 10 13" [0]="0 1 2 3 4 5 6 7 8 14 15 24" [3]="14" [14]="11 12" [5]="25 26 27 28 29 30" [4]="16 19" [7]="20 21 22 23" [6]="25 26")
+    declare -A literal_transitions_level_0=([4]="47 48 49 50 51 52 53 39 40" [2]="7 47 48 49 50 51 52 53 24" [0]="0 6 31 38 41 42" [3]="47 48 49 50 51 52 53 32 33 34 35 39 40" [18]="47 48 49 50 51 52 53" [10]="27 28 13 14 15 16 47 48 49 50 51 52 53" [11]="47 48 49 50 51 52 53 34 35 27 28 29 30" [16]="10 11 12" [12]="47 48 49 50 51 52 53" [15]="47 48 49 50 51 52 53" [1]="38 31 6" [17]="24 7")
+    declare -A literal_transitions_level_1=([0]="43 44 45 46 47 48 49 50 51 52 53")
     declare -A subword_transitions_level_0=()
-    declare -A commands_level_0=([9]="0" [3]="1" [8]="0" [13]="1" [10]="0" [11]="0" [16]="0" [15]="0")
+    declare -A subword_transitions_level_1=()
+    declare -A commands_level_0=([18]="1" [9]="0" [4]="1" [8]="0" [13]="0" [14]="0")
+    declare -A commands_level_1=()
     declare -A nontail_commands_level_0=()
     declare -A nontail_regexes_level_0=()
+    declare -A nontail_commands_level_1=()
+    declare -A nontail_regexes_level_1=()
 
     local -a candidates=()
     local -a matches=()
     local ignore_case=$(bind -v | grep completion-ignore-case | cut -d' ' -f3)
-    local max_fallback_level=0
+    local max_fallback_level=1
     local prefix="${words[$cword]}"
     for (( fallback_level=0; fallback_level <= max_fallback_level; fallback_level++ )) {
         eval "declare literal_transitions_name=literal_transitions_level_${fallback_level}"

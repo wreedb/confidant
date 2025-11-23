@@ -16,13 +16,24 @@ build: clean-build
     
 [group("clean")]
 clean-build:
-    -rm -rf .build/
+    -rm -rf .build
+
+[group("clean")]
+clean-cache:
+    -rm -rf .cache
+
+[group("clean")]
+distclean: clean-build clean-cache clean-flake
 
 [group("flake")]
 build-flake:
     nix build
 
 [group("flake")]
+update-flake:
+    nix flake update
+    
+[group("clean")]
 clean-flake:
     -rm result
 

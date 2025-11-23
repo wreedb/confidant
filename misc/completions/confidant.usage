@@ -1,20 +1,12 @@
-confidant ( ( -h | --help ) "display help info"
-          | ( -V | --version ) "display version info"
-          | ( -q | --quiet ) "suppress non-error messages"
-          | usage "brief usage info"
-          | version "version info"
-          | ( help ( init | config ( dump | get ) | link ) ) "display help for subcommands"
-          
-          | ( init "initialize a repository" ... <DIRECTORY> ... )
-          
-          | ( config "view configuration" [
-            ( ( get "find a value by name" [ ( -f <PATH> | --file <PATH> ) "specify a file path" ] <NAME> )
-            | ( dump "display current configuration" [ ( -f <PATH> | --file <PATH> "specify a file path" ) | ( -g | --global ) "display global configuration" ] ) ) ] )
-          
-          | ( link
-            [ ( ( -f <PATH> | --file <PATH> ) "specify a file path"
-              | ( -d | --dry-run ) "simulate actions"
-              | ( -t <TAGS> | --tags <TAGS> ) "specify tagged entries to apply" )
-            ] ) "apply symlinks" );
-          
-          
+<GLOBAL_OPTION> ::= ( -V | --version ) | ( -u | --usage );
+<OPTION> ::= ( -? | -h | --help ) | ( -v | --verbose ) | ( -q | --quiet );
+<LINK_OPTION> ::= ( -t <TAGS> | --tags <TAGS> ) | ( -f <PATH> | --file <PATH> ) | ( -d | --dry-run );
+<SUBCOMMAND> ::= help [<HELP_TOPIC>] | config [<CONFIG_SUBCOMMAND>] [<OPTION>] | link [<LINK_OPTION>...] [<OPTION>] | init [( -d | --dry-run )] [<DIRECTORY>] [<OPTION>] | usage | version;
+<HELP_TOPIC> ::= init | link | config [<HELP_CONFIG_TOPIC>];
+<HELP_CONFIG_TOPIC> ::= dump | get;
+<CONFIG_SUBCOMMAND> ::= get [<CONFIG_GET_OPTION>] [<OPTION>] | dump [<CONFIG_DUMP_OPTION>] [<OPTION>];
+<CONFIG_DUMP_OPTION> ::= ( -f <PATH> | --file <PATH> ) | ( -g | --global ) | ( -j | --json );
+<CONFIG_GET_OPTION> ::= ( (-g | --global) <CONFIG_GET_GLOBAL_QUERY> ) | <CONFIG_GET_LOCAL_QUERY>;
+<CONFIG_GET_LOCAL_QUERY> ::= repository | repository.url | links | templates;
+<CONFIG_GET_GLOBAL_QUERY> ::= create-directories | color | log-level;
+confidant ( <SUBCOMMAND> || ( <GLOBAL_OPTION> | <OPTION> ));

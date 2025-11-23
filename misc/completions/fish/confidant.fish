@@ -50,7 +50,7 @@ complete -c confidant -f -n "
     and not __fish_seen_subcommand_from help;
     and not __fish_seen_subcommand_from version;
     and not __fish_seen_subcommand_from usage;
-" -s h -l help -d "display help info"
+" -s h -s '?' -l help -d "display help info"
 
 # help
 complete -c confidant -f -n "
@@ -113,7 +113,7 @@ complete -c confidant -n "
 complete -c confidant -n "
     __fish_seen_subcommand_from config;
     and __fish_seen_subcommand_from get
-" -f -s h -l help -d "display help info"
+" -f -s h -s '?' -l help -d "display help info"
 
 complete -c confidant -n "
     __fish_seen_subcommand_from config;
@@ -126,9 +126,13 @@ complete -c confidant -n "
 " -s g -l global -d "display global configuration"
 
 complete -c confidant -n __fish_use_subcommand -a init -d "initialize a repository"
-complete -c confidant -n "__fish_seen_subcommand_from init" -s h -l help -d "display help info"
+complete -c confidant -n "__fish_seen_subcommand_from init" -s d -l dry-run -d "simulate actions only"
+complete -c confidant -n "__fish_seen_subcommand_from init" -s v -l verbose -d "increase verbosity"
+complete -c confidant -n "__fish_seen_subcommand_from init" -s q -l quiet -d "suppress messages"
+complete -c confidant -n "__fish_seen_subcommand_from init" -s h -s '?' -l help -d "display help info"
+
 complete -c confidant -n __fish_use_subcommand -a link -d "apply symlinks"
-complete -c confidant -n "__fish_seen_subcommand_from link" -s h -l help -d "display help info"
+complete -c confidant -n "__fish_seen_subcommand_from link" -s h -s '?' -l help -d "display help info"
 
 complete -c confidant -n "__fish_seen_subcommand_from link" -s t -l tags -d "specify tagged entries to apply"
 complete -c confidant -n "__fish_seen_subcommand_from link" -s f -l file -d "specify a file path"

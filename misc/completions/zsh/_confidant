@@ -9,36 +9,25 @@ _confidant_cmd_1 () {
 }
 
 _confidant () {
-    declare -a literals=("-h" "--help" "-V" "--version" "-q" "--quiet" "usage" "version" "help" "init" "config" "dump" "get" "link" "init" "config" "get" "-f" "--file" "dump" "-f" "--file" "-g" "--global" "link" "-f" "--file" "-d" "--dry-run" "-t" "--tags")
+    declare -a literals=("help" "init" "link" "config" "dump" "get" "config" "get" "-g" "--global" "create-directories" "color" "log-level" "repository" "repository.url" "links" "templates" "-?" "-h" "--help" "-v" "--verbose" "-q" "--quiet" "dump" "-f" "--file" "-g" "--global" "-j" "--json" "link" "-t" "--tags" "-f" "--file" "-d" "--dry-run" "init" "-d" "--dry-run" "usage" "version" "-V" "--version" "-u" "--usage" "-?" "-h" "--help" "-v" "--verbose" "-q" "--quiet")
     declare -A descrs=()
-    descrs[0]="display help info"
-    descrs[1]="display version info"
-    descrs[2]="suppress non-error messages"
-    descrs[3]="brief usage info"
-    descrs[4]="version info"
-    descrs[5]="display help for subcommands"
-    descrs[6]="initialize a repository"
-    descrs[7]="view configuration"
-    descrs[8]="find a value by name"
-    descrs[9]="specify a file path"
-    descrs[10]="display current configuration"
-    descrs[11]="display global configuration"
-    descrs[12]="apply symlinks"
-    descrs[13]="simulate actions"
-    descrs[14]="specify tagged entries to apply"
-    declare -A descr_id_from_literal_id=([1]=0 [2]=0 [3]=1 [4]=1 [5]=2 [6]=2 [7]=3 [8]=4 [9]=5 [15]=6 [16]=7 [17]=8 [18]=9 [19]=9 [20]=10 [23]=11 [24]=11 [25]=12 [26]=9 [27]=9 [28]=13 [29]=13 [30]=14 [31]=14)
+    declare -A descr_id_from_literal_id=()
     declare -a regexes=()
     declare -A literal_transitions=()
-    literal_transitions[1]="([1]=2 [2]=2 [3]=2 [4]=2 [5]=2 [6]=2 [7]=2 [8]=2 [9]=3 [15]=4 [16]=5 [25]=6)"
-    literal_transitions[3]="([10]=2 [11]=15 [14]=2)"
-    literal_transitions[4]="([15]=4)"
-    literal_transitions[5]="([17]=7 [20]=8)"
-    literal_transitions[6]="([26]=16 [27]=17 [28]=2 [29]=2 [30]=18 [31]=19)"
-    literal_transitions[7]="([26]=11 [27]=12)"
-    literal_transitions[8]="([21]=9 [22]=10 [23]=2 [24]=2)"
-    literal_transitions[15]="([12]=2 [13]=2)"
+    literal_transitions[1]="([1]=2 [7]=3 [32]=4 [39]=5 [42]=6 [43]=6 [44]=6 [45]=6 [46]=6 [47]=6 [48]=6 [49]=6 [50]=6 [51]=6 [52]=6 [53]=6 [54]=6)"
+    literal_transitions[2]="([39]=6 [32]=6 [7]=18)"
+    literal_transitions[3]="([8]=11 [48]=6 [49]=6 [50]=6 [51]=6 [52]=6 [53]=6 [54]=6 [25]=12)"
+    literal_transitions[4]="([48]=6 [49]=6 [50]=6 [51]=6 [52]=6 [53]=6 [54]=6 [33]=7 [34]=8 [35]=9 [36]=10 [40]=4 [41]=4)"
+    literal_transitions[5]="([48]=6 [49]=6 [50]=6 [51]=6 [52]=6 [53]=6 [54]=6 [40]=19 [41]=19)"
+    literal_transitions[11]="([28]=17 [29]=17 [14]=16 [15]=16 [16]=16 [17]=16 [48]=13 [49]=13 [50]=13 [51]=13 [52]=13 [53]=13 [54]=13)"
+    literal_transitions[12]="([48]=13 [49]=13 [50]=13 [51]=13 [52]=13 [53]=13 [54]=13 [35]=14 [36]=15 [28]=16 [29]=16 [30]=16 [31]=16)"
+    literal_transitions[13]="([48]=6 [49]=6 [50]=6 [51]=6 [52]=6 [53]=6 [54]=6)"
+    literal_transitions[16]="([48]=13 [49]=13 [50]=13 [51]=13 [52]=13 [53]=13 [54]=13)"
+    literal_transitions[17]="([11]=16 [12]=16 [13]=16)"
+    literal_transitions[18]="([25]=6 [8]=6)"
+    literal_transitions[19]="([48]=6 [49]=6 [50]=6 [51]=6 [52]=6 [53]=6 [54]=6)"
     declare -A nontail_transitions=()
-    declare -A match_anything_transitions=([9]=2 [10]=2 [7]=2 [11]=13 [13]=2 [12]=13 [4]=14 [14]=14 [19]=2 [16]=2 [18]=2 [17]=2)
+    declare -A match_anything_transitions=([7]=4 [8]=4 [9]=4 [10]=4 [5]=13 [14]=16 [15]=16 [19]=13)
     declare -A subword_transitions=()
 
     declare state=1
@@ -93,14 +82,20 @@ _confidant () {
         return 1
     done
 
-    declare -A literal_transitions_level_0=([3]="10 11 14" [1]="1 2 3 4 5 6 7 8 9 15 16 25" [4]="15" [15]="12 13" [6]="26 27 28 29 30 31" [5]="17 20" [8]="21 22 23 24" [7]="26 27")
+    declare -A literal_transitions_level_0=([5]="48 49 50 51 52 53 54 40 41" [3]="8 48 49 50 51 52 53 54 25" [1]="1 7 32 39 42 43" [4]="48 49 50 51 52 53 54 33 34 35 36 40 41" [19]="48 49 50 51 52 53 54" [11]="28 29 14 15 16 17 48 49 50 51 52 53 54" [12]="48 49 50 51 52 53 54 35 36 28 29 30 31" [17]="11 12 13" [13]="48 49 50 51 52 53 54" [16]="48 49 50 51 52 53 54" [2]="39 32 7" [18]="25 8")
+    declare -A literal_transitions_level_1=([1]="44 45 46 47 48 49 50 51 52 53 54")
     declare -A subword_transitions_level_0=()
+    declare -A subword_transitions_level_1=()
     declare -A commands_level_0=()
+    declare -A commands_level_1=()
     declare -A nontail_commands_level_0=()
     declare -A nontail_regexes_level_0=()
-    declare -A specialized_commands_level_0=([10]="0" [4]="1" [9]="0" [14]="1" [11]="0" [12]="0" [17]="0" [16]="0")
+    declare -A nontail_commands_level_1=()
+    declare -A nontail_regexes_level_1=()
+    declare -A specialized_commands_level_0=([19]="1" [10]="0" [5]="1" [9]="0" [14]="0" [15]="0")
+    declare -A specialized_commands_level_1=()
 
-    declare max_fallback_level=0
+    declare max_fallback_level=1
     for (( fallback_level=0; fallback_level <= max_fallback_level; fallback_level++ )); do
         completions_no_description_trailing_space=()
         completions_no_description_no_trailing_space=()

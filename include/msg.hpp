@@ -64,7 +64,8 @@ namespace msg {
     
     template <typename... Args>
     void warnextra(std::string_view msg, Args&&... fmt) {
-        if (gconf::loglevel == verbose::quiet || gconf::loglevel >= verbose::info) return;
+        if (gconf::loglevel == verbose::quiet) return;
+        if (gconf::loglevel <= verbose::info) return;
         std::string message = std::vformat(msg.data(), std::make_format_args(fmt...));
         std::cout
         << fg::yellow("warn")

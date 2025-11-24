@@ -52,8 +52,7 @@ namespace confidant {
                         
                         if (fs::exists(destpath)) {
                             if (fs::equivalent(sourcepath, destpath)) {
-                                msg::warnextra("skipping {}, already linked",
-                                    fmt::bolden(udeststr));
+                                msg::extra("skipping {}, already linked", fmt::bolden(udeststr));
                                 continue;
                             }
                             msg::warn("destination {} already exists, skipping",
@@ -129,6 +128,9 @@ namespace confidant {
                         // show message regardless for dry-runs
                         msg::pretty("linked {}", fmt::bolden(udeststr));
                     }
+                    // show *something* when nothing happens
+                    if (processedItems == 0)
+                        msg::pretty("template {} required no links", fmt::bolden(tmpl.name));
                     msg::trace("processed {} items", processedItems);
                     processedTemplates++;
                 }
@@ -175,7 +177,7 @@ namespace confidant {
                     if (fs::exists(destpath)) {
                         // if the source and dest are the same file, e.g. the link was (likely) already created by us
                         if (fs::equivalent(sourcepath, destpath)) {
-                            msg::debug("skipping {}, already linked", fmt::bolden(udeststr));
+                            msg::extra("skipping {}, already linked", fmt::bolden(udeststr));
                             continue;
                         }
                         
@@ -195,7 +197,7 @@ namespace confidant {
                                 std::exit(1);
                             }
                         } else {
-                            msg::warnextra("removing broken symlink at {}", fmt::bolden(deststr));
+                            msg::extra("removing broken symlink at {}", fmt::bolden(deststr));
                         }
                     }
                     
@@ -283,7 +285,9 @@ namespace confidant {
                     // the file was linked
                     msg::pretty("linked {}", fmt::bolden(udeststr));
                 }
-            
+                // show *something* when nothing happens at least
+                if (linksdone == 0)
+                    msg::pretty("no links were needed");
                 msg::trace("created {} normal links", fmt::bolden(std::to_string(linksdone)));
                 return 0;
         

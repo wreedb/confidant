@@ -1,0 +1,484 @@
+# Spanish translations for confidant package
+# Traducciones al español para el paquete confidant.
+# Copyright (C) 2025 Will Reed
+# This file is distributed under the same license as the confidant package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: confidant 0.4.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-24 04:40-0600\n"
+"PO-Revision-Date: 2025-11-24 03:31-0600\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: es_MX\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/settings/local.cpp:36
+#, c++-format
+msgid "failed to parse {} value as a string!"
+msgstr "¡no se pudo analizar {} como una cadena!"
+
+#: src/settings/local.cpp:46 src/settings/local.cpp:124
+#, c++-format
+msgid "field {} not specified"
+msgstr "no se especificó la entrada {}"
+
+#: src/settings/local.cpp:50 src/settings/local.cpp:128
+#, c++-format
+msgid "failed to parse {} as a node!"
+msgstr "¡no se pudo analizar {} campo {} como nodo!"
+
+#: src/settings/local.cpp:66 src/settings/local.cpp:76
+#: src/settings/local.cpp:88 src/settings/local.cpp:92
+#: src/settings/local.cpp:105 src/settings/local.cpp:144
+#, c++-format
+msgid "failed to parse {} field {} as a string!"
+msgstr "¡no se pudo analizar {} campo {} como una cadena!"
+
+#: src/settings/local.cpp:79
+#, c++-format
+msgid "{} field {} must be a string!"
+msgstr "¡el campo {} {} debe ser una candena!"
+
+#: src/settings/local.cpp:81 src/settings/local.cpp:96
+#, c++-format
+msgid "link {} is missing a {} value!"
+msgstr "¡link {} le falte el valor {}!"
+
+#: src/settings/local.cpp:109
+#, c++-format
+msgid "type {} is not recognized, expected one of {} or {}, using default"
+msgstr ""
+"type {} no se reconoce, se espera uno de los siguientes: {} o {}, utilizando "
+"el valor predeterminado"
+
+#: src/settings/local.cpp:154 src/settings/local.cpp:164
+#, c++-format
+msgid "template {} is missing a {} value!"
+msgstr "¡template {} le falte el valor {}!"
+
+#: src/settings/local.cpp:178
+#, c++-format
+msgid "failed to get {} items field as a list!"
+msgstr "¡no se pudo analizar {} items campo como una lista!"
+
+#. items field exists, but is not an array (fatal)
+#: src/settings/local.cpp:187
+#, c++-format
+msgid "template {} {} field is not a list!"
+msgstr "¡template {} {} campo no es una lista!"
+
+#. items field doesn't exist (fatal)
+#: src/settings/local.cpp:192
+#, c++-format
+msgid "template {} has no {} list!"
+msgstr "¡template {} no tiene lista {}!"
+
+#: src/actions/link.cpp:48 src/actions/link.cpp:170
+#, c++-format
+msgid "source file {} does not exist!"
+msgstr "¡el archivo fuente {} no existe!"
+
+#: src/actions/link.cpp:55 src/actions/link.cpp:180
+#, c++-format
+msgid "skipping {}, already linked"
+msgstr "omitiendo {}, ya está vinculado"
+
+#: src/actions/link.cpp:58
+#, c++-format
+msgid "destination {} already exists, skipping"
+msgstr "el destino {} ya existe, omitiendo"
+
+#: src/actions/link.cpp:68 src/actions/link.cpp:195
+#, c++-format
+msgid "failed to remove broken symlink at {}"
+msgstr "no se ha podido eliminar el enlace simbólico roto en {}"
+
+#: src/actions/link.cpp:73 src/actions/link.cpp:200
+#, c++-format
+msgid "removing broken symlink at {}"
+msgstr "eliminar enlace simbólico roto en {}"
+
+#: src/actions/link.cpp:79
+#, c++-format
+msgid "parent directory for {} doesn't exist, skipping"
+msgstr "el directorio principal {} no existe, omitiendo"
+
+#: src/actions/link.cpp:86 src/actions/link.cpp:216 src/help.cpp:234
+#, c++-format
+msgid "failed to create directory {}"
+msgstr "no se pudo crear el directorio {}"
+
+#: src/actions/link.cpp:92 src/help.cpp:237
+#, c++-format
+msgid "created directory {}"
+msgstr "directorio creado {}"
+
+#: src/actions/link.cpp:98
+#, c++-format
+msgid "no write permissions for directory {}"
+msgstr "sin permisos de escritura para directorio {}"
+
+#: src/actions/link.cpp:109 src/actions/link.cpp:121
+#, c++-format
+msgid "failed to create symlink at {}"
+msgstr "no se pudo crear el enlace simbólico en {}"
+
+#. show message regardless for dry-runs
+#. the file was linked
+#: src/actions/link.cpp:129 src/actions/link.cpp:286
+#, c++-format
+msgid "linked {}"
+msgstr "vinculado {}"
+
+#: src/actions/link.cpp:133
+#, c++-format
+msgid "template {} required no links"
+msgstr "template {} no necesitaba enlaces."
+
+#: src/actions/link.cpp:134
+#, c++-format
+msgid "processed {} items"
+msgstr "procesó {} items"
+
+#: src/actions/link.cpp:137
+#, c++-format
+msgid "processed {} templates"
+msgstr "procesó {} templates"
+
+#. the destination already exists, and isn't identical to our source; we do nothing and skip
+#: src/actions/link.cpp:185
+#, c++-format
+msgid "destination {} already exists and is not identical to source, skipping"
+msgstr "el destino {} ya existe y no es idéntico a source, omitiendo"
+
+#. parent path doesn't exist and settings to create dirs is off
+#: src/actions/link.cpp:207
+#, c++-format
+msgid "parent directory for {} does not exist, skipping"
+msgstr "el directorio principal de {} no existe, omitiendo"
+
+#. display extra message regardless, for dry-run verbose
+#: src/actions/link.cpp:223
+#, c++-format
+msgid "create directory {}"
+msgstr "directorio creado {}"
+
+#: src/actions/link.cpp:230
+#, c++-format
+msgid "no write permissions for {}"
+msgstr "sin permisos de escritura para {}"
+
+#. they specified directory, but the source is not a directory
+#: src/actions/link.cpp:243
+#, c++-format
+msgid "link {} source {} is not a directory"
+msgstr "link {} source {} no es un directorio"
+
+#: src/actions/link.cpp:254 src/actions/link.cpp:270
+#, c++-format
+msgid "failed to create symlink for {} at {}"
+msgstr "no se pudo crear el enlace simbólico para {} en {}"
+
+#: src/actions/link.cpp:290
+msgid "no links were needed"
+msgstr "no se necesitaban enlaces"
+
+#: src/actions/link.cpp:291
+#, c++-format
+msgid "created {} normal links"
+msgstr "creó {} enlaces normales"
+
+#: src/help.cpp:27
+msgid "your configuration"
+msgstr "tu amigo de configuracion"
+
+#: src/help.cpp:27
+msgid "pal and confidant"
+msgstr "y confidente"
+
+#: src/help.cpp:28 src/help.cpp:43
+msgid "actions"
+msgstr "acciones"
+
+#: src/help.cpp:29
+msgid "initialize a repository"
+msgstr "inicializar un repositorio"
+
+#: src/help.cpp:30
+msgid "view configuration"
+msgstr "ver configuracion"
+
+#: src/help.cpp:31
+msgid "create symlinks"
+msgstr "crear enlaces simbolicos"
+
+#: src/help.cpp:32
+msgid "display help for subcommands"
+msgstr "ayuda para subcomandos"
+
+#: src/help.cpp:33
+msgid "brief command-line usage info"
+msgstr "informacion breve sobre el uso"
+
+#: src/help.cpp:34
+msgid "display version info"
+msgstr "mostrar informacion de la version"
+
+#: src/help.cpp:35 src/help.cpp:42 src/help.cpp:63 src/help.cpp:79
+#: src/help.cpp:111 src/help.cpp:125
+msgid "options"
+msgstr "opciones"
+
+#: src/help.cpp:36 src/help.cpp:80 src/help.cpp:97 src/help.cpp:113
+#: src/help.cpp:130
+msgid "output more information about actions taken"
+msgstr "dar mas informacion durante la ejecucion"
+
+#: src/help.cpp:37 src/help.cpp:66 src/help.cpp:81 src/help.cpp:98
+#: src/help.cpp:114 src/help.cpp:131
+msgid "suppress non-error messages"
+msgstr "ocultar mensajes que no son de error"
+
+#: src/help.cpp:38 src/help.cpp:67 src/help.cpp:82 src/help.cpp:99
+#: src/help.cpp:115 src/help.cpp:132
+msgid "display this help"
+msgstr "mostrar este mensaje de ayuda"
+
+#: src/help.cpp:42
+msgid "usage"
+msgstr "uso"
+
+#: src/help.cpp:50
+msgid "see"
+msgstr "consulte"
+
+#: src/help.cpp:50 src/help.cpp:83
+msgid "action"
+msgstr "accion"
+
+#: src/help.cpp:50
+msgid "or"
+msgstr "o"
+
+#: src/help.cpp:51
+msgid "for more information about a specific action"
+msgstr "para obtener mas informacion sobre una accion especiffica"
+
+#: src/help.cpp:51 src/help.cpp:85
+msgid "and its' respective options."
+msgstr "y sus opciones"
+
+#: src/help.cpp:59
+msgid "initialize a confidant repository"
+msgstr "inicializar un repositorio"
+
+#: src/help.cpp:60 src/help.cpp:107
+msgid "arguments"
+msgstr "argumentos"
+
+#: src/help.cpp:61 src/help.cpp:93 src/help.cpp:127
+msgid "PATH"
+msgstr "RUTA"
+
+#: src/help.cpp:61
+msgid "specify the path to initialize"
+msgstr "especifique la ruta del directorio para inicializar"
+
+#: src/help.cpp:62
+msgid "default: current working directory"
+msgstr "predeterminado: directorio actual"
+
+#: src/help.cpp:64 src/help.cpp:129
+msgid "show what actions"
+msgstr "solo"
+
+#: src/help.cpp:64 src/help.cpp:129
+msgid "would"
+msgstr "simular"
+
+#: src/help.cpp:64 src/help.cpp:129
+msgid "be taken"
+msgstr "las acciones"
+
+#: src/help.cpp:65
+msgid "output more information about actions"
+msgstr "mostrar más información sobre las acciones"
+
+#: src/help.cpp:75
+msgid "view configuration settings"
+msgstr "ver configuración"
+
+#: src/help.cpp:77
+msgid "display current configuration settings"
+msgstr "mostrar la configuración actual"
+
+#: src/help.cpp:78
+msgid "find the value of a setting by name"
+msgstr "buscar el valor de una configuración por nombre"
+
+#: src/help.cpp:83
+msgid "see 'confidant help config"
+msgstr "consulte 'confidant help config"
+
+#: src/help.cpp:83
+msgid "for more information about a specific command"
+msgstr "para obtener más información sobre un comando específico"
+
+#: src/help.cpp:91
+msgid "display current configuration"
+msgstr "mostrar la configuración actual"
+
+#: src/help.cpp:93
+msgid "specify a configuration file to operate on"
+msgstr "especificar un archivo de configuración sobre el que operar"
+
+#: src/help.cpp:94 src/help.cpp:128
+msgid "default: <current directory>/confidant.ucl"
+msgstr "predeterminado: <directorio actual>/confidant.ucl"
+
+#: src/help.cpp:95
+msgid "display the global configuration"
+msgstr "mostrar la configuración global"
+
+#: src/help.cpp:96
+msgid "output configuration in JSON format"
+msgstr "configuración de salida en formato JSON"
+
+#: src/help.cpp:106
+msgid "find a configuration value by name"
+msgstr "buscar el valor de una configuración por nombre"
+
+#: src/help.cpp:108
+msgid "QUERY"
+msgstr "CONSULTA"
+
+#: src/help.cpp:108
+msgid "the configuration setting to search for"
+msgstr "la configuración para buscar"
+
+#: src/help.cpp:109
+msgid "you may search for nested values by using"
+msgstr "puede buscar valores anidados"
+
+#: src/help.cpp:110
+msgid "periods to traverse, e.g.: 'repository.url'"
+msgstr "utilizando puntos para recorrerlos, por ejemplo: 'repository.url'"
+
+#: src/help.cpp:112
+msgid "query the global configuration"
+msgstr "consulta la configuración global"
+
+#: src/help.cpp:124
+msgid "apply symlinks from your configuration file"
+msgstr "aplique los enlaces simbólicos desde su configuración"
+
+#: src/help.cpp:126
+msgid "specify a set of tagged links to apply, separated by commas"
+msgstr ""
+"especifique un grupo de enlaces etiquetados que se aplicarán, separados por "
+"comas"
+
+#: src/help.cpp:127
+msgid "specify the configuration file to operate on"
+msgstr "especifique el archivo de configuración con el que desea trabajar"
+
+#: src/help.cpp:241
+#, c++-format
+msgid "no permission to write files to {}"
+msgstr "sin permiso para escribir archivos en {}"
+
+#: src/help.cpp:244
+#, c++-format
+msgid "file {} already exists, not overwriting"
+msgstr "el archivo {} ya existe, no se sobrescribirá"
+
+#: src/help.cpp:250
+#, c++-format
+msgid "failed to open {} for writing"
+msgstr "no se puede abrir {} para escribir."
+
+#: src/help.cpp:255 src/help.cpp:275
+#, c++-format
+msgid "wrote configuration to file {}"
+msgstr "escribió el archivo de configuración en {}"
+
+#: src/help.cpp:263
+#, c++-format
+msgid "file {} already exists, not overwriting."
+msgstr "el archivo {} ya existe, no se sobrescribirá."
+
+#: src/help.cpp:270
+#, c++-format
+msgid "unable to open {} for writing"
+msgstr "no se puede abrir {} para escribir."
+
+#: src/main.cpp:178
+#, c++-format
+msgid "failed to create parent directory {} for global config file!"
+msgstr ""
+"¡no se pudo crear el directorio principal {} para el archivo de "
+"configuración global!"
+
+#: src/main.cpp:184
+#, c++-format
+msgid "failed to create global config file at {}!"
+msgstr "¡no se pudo crear el archivo de configuración global en {}!"
+
+#: src/main.cpp:261
+msgid "--quiet and --verbose are mutually exclusive."
+msgstr "--quiet y --verbose se excluyen mutuamente."
+
+#: src/main.cpp:276
+msgid "unable to parse command line"
+msgstr "no se puede analizar la línea de comandos"
+
+#: src/main.cpp:315
+#, c++-format
+msgid "version {}"
+msgstr "versión {}"
+
+#: src/main.cpp:371 src/main.cpp:380
+#, c++-format
+msgid "setting {} not found in configuration"
+msgstr "no se encuentra {} en la configuración"
+
+#. help::defaults::write_local_config(args::init::path);
+#: src/main.cpp:406
+#, c++-format
+msgid "wrote sample config file to {}"
+msgstr "escribí un archivo de configuración de muestra en {}"
+
+#: src/util.cpp:80
+#, c++-format
+msgid "log-level {} is invalid!"
+msgstr "¡log-level {} no es válido!"
+
+#: include/msg.hpp:40
+msgid "error"
+msgstr "error"
+
+#: include/msg.hpp:52
+msgid "info"
+msgstr "información"
+
+#: include/msg.hpp:65 include/msg.hpp:78
+msgid "warn"
+msgstr "aviso"
+
+#: include/msg.hpp:91 include/msg.hpp:104
+msgid "debug"
+msgstr "depuración"
+
+#: include/msg.hpp:117
+msgid "trace"
+msgstr "traza"
+
+#: include/msg.hpp:128
+msgid "fatal"
+msgstr "fatal"

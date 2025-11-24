@@ -1,0 +1,478 @@
+# German translations for confidant package
+# German translation for confidant.
+# Copyright (C) 2025 THE confidant'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the confidant package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: confidant 0.4.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-24 04:40-0600\n"
+"PO-Revision-Date: 2025-11-24 04:40-0600\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/settings/local.cpp:36
+#, c++-format
+msgid "failed to parse {} value as a string!"
+msgstr ""
+
+#: src/settings/local.cpp:46 src/settings/local.cpp:124
+#, c++-format
+msgid "field {} not specified"
+msgstr ""
+
+#: src/settings/local.cpp:50 src/settings/local.cpp:128
+#, c++-format
+msgid "failed to parse {} as a node!"
+msgstr ""
+
+#: src/settings/local.cpp:66 src/settings/local.cpp:76
+#: src/settings/local.cpp:88 src/settings/local.cpp:92
+#: src/settings/local.cpp:105 src/settings/local.cpp:144
+#, c++-format
+msgid "failed to parse {} field {} as a string!"
+msgstr ""
+
+#: src/settings/local.cpp:79
+#, c++-format
+msgid "{} field {} must be a string!"
+msgstr ""
+
+#: src/settings/local.cpp:81 src/settings/local.cpp:96
+#, c++-format
+msgid "link {} is missing a {} value!"
+msgstr ""
+
+#: src/settings/local.cpp:109
+#, c++-format
+msgid "type {} is not recognized, expected one of {} or {}, using default"
+msgstr ""
+
+#: src/settings/local.cpp:154 src/settings/local.cpp:164
+#, c++-format
+msgid "template {} is missing a {} value!"
+msgstr ""
+
+#: src/settings/local.cpp:178
+#, c++-format
+msgid "failed to get {} items field as a list!"
+msgstr ""
+
+#. items field exists, but is not an array (fatal)
+#: src/settings/local.cpp:187
+#, c++-format
+msgid "template {} {} field is not a list!"
+msgstr ""
+
+#. items field doesn't exist (fatal)
+#: src/settings/local.cpp:192
+#, c++-format
+msgid "template {} has no {} list!"
+msgstr ""
+
+#: src/actions/link.cpp:48 src/actions/link.cpp:170
+#, c++-format
+msgid "source file {} does not exist!"
+msgstr ""
+
+#: src/actions/link.cpp:55 src/actions/link.cpp:180
+#, c++-format
+msgid "skipping {}, already linked"
+msgstr ""
+
+#: src/actions/link.cpp:58
+#, c++-format
+msgid "destination {} already exists, skipping"
+msgstr ""
+
+#: src/actions/link.cpp:68 src/actions/link.cpp:195
+#, c++-format
+msgid "failed to remove broken symlink at {}"
+msgstr ""
+
+#: src/actions/link.cpp:73 src/actions/link.cpp:200
+#, c++-format
+msgid "removing broken symlink at {}"
+msgstr ""
+
+#: src/actions/link.cpp:79
+#, c++-format
+msgid "parent directory for {} doesn't exist, skipping"
+msgstr ""
+
+#: src/actions/link.cpp:86 src/actions/link.cpp:216 src/help.cpp:234
+#, c++-format
+msgid "failed to create directory {}"
+msgstr ""
+
+#: src/actions/link.cpp:92 src/help.cpp:237
+#, c++-format
+msgid "created directory {}"
+msgstr ""
+
+#: src/actions/link.cpp:98
+#, c++-format
+msgid "no write permissions for directory {}"
+msgstr ""
+
+#: src/actions/link.cpp:109 src/actions/link.cpp:121
+#, c++-format
+msgid "failed to create symlink at {}"
+msgstr ""
+
+#. show message regardless for dry-runs
+#. the file was linked
+#: src/actions/link.cpp:129 src/actions/link.cpp:286
+#, c++-format
+msgid "linked {}"
+msgstr ""
+
+#: src/actions/link.cpp:133
+#, c++-format
+msgid "template {} required no links"
+msgstr ""
+
+#: src/actions/link.cpp:134
+#, c++-format
+msgid "processed {} items"
+msgstr ""
+
+#: src/actions/link.cpp:137
+#, c++-format
+msgid "processed {} templates"
+msgstr ""
+
+#. the destination already exists, and isn't identical to our source; we do nothing and skip
+#: src/actions/link.cpp:185
+#, c++-format
+msgid "destination {} already exists and is not identical to source, skipping"
+msgstr ""
+
+#. parent path doesn't exist and settings to create dirs is off
+#: src/actions/link.cpp:207
+#, c++-format
+msgid "parent directory for {} does not exist, skipping"
+msgstr ""
+
+#. display extra message regardless, for dry-run verbose
+#: src/actions/link.cpp:223
+#, c++-format
+msgid "create directory {}"
+msgstr ""
+
+#: src/actions/link.cpp:230
+#, c++-format
+msgid "no write permissions for {}"
+msgstr ""
+
+#. they specified directory, but the source is not a directory
+#: src/actions/link.cpp:243
+#, c++-format
+msgid "link {} source {} is not a directory"
+msgstr ""
+
+#: src/actions/link.cpp:254 src/actions/link.cpp:270
+#, c++-format
+msgid "failed to create symlink for {} at {}"
+msgstr ""
+
+#: src/actions/link.cpp:290
+msgid "no links were needed"
+msgstr ""
+
+#: src/actions/link.cpp:291
+#, c++-format
+msgid "created {} normal links"
+msgstr ""
+
+#: src/help.cpp:27
+msgid "your configuration"
+msgstr ""
+
+#: src/help.cpp:27
+msgid "pal and confidant"
+msgstr ""
+
+#: src/help.cpp:28 src/help.cpp:43
+msgid "actions"
+msgstr ""
+
+#: src/help.cpp:29
+msgid "initialize a repository"
+msgstr ""
+
+#: src/help.cpp:30
+msgid "view configuration"
+msgstr ""
+
+#: src/help.cpp:31
+msgid "create symlinks"
+msgstr ""
+
+#: src/help.cpp:32
+msgid "display help for subcommands"
+msgstr ""
+
+#: src/help.cpp:33
+msgid "brief command-line usage info"
+msgstr ""
+
+#: src/help.cpp:34
+msgid "display version info"
+msgstr ""
+
+#: src/help.cpp:35 src/help.cpp:42 src/help.cpp:63 src/help.cpp:79
+#: src/help.cpp:111 src/help.cpp:125
+msgid "options"
+msgstr ""
+
+#: src/help.cpp:36 src/help.cpp:80 src/help.cpp:97 src/help.cpp:113
+#: src/help.cpp:130
+msgid "output more information about actions taken"
+msgstr ""
+
+#: src/help.cpp:37 src/help.cpp:66 src/help.cpp:81 src/help.cpp:98
+#: src/help.cpp:114 src/help.cpp:131
+msgid "suppress non-error messages"
+msgstr ""
+
+#: src/help.cpp:38 src/help.cpp:67 src/help.cpp:82 src/help.cpp:99
+#: src/help.cpp:115 src/help.cpp:132
+msgid "display this help"
+msgstr ""
+
+#: src/help.cpp:42
+msgid "usage"
+msgstr ""
+
+#: src/help.cpp:50
+msgid "see"
+msgstr ""
+
+#: src/help.cpp:50 src/help.cpp:83
+msgid "action"
+msgstr ""
+
+#: src/help.cpp:50
+msgid "or"
+msgstr ""
+
+#: src/help.cpp:51
+msgid "for more information about a specific action"
+msgstr ""
+
+#: src/help.cpp:51 src/help.cpp:85
+msgid "and its' respective options."
+msgstr ""
+
+#: src/help.cpp:59
+msgid "initialize a confidant repository"
+msgstr ""
+
+#: src/help.cpp:60 src/help.cpp:107
+msgid "arguments"
+msgstr ""
+
+#: src/help.cpp:61 src/help.cpp:93 src/help.cpp:127
+msgid "PATH"
+msgstr ""
+
+#: src/help.cpp:61
+msgid "specify the path to initialize"
+msgstr ""
+
+#: src/help.cpp:62
+msgid "default: current working directory"
+msgstr ""
+
+#: src/help.cpp:64 src/help.cpp:129
+msgid "show what actions"
+msgstr ""
+
+#: src/help.cpp:64 src/help.cpp:129
+msgid "would"
+msgstr ""
+
+#: src/help.cpp:64 src/help.cpp:129
+msgid "be taken"
+msgstr ""
+
+#: src/help.cpp:65
+msgid "output more information about actions"
+msgstr ""
+
+#: src/help.cpp:75
+msgid "view configuration settings"
+msgstr ""
+
+#: src/help.cpp:77
+msgid "display current configuration settings"
+msgstr ""
+
+#: src/help.cpp:78
+msgid "find the value of a setting by name"
+msgstr ""
+
+#: src/help.cpp:83
+msgid "see 'confidant help config"
+msgstr ""
+
+#: src/help.cpp:83
+msgid "for more information about a specific command"
+msgstr ""
+
+#: src/help.cpp:91
+msgid "display current configuration"
+msgstr ""
+
+#: src/help.cpp:93
+msgid "specify a configuration file to operate on"
+msgstr ""
+
+#: src/help.cpp:94 src/help.cpp:128
+msgid "default: <current directory>/confidant.ucl"
+msgstr ""
+
+#: src/help.cpp:95
+msgid "display the global configuration"
+msgstr ""
+
+#: src/help.cpp:96
+msgid "output configuration in JSON format"
+msgstr ""
+
+#: src/help.cpp:106
+msgid "find a configuration value by name"
+msgstr ""
+
+#: src/help.cpp:108
+msgid "QUERY"
+msgstr ""
+
+#: src/help.cpp:108
+msgid "the configuration setting to search for"
+msgstr ""
+
+#: src/help.cpp:109
+msgid "you may search for nested values by using"
+msgstr ""
+
+#: src/help.cpp:110
+msgid "periods to traverse, e.g.: 'repository.url'"
+msgstr ""
+
+#: src/help.cpp:112
+msgid "query the global configuration"
+msgstr ""
+
+#: src/help.cpp:124
+msgid "apply symlinks from your configuration file"
+msgstr ""
+
+#: src/help.cpp:126
+msgid "specify a set of tagged links to apply, separated by commas"
+msgstr ""
+
+#: src/help.cpp:127
+msgid "specify the configuration file to operate on"
+msgstr ""
+
+#: src/help.cpp:241
+#, c++-format
+msgid "no permission to write files to {}"
+msgstr ""
+
+#: src/help.cpp:244
+#, c++-format
+msgid "file {} already exists, not overwriting"
+msgstr ""
+
+#: src/help.cpp:250
+#, c++-format
+msgid "failed to open {} for writing"
+msgstr ""
+
+#: src/help.cpp:255 src/help.cpp:275
+#, c++-format
+msgid "wrote configuration to file {}"
+msgstr ""
+
+#: src/help.cpp:263
+#, c++-format
+msgid "file {} already exists, not overwriting."
+msgstr ""
+
+#: src/help.cpp:270
+#, c++-format
+msgid "unable to open {} for writing"
+msgstr ""
+
+#: src/main.cpp:178
+#, c++-format
+msgid "failed to create parent directory {} for global config file!"
+msgstr ""
+
+#: src/main.cpp:184
+#, c++-format
+msgid "failed to create global config file at {}!"
+msgstr ""
+
+#: src/main.cpp:261
+msgid "--quiet and --verbose are mutually exclusive."
+msgstr ""
+
+#: src/main.cpp:276
+msgid "unable to parse command line"
+msgstr ""
+
+#: src/main.cpp:315
+#, c++-format
+msgid "version {}"
+msgstr ""
+
+#: src/main.cpp:371 src/main.cpp:380
+#, c++-format
+msgid "setting {} not found in configuration"
+msgstr ""
+
+#. help::defaults::write_local_config(args::init::path);
+#: src/main.cpp:406
+#, c++-format
+msgid "wrote sample config file to {}"
+msgstr ""
+
+#: src/util.cpp:80
+#, c++-format
+msgid "log-level {} is invalid!"
+msgstr ""
+
+#: include/msg.hpp:40
+msgid "error"
+msgstr ""
+
+#: include/msg.hpp:52
+msgid "info"
+msgstr ""
+
+#: include/msg.hpp:65 include/msg.hpp:78
+msgid "warn"
+msgstr ""
+
+#: include/msg.hpp:91 include/msg.hpp:104
+msgid "debug"
+msgstr ""
+
+#: include/msg.hpp:117
+msgid "trace"
+msgstr ""
+
+#: include/msg.hpp:128
+msgid "fatal"
+msgstr ""

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+destdir="${DESTDIR}"
+sourceroot="${MESON_SOURCE_ROOT}"
+
+localedir="${1}"; shift;
+name="${1}"; shift;
+
+for lang in "${@}"
+do
+    pofile="${sourceroot}/i18n/po/${lang}.po"
+    installpath="${destdir}${localedir}/${lang}/LC_MESSAGES/${name}.mo"
+    mkdir -p "$(dirname ${installpath})"
+    msgfmt "${pofile}" -o "${installpath}"
+    echo -en "installed ${lang} translation to ${installpath}\n"
+done

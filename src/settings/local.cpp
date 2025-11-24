@@ -73,7 +73,7 @@ namespace confidant {
                             // BEGIN source
                             if (ucl::check(n, "source") && n["source"].type() == ucl::String) {
                                 auto s = ucl::get::str(n, "source");
-                                if (!s) msg::fatal("failed to get {} field {} as a string!", fmt::bolden(link.name), fmt::bolden("source"));
+                                if (!s) msg::fatal("failed to parse {} field {} as a string!", fmt::bolden(link.name), fmt::bolden("source"));
                                 else link.source = fs::path(s.value());
                             } else if (ucl::check(n, "source") &&  n["source"].type() != ucl::String) {
                                 msg::fatal("{} field {} must be a string!", fmt::bolden(link.name), fmt::bolden("source"));
@@ -93,7 +93,7 @@ namespace confidant {
                                 std::string bn = link.source.filename().string();    
                                 link.destination = fs::path(std::format("{}/{}", s.value(), bn));
                             } else {
-                                msg::fatal(1, "link {} is missing a {} value!", fmt::bolden(link.name), fmt::bolden("dest/destdir"));
+                                msg::fatal("link {} is missing a {} value!", fmt::bolden(link.name), fmt::bolden("dest/destdir"));
                             }
                             // END dest/destdir
                             
@@ -110,7 +110,6 @@ namespace confidant {
                                         fmt::ital(t.value()),
                                         fmt::bolden("file"),
                                         fmt::bolden("directory"));
-                                    
                                     link.type = linktype::file;
                                 }
                             }
@@ -143,7 +142,7 @@ namespace confidant {
                                 auto s = ucl::get::str(tmpl, "tag");
                                 if (!s)
                                     msg::fatal("failed to parse {} field {} as a string!", fmt::bolden(t.name),
-                                                                                           fmt::bolden("tag"));
+                                                                                          fmt::bolden("tag"));
                                 else
                                     t.tag = s.value();                                
                             }

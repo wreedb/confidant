@@ -9,6 +9,7 @@
 #include <string>
 #include <string_view>
 
+#include "i18n.hpp"
 #include "config.hpp"
 #include "help.hpp"
 #include "fmt.hpp"
@@ -23,30 +24,31 @@ namespace help {
 namespace general {
     void help(std::string_view argz) {
         std::cout << fg::green(argz) << ":\n\n"
-                  << "    your configuration " << fmt::ital("pal and confidant") << "\n\n"
-                  << fg::magenta("actions") << ":\n\n"
-                  << "    " << fmt::ul("init") << "                initialize a repository\n"
-                  << "    " << fmt::ul("config") << "              modify and view configuration\n"
-                  << "    " << fmt::ul("link") << "                create symlinks\n"
-                  << "    " << fmt::ul("help") << "                display help for subcommands\n"
-                  << "    " << fmt::ul("usage") << "               brief command-line usage info\n"
-                  << "    " << fmt::ul("version") << "             display version info\n\n"
-                  << fg::yellow("options") << ":\n\n"
-                  << "    -v, --verbose       output more information about actions taken\n\n"
-                  << "    -q, --quiet         suppress non-error messages\n\n"
-                  << "    -?, -h, --help      display this help\n"
+                  << "    " << _("your configuration") << " " << fmt::ital(_("pal and confidant")) << "\n\n"
+                  << fg::magenta(_("actions")) << ":\n\n"
+                  << "    " << fmt::ul("init") << "                " << _("initialize a repository") << "\n"
+                  << "    " << fmt::ul("config") << "              " << _("view configuration") << "\n"
+                  << "    " << fmt::ul("link") << "                " << _("create symlinks") << "\n"
+                  << "    " << fmt::ul("help") << "                " << _("display help for subcommands") << "\n"
+                  << "    " << fmt::ul("usage") << "               " << _("brief command-line usage info") << "\n"
+                  << "    " << fmt::ul("version") << "             " << _("display version info") << "\n\n"
+                  << fg::yellow(_("options")) << ":\n\n"
+                  << "    -v, --verbose       " << _("output more information about actions taken") << "\n\n"
+                  << "    -q, --quiet         " << _("suppress non-error messages") << "\n\n"
+                  << "    -?, -h, --help      " << _("display this help") << "\n"
                   << std::endl;
     }
     void usage(std::string_view argz) {
-        std::cout << "usage: " << fg::green(argz) << " [" << fmt::ul("action") << "] [...options]\n"
-                  << fg::magenta("actions") << ": "
+        std::cout << _("usage") << ": " << fg::green(argz) << " [" << fmt::ul("action") << "] [..." << _("options") << "]\n"
+                  << fg::magenta(_("actions")) << ": "
                   << fmt::ul("init")    << ", "
                   << fmt::ul("config")  << ", "
                   << fmt::ul("link")    << ", "
                   << fmt::ul("help")    << ", "
                   << fmt::ul("usage")   << ", "
                   << fmt::ul("version") << "\n\n"
-                  << "see 'confidant help <" << fmt::ul("action") << ">' or 'confidant <" << fmt::ul("action") << "> -?'\nfor more information about a specific action and its' respective options."
+                  << _("see") << "'confidant help <" << fmt::ul(_("action")) << ">' " << _("or") << "'confidant <" << fmt::ul(_("action")) << "> -?'"
+                  << _("for more information about a specific action") << "\n" << _("and its' respective options.")
                   << std::endl;
     }
 };
@@ -54,15 +56,15 @@ namespace general {
 namespace init {
     void help(std::string_view argz) {
         std::cout << fg::green(argz) << " " << fmt::ul("init") << ":\n\n"
-                  << "    initialize a confidant repository\n\n"
-                  << fg::blue("arguments") << ":\n\n"
-                  << "    "<< fmt::ul("PATH") <<"                specify the path to initialize\n"
-                  << "                        default: current working directory\n\n"
-                  << fg::yellow("options") << ":\n\n"
-                  << "    -d, --dry-run       show what actions " << fmt::ital("would") << " be taken\n\n"
-                  << "    -v, --verbose       output more information about actions\n\n"
-                  << "    -q, --quiet         suppress non-error messages\n\n"
-                  << "    -?, -h, --help      display this help\n"
+                  << "    " << _("initialize a confidant repository") << "\n\n"
+                  << fg::blue(_("arguments")) << ":\n\n"
+                  << "    " << fmt::ul(_("PATH")) << "                " << _("specify the path to initialize") << "\n"
+                  << "                        " << _("default: current working directory") << "\n\n"
+                  << fg::yellow(_("options")) << ":\n\n"
+                  << "    -d, --dry-run       " << _("show what actions") << " " << fmt::ital(_("would")) << " " << _("be taken") << "\n\n"
+                  << "    -v, --verbose       " << _("output more information about actions") << "\n\n"
+                  << "    -q, --quiet         " << _("suppress non-error messages") << "\n\n"
+                  << "    -?, -h, --help      " << _("display this help") << "\n"
                   << std::endl;
     }
 };
@@ -70,45 +72,47 @@ namespace init {
 namespace config {
     void help(std::string_view argz) {
         std::cout << fg::green(argz) << " " << fmt::ul("config") << ":\n\n"
-                  << "    view configuration settings\n\n"
+                  << "    " << _("view configuration settings") << "\n\n"
                   << fg::magenta("actions") << ":\n\n"
-                  << "    " << fmt::ul("dump") << "                display current configuration settings\n"
-                  << "    " << fmt::ul("get") << "                 find the value of a setting by name\n\n"
-                  << fg::yellow("options") << ":\n\n"
-                  << "    -v, --verbose       output more information about actions taken\n\n"
-                  << "    -q, --quiet         suppress non-error messages\n\n"
-                  << "    -?, -h, --help      display this help\n\n"
-                  << "see 'confidant help config <" << fmt::ul("action") << ">' for more information about a specific command\nand its' respective options."
+                  << "    " << fmt::ul("dump") << "                " << _("display current configuration settings") << "\n"
+                  << "    " << fmt::ul("get") << "                 " << _("find the value of a setting by name") << "\n\n"
+                  << fg::yellow(_("options")) << ":\n\n"
+                  << "    -v, --verbose       " << _("output more information about actions taken") << "\n\n"
+                  << "    -q, --quiet         " << _("suppress non-error messages") << "\n\n"
+                  << "    -?, -h, --help      " << _("display this help") << "\n\n"
+                  << _("see 'confidant help config") << " <" << fmt::ul(_("action")) << ">' " << _("for more information about a specific command")
+                  << "\n"
+                  << _("and its' respective options.")
                   << std::endl;
     }
 namespace dump {
     void help(std::string_view argz) {
         std::cout << fg::green(argz) << " " << fmt::ul("config") << " " << fmt::ul("dump") << ":\n\n"
-                  << "    display current configuration\n\n"
+                  << "    " << _("display current configuration") << "\n\n"
                   << fg::yellow("options") << ":\n\n"
-                  << "    -f, --file " << fmt::ul("PATH") << "     specify a configuration file to operate on\n"
-                  << "                        default: <current directory>/confidant.ucl\n\n"
-                  << "    -g, --global        display the global configuration\n\n"
-                  << "    -j, --json          output configuration in JSON format\n\n"
-                  << "    -v, --verbose       output more information about actions taken\n\n"
-                  << "    -q, --quiet         suppress non-error messages\n\n"
-                  << "    -?, -h, --help      display this help\n"
+                  << "    -f, --file " << fmt::ul(_("PATH")) << "     " << _("specify a configuration file to operate on") << "\n"
+                  << "                        " << _("default: <current directory>/confidant.ucl") << "\n\n"
+                  << "    -g, --global        " << _("display the global configuration") << "\n\n"
+                  << "    -j, --json          " << _("output configuration in JSON format") << "\n\n"
+                  << "    -v, --verbose       " << _("output more information about actions taken") << "\n\n"
+                  << "    -q, --quiet         " << _("suppress non-error messages") << "\n\n"
+                  << "    -?, -h, --help      " << _("display this help") << "\n"
                   << std::endl;
     }
 };
 namespace get {
     void help(std::string_view argz) {
         std::cout << fg::green(argz) << " " << fmt::ul("config") << " " << fmt::ul("get") << ":\n\n"
-                  << "    find a configuration value by name\n\n"
-                  << fg::blue("arguments") << ":\n\n"
-                  << "    " << fmt::ul("QUERY") << "               the configuration setting to search for,\n"
-                  << "                        you may search for nested values by using\n"
-                  << "                        periods to traverse, e.g.: 'repository.url'\n\n"
-                  << fg::yellow("options") << ":\n\n"
-                  << "    -g, --global        query the global configuration\n\n"
-                  << "    -v, --verbose       output more information about actions taken\n\n"
-                  << "    -q, --quiet         suppress non-error messages\n\n"
-                  << "    -?, -h, --help      display this help\n"
+                  << "    " << _("find a configuration value by name") << "\n\n"
+                  << fg::blue(_("arguments")) << ":\n\n"
+                  << "    " << fmt::ul(_("QUERY")) << "               " << _("the configuration setting to search for") << ",\n"
+                  << "                        " << _("you may search for nested values by using") << "\n"
+                  << "                        " << _("periods to traverse, e.g.: 'repository.url'") << "\n\n"
+                  << fg::yellow(_("options")) << ":\n\n"
+                  << "    -g, --global        " <<_("query the global configuration") << "\n\n"
+                  << "    -v, --verbose       " <<_("output more information about actions taken") << "\n\n"
+                  << "    -q, --quiet         " <<_("suppress non-error messages") << "\n\n"
+                  << "    -?, -h, --help      " <<_("display this help") << "\n"
                   << std::endl;
     }
 };
@@ -117,15 +121,15 @@ namespace get {
 namespace link {
 void help(std::string_view argz) {
     std::cout << fg::green(argz) << " " << fmt::ul("link") << ":\n\n"
-              << "    apply symlinks from your configuration file\n\n"
-              << fg::yellow("options") << ":\n\n"
-              << "    -t, --tags " << fmt::ul("X,Y,Z") << "    specify a set of tagged links to apply, separated by commas\n\n"
-              << "    -f, --file " << fmt::ul("PATH") << "     specify the configuration file to operate on\n"
-              << "                        default: <current directory>/confidant.ucl\n\n"
-              << "    -d, --dry-run       show what actions " << fmt::ital("would") << " be taken\n\n"
-              << "    -v, --verbose       output more information about actions taken\n\n"
-              << "    -q, --quiet         suppress non-error messages\n\n"
-              << "    -?, -h, --help      display this help\n"
+              << "    " << _("apply symlinks from your configuration file") << "\n\n"
+              << fg::yellow(_("options")) << ":\n\n"
+              << "    -t, --tags " << fmt::ul("X,Y,Z")   << "    "  << _("specify a set of tagged links to apply, separated by commas") << "\n\n"
+              << "    -f, --file " << fmt::ul(_("PATH")) << "     " << _("specify the configuration file to operate on") << "\n"
+              << "                        " << _("default: <current directory>/confidant.ucl") << "\n\n"
+              << "    -d, --dry-run       " << _("show what actions") << " " << fmt::ital(_("would")) << " " << _("be taken") << "\n\n"
+              << "    -v, --verbose       " << _("output more information about actions taken") << "\n\n"
+              << "    -q, --quiet         " << _("suppress non-error messages") << "\n\n"
+              << "    -?, -h, --help      " << _("display this help") << "\n"
               << std::endl;
 }
     

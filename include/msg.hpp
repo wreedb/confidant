@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string_view>
 
+#include "i18n.hpp"
 #include "util.hpp"
 #include "fmt.hpp"
 #include "settings/global.hpp"
@@ -22,7 +23,8 @@ namespace msg {
     template <typename... Args>
     void pretty(std::string_view msg, Args&&... fmt) {
         if (gconf::loglevel == verbose::quiet) return;
-        std::string message = std::vformat(msg.data(), std::make_format_args(fmt...));
+        std::string translated = _(msg.data());
+        std::string message = std::vformat(translated, std::make_format_args(fmt...));
         std::cout
         << fg::magenta(">>>")
         << " "
@@ -32,9 +34,10 @@ namespace msg {
     
     template <typename... Args>
     void error(std::string_view msg, Args&&... fmt) {
-        std::string message = std::vformat(msg.data(), std::make_format_args(fmt...));
+        std::string translated = _(msg.data());
+        std::string message = std::vformat(translated, std::make_format_args(fmt...));
         std::cout
-        << fg::red("error")
+        << fg::red(_("error"))
         << ": "
         << message
         << "\n";
@@ -43,9 +46,10 @@ namespace msg {
     template <typename... Args>
     void info(std::string_view msg, Args&&... fmt) {
         if (gconf::loglevel == verbose::quiet) return;
-        std::string message = std::vformat(msg.data(), std::make_format_args(fmt...));
+        std::string translated = _(msg.data());
+        std::string message = std::vformat(translated, std::make_format_args(fmt...));
         std::cout
-        << fg::blue("info")
+        << fg::blue(_("info"))
         << ": "
         << message
         << "\n";
@@ -53,10 +57,12 @@ namespace msg {
     
     template <typename... Args>
     void warn(std::string_view msg, Args&&... fmt) {
-        if (gconf::loglevel == verbose::quiet || gconf::loglevel <= verbose::normal) return;
-        std::string message = std::vformat(msg.data(), std::make_format_args(fmt...));
+        if (gconf::loglevel == verbose::quiet) return;
+        if (gconf::loglevel <= verbose::normal) return;
+        std::string translated = _(msg.data());
+        std::string message = std::vformat(translated, std::make_format_args(fmt...));
         std::cout
-        << fg::yellow("warn")
+        << fg::yellow(_("warn"))
         << ": "
         << message
         << "\n";
@@ -66,9 +72,10 @@ namespace msg {
     void warnextra(std::string_view msg, Args&&... fmt) {
         if (gconf::loglevel == verbose::quiet) return;
         if (gconf::loglevel <= verbose::info) return;
-        std::string message = std::vformat(msg.data(), std::make_format_args(fmt...));
+        std::string translated = _(msg.data());
+        std::string message = std::vformat(translated, std::make_format_args(fmt...));
         std::cout
-        << fg::yellow("warn")
+        << fg::yellow(_("warn"))
         << ": "
         << message
         << "\n";
@@ -76,10 +83,12 @@ namespace msg {
     
     template <typename... Args>
     void extra(std::string_view msg, Args&&... fmt) {
-        if (gconf::loglevel == verbose::quiet || gconf::loglevel < verbose::debug) return;
-        std::string message = std::vformat(msg.data(), std::make_format_args(fmt...));
+        if (gconf::loglevel == verbose::quiet) return;
+        if (gconf::loglevel < verbose::debug) return;
+        std::string translated = _(msg.data());
+        std::string message = std::vformat(translated, std::make_format_args(fmt...));
         std::cout
-        << fg::cyan("debug")
+        << fg::cyan(_("debug"))
         << ": "
         << message
         << "\n";
@@ -87,10 +96,12 @@ namespace msg {
     
     template <typename... Args>
     void debug(std::string_view msg, Args&&... fmt) {
-        if (gconf::loglevel == verbose::quiet || gconf::loglevel < verbose::debug) return;
-        std::string message = std::vformat(msg.data(), std::make_format_args(fmt...));
+        if (gconf::loglevel == verbose::quiet) return;
+        if (gconf::loglevel < verbose::debug) return;
+        std::string translated = _(msg.data());
+        std::string message = std::vformat(translated, std::make_format_args(fmt...));
         std::cout
-        << fg::cyan("debug")
+        << fg::cyan(_("debug"))
         << ": "
         << message
         << "\n";
@@ -98,31 +109,27 @@ namespace msg {
     
     template <typename... Args>
     void trace(std::string_view msg, Args&&... fmt) {
-        if (gconf::loglevel == verbose::quiet || gconf::loglevel < verbose::trace) return;
-        std::string message = std::vformat(msg.data(), std::make_format_args(fmt...));
+        if (gconf::loglevel == verbose::quiet) return;
+        if (gconf::loglevel < verbose::trace) return;
+        std::string translated = _(msg.data());
+        std::string message = std::vformat(translated, std::make_format_args(fmt...));
         std::cout
-        << fg::cyan("trace")
+        << fg::cyan(_("trace"))
         << ": "
         << message
         << "\n";
     }
     
     template <typename... Args>
-    [[noreturn]] void fatal(int ecode, std::string_view msg, Args&&... fmt) {
-        std::string message = std::vformat(msg.data(), std::make_format_args(fmt...));
+    [[noreturn]] void fatal(std::string_view msg, Args&&... fmt) {
+        std::string translated = _(msg.data());
+        std::string message = std::vformat(translated, std::make_format_args(fmt...));
         std::cerr
-        << fg::red("fatal")
+        << fg::red(_("fatal"))
         << ": "
         << message
         << std::endl;
-        std::exit(ecode);
+        std::exit(1);
     }
-    
-    // use exit code 1 by default
-    template <typename... Args>
-    [[noreturn]] void fatal(std::string_view msg, Args&&... fmt) {
-        fatal(1, msg, std::forward<Args>(fmt)...);
-    }
-    
     
 }; // END msg

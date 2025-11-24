@@ -46,7 +46,7 @@ namespace confidant {
                         
                         if (!fs::exists(sourcepath)) {
                             msg::error("source file {} does not exist!",
-                                fmt::bolden(udeststr));
+                                fmt::bolden(usourcestr));
                             continue;
                         }
                         
@@ -252,8 +252,8 @@ namespace confidant {
                                 fs::create_directory_symlink(sourcepath, destpath);
                             } catch (const fs::filesystem_error& err) {
                                 msg::error("failed to create symlink for {} at {}",
-                                    fmt::bolden(name),
-                                    fmt::ital(udeststr));
+                                   fmt::bolden(name),
+                                   fmt::ital(udeststr));
                                 std::cout << err.what() << std::endl;
                                 // TODO: continue when strict == false
                                 return 1;
@@ -267,10 +267,10 @@ namespace confidant {
                                 // create the link
                                 fs::create_symlink(sourcepath, destpath);
                             } catch (const fs::filesystem_error& err) {
-                                msg::error("failed to create symlink for {} at {}",
+                                 msg::error("failed to create symlink for {} at {}",
                                     fmt::bolden(name),
                                     fmt::ital(udeststr));
-                                std::cout << err.what() << std::endl;
+                                 std::cout << err.what() << std::endl;
                                 // TODO: continue if strict == false
                                 return 1;
                             }
@@ -283,7 +283,7 @@ namespace confidant {
                     }
                     
                     // the file was linked
-                    msg::pretty("linked {}", fmt::bolden(udeststr));
+                    msg::pretty("linked {}", udeststr);
                 }
                 // show *something* when nothing happens at least
                 if (linksdone == 0)

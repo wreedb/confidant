@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 // cli
+#include <clocale>
 #include <lyra/lyra.hpp>
 #include <lyra/group.hpp>
 #include <lyra/parser.hpp>
@@ -14,6 +15,9 @@
 #include <filesystem>
 #include <string>
 #include <string_view>
+
+// gettext
+#include <libintl.h>
 
 // project-local
 #include "settings/local.hpp"
@@ -87,7 +91,7 @@ namespace args {
         };
         bool init = false;
         bool link = false;
-    };
+    }
     
     namespace init {
         std::string path = fs::current_path().string();
@@ -153,10 +157,13 @@ namespace flags {
 };
 
 int main(int argc, const char *argv[]) {
+    setlocale(LC_ALL, "");
+    std::locale::global(std::locale(""));
+    bindtextdomain("confidant", LOCALEDIR);
+    textdomain("confidant");
     
     std::string version = PROJECT_VERSION;
     std::string argz = util::stripargz(argv[0]);
-    
     gconfig::color = usecolorp;
     options::global::color = usecolorp;
     
@@ -395,10 +402,11 @@ int main(int argc, const char *argv[]) {
     
     if (args::init::self) {
         if (args::init::dry) {
+            // help::defaults::write_local_config(args::init::path);
             msg::pretty("wrote sample config file to {}", fs::relative(args::init::path).string() + "/confidant.ucl");
             return 0;
         } else {
-            msg::pretty("wrote sample config file to {}", fs::relative(args::init::path).string() + "/confidant.ucl");
+            // msg::pretty("wrote sample config file to {}", fs::relative(args::init::path).string() + "/confidant.ucl");
             help::defaults::write_local_config(args::init::path);
             return 0;
         }

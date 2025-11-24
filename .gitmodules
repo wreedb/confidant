@@ -1,0 +1,4 @@
+[submodule "aur"]
+	path = misc/packaging/aur
+	url = ssh://aur@aur.archlinux.org/confidant.git
+	branch = master

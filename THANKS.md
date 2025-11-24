@@ -14,13 +14,13 @@ and parser, as well as providing nice C++ bindings to it.
 
 ---
 ## René Ferdinand Rivera Morell
-For [Lyra](https://github.com/bfgroup/lyra) for the C++ command-line argument 
-parsing library that **Confidant** uses, which is easy to use, understand and 
+For [Lyra](https://github.com/bfgroup/lyra), the C++ command-line argument 
+parsing library that **Confidant** uses which is elegant, easy to use and  
 very flexible.
 
 ---
 ## Michael DeHann, The Ansible Community and Red Hat Inc.
-For [Ansible](https://redhat.com/en/ansible-collaborative); Confidant's templating `link-from` syntax was inspired by that of 
+For [Ansible](https://redhat.com/en/ansible-collaborative); Confidant's templating syntax was inspired by that of 
 Ansible playbooks.
 
 ---

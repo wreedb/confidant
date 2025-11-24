@@ -21,7 +21,7 @@
           pkg-config
           ninja
           meson
-          cmake
+          gettext
         ];
 
         buildInputs = with pkgs; [

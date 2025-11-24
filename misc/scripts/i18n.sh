@@ -32,7 +32,7 @@ do
     pofile=${podir}/${language}.po
     if [ -r ${pofile} ]
     then
-        msgmerge --update ${pofile} ${potfile}
+        msgmerge --verbose --suffix=".backup" --update ${pofile} ${potfile}
     else
         gt_args=(--input=${potfile}
                  --locale=${language}.UTF-8

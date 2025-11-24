@@ -22,6 +22,7 @@ sourcefiles=(
     subprojects/libucl.wrap
     subprojects/lyra.wrap
     subprojects/packagefiles/libucl/meson.build
+    subprojects/packagefiles/lyra/meson.build
 )
 
 sourcedirs=(

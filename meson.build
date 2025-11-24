@@ -4,7 +4,11 @@ project(
     license: 'GPL-3.0-or-later',
     license_files: 'LICENSE.md',
     meson_version: '>= 1.4.0',
-    default_options: ['cpp_std=c++23'])
+    default_options: [
+        'cpp_std=c++23',
+        'libucl:warning_level=2',
+        'libucl:c_args="[-Wno-unused-parameter, -Wno-pointer-sign]'
+    ])
 
 deps = []
 cxx = meson.get_compiler('cpp')
@@ -108,8 +112,9 @@ libucl_dep = dependency(
     fallback: ['libucl', 'libucl_dep'],
     static: opt_static or get_option('static-libucl'))
 
-lyra_dep = dependency('lyra',
-    required: false,
+lyra_dep = dependency(
+    'lyra',
+    required: true,
     fallback: ['lyra', 'lyra_dep'])
 
 sources = files(
@@ -145,23 +150,25 @@ executable(
 )
 
 if get_option('build-tests')
+    # set up test config header
     test_hpp = configuration_data()
     test_hpp.set_quoted('PROJECT_ROOT', meson.project_source_root())
+    test_hpp.set_quoted('PROJECT_NAME', meson.project_name())
+    test_hpp.set_quoted('PROJECT_VERSION', meson.project_version())
     configure_file(output: 'test.hpp', configuration: test_hpp)
     
+    # test sources
     test_sources = files(
         'test/config-serialize-local.cpp',
         'test/config-serialize-global.cpp'
     )
-
-    foreach n : test_sources
-        name = n.full_path().split('/')[-1].split('.')[0]
-        test_exe = executable(
-            name,
-            n,
+    # make test executables
+    foreach t : test_sources
+        name = t.full_path().split('/')[-1].split('.')[0]
+        test(name, executable(
+            name, t,
             dependencies: deps,
             include_directories: ['include'],
-            link_with: confidant_lib)
-        test(name, test_exe)
+            link_with: confidant_lib))
     endforeach
 endif

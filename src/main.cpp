@@ -9,6 +9,7 @@
 #include <lyra/help.hpp>
 
 // std
+#include <format>
 #include <print>
 #include <filesystem>
 #include <string>
@@ -97,61 +98,58 @@ namespace args {
     };  
 };
 
-namespace opts {
-    namespace cmd {
-        namespace link {
-            lyra::command self = lyra::command("link", [](const lyra::group&) { args::link::self = true; }).help("apply symlinks");
-            lyra::help help = lyra::help(args::link::help);
-            lyra::opt dry = lyra::opt(args::link::dry)["-d"]["--dry-run"]("simulate actions only");
-            lyra::opt tags = lyra::opt(args::link::tags, "tags")["-t"]["--tags"]("apply tagged links");
-            lyra::opt file = lyra::opt(args::link::file, "path")["-f"]["--file"]("specify a file path to read");
-        };
-        namespace help {
-            lyra::command self = lyra::command("help", [](const lyra::group&) { args::help::self = true; }).help("display help for subcommands");
-            namespace config {
-                lyra::command self = lyra::command("config", [](const lyra::group&) { args::config::help = true; });
-                lyra::command dump = lyra::command("dump", [](const lyra::group&) { args::config::dump::help = true; });
-                lyra::command get  = lyra::command("get", [](const lyra::group&) { args::config::get::help = true; });
-            };
-            lyra::command init = lyra::command("init", [](const lyra::group&) { args::init::help = true; });
-            lyra::command link = lyra::command("link", [](const lyra::group&) { args::link::help = true; });
-        };
-        lyra::command usage = lyra::command("usage", [](const lyra::group&) { args::usage = true; }).help("display brief usage info");
-        lyra::command version = lyra::command("version", [](const lyra::group&) { args::version = true; }).help("display version info");
-        namespace init {
-            lyra::command self = lyra::command("init", [](const lyra::group&) { args::init::self = true; }).help("initialize a repository");
-            lyra::help help = lyra::help(args::init::help);
-            lyra::arg path = lyra::arg(args::init::path, "path")("the directory path to initialize");
-            lyra::opt dry = lyra::opt(args::init::dry)["-d"]["--dry-run"]("simulate actions only");
-        };
+namespace cmd {
+    namespace link {
+        lyra::command self = lyra::command("link", [](const lyra::group&) { args::link::self = true; });
+        lyra::help help = lyra::help(args::link::help);
+        lyra::opt dry = lyra::opt(args::link::dry)["-d"]["--dry-run"];
+        lyra::opt tags = lyra::opt(args::link::tags, "tags")["-t"]["--tags"];
+        lyra::opt file = lyra::opt(args::link::file, "path")["-f"]["--file"];
+    };
+    namespace help {
+        lyra::command self = lyra::command("help", [](const lyra::group&) { args::help::self = true; });
         namespace config {
-            lyra::command self = lyra::command("config", [](const lyra::group&) { args::config::self = true; }).help("introspect configuration settings");
-            lyra::opt help = lyra::opt(args::config::help).name("-h").name("--help").name("-?").optional();
-            namespace dump {
-                lyra::command self = lyra::command("dump", [](const lyra::group&) { args::config::dump::self = true; }).help("display current configuration settings").optional();
-                lyra::help help = lyra::help(args::config::dump::help);
-                lyra::opt global = lyra::opt(args::config::dump::global)["-g"]["--global"]("display global configuration").optional();
-                lyra::opt json = lyra::opt(args::config::dump::json)["-j"]["--json"]("display configuration in JSON format").optional();
-                lyra::opt file = lyra::opt(args::config::dump::file, "path")["-f"]["--file"]("specify a file path");
-            };
-            namespace get {
-                lyra::command self = lyra::command("get", [](const lyra::group&) { args::config::get::self = true; }).help("find configuration value by name").optional();
-                lyra::arg query = lyra::arg(args::config::get::query, "query").help("setting to search for");
-                lyra::help help = lyra::help(args::config::get::help);
-                lyra::opt global = lyra::opt(args::config::get::global)["-g"]["--global"]("query from global configuration");
-                lyra::opt file = lyra::opt(args::config::get::file, "path")["-f"]["--file"]("specify a file path");
-            };
+            lyra::command self = lyra::command("config", [](const lyra::group&) { args::config::help = true; });
+            lyra::command dump = lyra::command("dump", [](const lyra::group&) { args::config::dump::help = true; });
+            lyra::command get  = lyra::command("get", [](const lyra::group&) { args::config::get::help = true; });
+        };
+        lyra::command init = lyra::command("init", [](const lyra::group&) { args::init::help = true; });
+        lyra::command link = lyra::command("link", [](const lyra::group&) { args::link::help = true; });
+    };
+    lyra::command usage = lyra::command("usage", [](const lyra::group&) { args::usage = true; });
+    lyra::command version = lyra::command("version", [](const lyra::group&) { args::version = true; });
+    namespace init {
+        lyra::command self = lyra::command("init", [](const lyra::group&) { args::init::self = true; });
+        lyra::help help = lyra::help(args::init::help);
+        lyra::arg path = lyra::arg(args::init::path, "path");
+        lyra::opt dry = lyra::opt(args::init::dry)["-d"]["--dry-run"];
+    };
+    namespace config {
+        lyra::command self = lyra::command("config", [](const lyra::group&) { args::config::self = true; });
+        lyra::opt help = lyra::opt(args::config::help).name("-h").name("--help").name("-?").optional();
+        namespace dump {
+            lyra::command self = lyra::command("dump", [](const lyra::group&) { args::config::dump::self = true; }).optional();
+            lyra::help help = lyra::help(args::config::dump::help);
+            lyra::opt global = lyra::opt(args::config::dump::global)["-g"]["--global"].optional();
+            lyra::opt json = lyra::opt(args::config::dump::json)["-j"]["--json"].optional();
+            lyra::opt file = lyra::opt(args::config::dump::file, "path")["-f"]["--file"];
+        };
+        namespace get {
+            lyra::command self = lyra::command("get", [](const lyra::group&) { args::config::get::self = true; }).optional();
+            lyra::arg query = lyra::arg(args::config::get::query, "query");
+            lyra::help help = lyra::help(args::config::get::help);
+            lyra::opt global = lyra::opt(args::config::get::global)["-g"]["--global"];
+            lyra::opt file = lyra::opt(args::config::get::file, "path")["-f"]["--file"];
         };
     };
-
-}; 
+};
 
 namespace flags {
-    lyra::help help = lyra::help(args::help::self).description("display help information");
-    lyra::opt usage = lyra::opt(args::usage)["-u"]["--usage"]("display brief usage info");
-    lyra::opt version = lyra::opt(args::version)["-V"]["--version"]("display version info");
-    lyra::opt verbose = lyra::opt(args::verbose)["-v"]["--verbose"]("increase verbosity");
-    lyra::opt quiet = lyra::opt(args::quiet)["-q"]["--quiet"]("supress non-error messages");
+    lyra::help help = lyra::help(args::help::self);
+    lyra::opt usage = lyra::opt(args::usage)["-u"]["--usage"];
+    lyra::opt version = lyra::opt(args::version)["-V"]["--version"];
+    lyra::opt verbose = lyra::opt(args::verbose)["-v"]["--verbose"];
+    lyra::opt quiet = lyra::opt(args::quiet)["-q"]["--quiet"];
 };
 
 int main(int argc, const char *argv[]) {
@@ -159,107 +157,89 @@ int main(int argc, const char *argv[]) {
     std::string version = PROJECT_VERSION;
     std::string argz = util::stripargz(argv[0]);
     
-    gconfig::settings gconf = gconfig::serialize(help::defaults::global_config_path());
+    gconfig::color = usecolorp;
+    options::global::color = usecolorp;
     
-    opts::cmd::link::self |= flags::quiet;
-    opts::cmd::link::self |= flags::verbose;
+    fs::path gconfpath = help::defaults::global_config_path();
+    // check for global config file; try to create it
+    if (!fs::exists(gconfpath)) {
+        try {
+            if (!fs::exists(gconfpath.parent_path()))
+                try {
+                    std::filesystem::create_directory(gconfpath.parent_path());
+                } catch (const fs::filesystem_error& err) {
+                    msg::error("failed to create parent directory {} for global config file!", gconfpath.parent_path().string());
+                    std::cout << err.what() << std::endl;
+                }
+            // write the default global config
+            help::defaults::write_global_config(gconfpath.string());
+        } catch (const fs::filesystem_error& e) {
+            msg::error("failed to create global config file at {}!", gconfpath.string());
+            std::cout << e.what() << std::endl;
+        }
+    }
     
-    opts::cmd::init::self |= flags::quiet;
-    opts::cmd::init::self |= flags::verbose;
+    // found the global config, serialize it
+    gconfig::settings gconf = gconfig::serialize(gconfpath.string());
     
-    opts::cmd::config::self |= flags::quiet;
-    opts::cmd::config::self |= flags::verbose;
-    
-    opts::cmd::config::get::self |= flags::quiet;
-    opts::cmd::config::get::self |= flags::verbose;
-    
-    opts::cmd::config::dump::self |= flags::quiet;
-    opts::cmd::config::dump::self |= flags::verbose;
-    
-    opts::cmd::link::self
-        |= opts::cmd::link::dry;
-    
-    opts::cmd::link::self
-        |= opts::cmd::link::tags;
-    
-    opts::cmd::link::self
-        |= opts::cmd::link::file;
-    
-    opts::cmd::link::self
-        |= opts::cmd::link::help;
-    
-    opts::cmd::help::self
-        |= opts::cmd::help::link;
-    
-    opts::cmd::help::config::self
-        |= opts::cmd::help::config::dump;
-    
-    opts::cmd::help::config::self
-        |= opts::cmd::help::config::get;
-    
-    opts::cmd::help::self
-        |= opts::cmd::help::config::self;
-    
-    opts::cmd::help::self
-        |= opts::cmd::help::init;
-    
-    opts::cmd::config::self
-        |= opts::cmd::config::help;
-    
-    opts::cmd::config::dump::self
-        |= opts::cmd::config::dump::help;
-    
-    opts::cmd::config::dump::self
-        |= opts::cmd::config::dump::global;
-    
-    opts::cmd::config::dump::self
-        |= opts::cmd::config::dump::json;
-    
-    opts::cmd::config::dump::self
-        |= opts::cmd::config::dump::file;
-            
-    opts::cmd::config::get::self
-        |= opts::cmd::config::get::help;
-    
-    opts::cmd::config::get::self
-        |= opts::cmd::config::get::global;
-    
-    opts::cmd::config::get::self
-        |= opts::cmd::config::get::file;
-    
-    opts::cmd::config::get::self
-        |= opts::cmd::config::get::query;
-    
-    opts::cmd::config::self
-        |= opts::cmd::config::dump::self;
-    
-    opts::cmd::config::self
-        |= opts::cmd::config::get::self;
-    
-    opts::cmd::init::self
-        |= opts::cmd::init::dry;
-    
-    opts::cmd::init::self
-        |= opts::cmd::init::path;
-    
-    opts::cmd::init::self
-        |= opts::cmd::init::help;
-    
+    // prepare cli
     lyra::cli cli;
-    cli |= opts::cmd::link::self;
-    cli |= opts::cmd::config::self;
-    cli |= opts::cmd::init::self;
-    cli |= opts::cmd::help::self;
-    cli |= opts::cmd::usage;
-    cli |= opts::cmd::version;
-    cli |= flags::help;
-    cli |= flags::usage;
-    cli |= flags::version;
-    cli |= flags::quiet;
-    cli |= flags::verbose;
+    cli
+    // help subcommand
+    .add_argument(cmd::help::self
+        .add_argument(cmd::help::init)
+        .add_argument(cmd::help::link)
+        .add_argument(cmd::help::config::self
+            .add_argument(cmd::help::config::dump)
+            .add_argument(cmd::help::config::get)))
+    // init subcommand
+    .add_argument(cmd::init::self
+        .add_argument(cmd::init::help)
+        .add_argument(cmd::init::dry)
+        .add_argument(cmd::init::path)
+        .add_argument(flags::verbose)
+        .add_argument(flags::quiet))
+    // link subcommand
+    .add_argument(cmd::link::self
+        .add_argument(cmd::link::dry)
+        .add_argument(cmd::link::file)
+        .add_argument(cmd::link::tags)
+        .add_argument(cmd::link::help)
+        .add_argument(flags::verbose)
+        .add_argument(flags::quiet))
+    // config subcommand
+    .add_argument(cmd::config::self
+        // config get subcommand
+        .add_argument(cmd::config::get::self
+            .add_argument(cmd::config::get::help)
+            .add_argument(cmd::config::get::file)
+            .add_argument(cmd::config::get::global)
+            .add_argument(cmd::config::get::query)
+            .add_argument(flags::quiet)
+            .add_argument(flags::verbose))
+        // config dump subcommand
+        .add_argument(cmd::config::dump::self
+            .add_argument(cmd::config::dump::file)
+            .add_argument(cmd::config::dump::help)
+            .add_argument(cmd::config::dump::global)
+            .add_argument(cmd::config::dump::json)
+            .add_argument(flags::quiet)
+            .add_argument(flags::verbose))
+        .add_argument(flags::verbose)
+        .add_argument(flags::quiet)
+        .add_argument(cmd::config::help))
+    .add_argument(flags::usage)
+    .add_argument(flags::quiet)
+    .add_argument(flags::verbose)
+    .add_argument(flags::version)
+    .add_argument(flags::help);
     
-    lyra::parse_result res = cli.parse ({ argc, argv });
+    // parse the command line
+    lyra::parse_result res = cli.parse ( { argc, argv } );
     
+    /* apply global configurations */
+    
+    // color
     if (!usecolorp) {
         // environment NO_COLOR presence always honored
         options::global::color = false;
@@ -269,6 +249,7 @@ int main(int argc, const char *argv[]) {
         gconfig::color = gconf.color;
     }
     
+    // log-level
     if (args::quiet && args::verbose) {
         msg::error("--quiet and --verbose are mutually exclusive.");
         return 1;
@@ -281,6 +262,7 @@ int main(int argc, const char *argv[]) {
         gconfig::loglevel = gconf.loglevel;
     }
     
+    // create-directories
     gconfig::createdirs = gconf.createdirs;
     
     if (!res) {
@@ -421,7 +403,8 @@ int main(int argc, const char *argv[]) {
             return 0;
         }
     }
-    
+    // nothing else was properly parsed or caught to cause process to stop;
+    // show usage and exit 1.
     help::general::usage(argz);
     return 1;
 }

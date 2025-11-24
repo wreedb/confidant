@@ -19,6 +19,12 @@ A repository containing your *real* files, and a program that manages creating
 symbolic links where your files need to be, with as little effort needed as 
 possible.
 
+A Quick Look
+------------
+If you just want to see **Confidant** in action, you can take a look at my 
+personal [dotfiles repository](https://codeberg.org/wreedb/config.git) for a real-world example
+of how **Confidant** can be used.
+
 Why **Confidant**?
 ------------------
 It combines the power of simple templating inspired by Ansible with the 

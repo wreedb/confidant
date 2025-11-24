@@ -7,6 +7,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 # Local Configuration
 **Local** (meaning they work on local basis; the directory they reside 
 in) configuration files are where you declare your *dotfile* symlink paths.
+For a quick look at **Confidant** in action, see the [example](#a-real-world-example)!
 They offer three `node` types, `repostiory`, `links` and `templates`.
 
 ## `repository`
@@ -133,11 +134,11 @@ ${repo}/.config/fish/config.fish -> ${XDG_CONFIG_HOME}/fish/config.fish
 
 
 ## tags
-#### (since 0.3.0)
-Both `templates` and `links` nodes may optionally contain a `tag` field. The value 
-specified for a tag is a simple string name, such as `desktop` or `work`. These 
-entries are skipped when running `confidant link`, and are only used when you
-provide the `-t,--tags` argument, specifying them by name.
+(since 0.3.0) Both `templates` and `links` nodes may optionally contain a 
+`tag` field. The value specified for a tag is a simple string name, such as 
+`desktop` or `work`. These entries are skipped when running `confidant link`, 
+and are only used when you provide the `-t,--tags` argument, specifying them 
+by name.
 
 Tags are particularly useful when you have multiple versions of a file, which 
 would all occupy the same destination, but in different contexts or on different
@@ -179,3 +180,7 @@ properly managed on a contextual basis.
     utilized without explicitly passing them on the command-line; this is 
     expected behavior, as this action would be attempting to overwrite an 
     existing link.
+
+# A real-world example
+If you learn better by example, you can inspect my [personal dotfiles repository](https://codeberg.org/wreedb/config.git)
+for a look at how **Confidant** can be used.

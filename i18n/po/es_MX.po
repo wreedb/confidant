@@ -1,6 +1,6 @@
 # Spanish translations for confidant package
 # Traducciones al español para el paquete confidant.
-# Copyright (C) 2025 Will Reed
+# Copyright (C) 2025 THE confidant'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the confidant package.
 # Automatically generated, 2025.
 #
@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: confidant 0.4.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 04:40-0600\n"
-"PO-Revision-Date: 2025-11-24 03:31-0600\n"
+"POT-Creation-Date: 2025-11-24 11:00-0600\n"
+"PO-Revision-Date: 2025-11-24 10:26-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: es_MX\n"
@@ -31,14 +31,14 @@ msgstr "no se especificó la entrada {}"
 #: src/settings/local.cpp:50 src/settings/local.cpp:128
 #, c++-format
 msgid "failed to parse {} as a node!"
-msgstr "¡no se pudo analizar {} campo {} como nodo!"
+msgstr "¡no se pudo analizar {} entrada {} como nodo!"
 
 #: src/settings/local.cpp:66 src/settings/local.cpp:76
 #: src/settings/local.cpp:88 src/settings/local.cpp:92
 #: src/settings/local.cpp:105 src/settings/local.cpp:144
 #, c++-format
 msgid "failed to parse {} field {} as a string!"
-msgstr "¡no se pudo analizar {} campo {} como una cadena!"
+msgstr "¡no se pudo analizar {} entrada {} como una cadena!"
 
 #: src/settings/local.cpp:79
 #, c++-format
@@ -65,13 +65,13 @@ msgstr "¡template {} le falte el valor {}!"
 #: src/settings/local.cpp:178
 #, c++-format
 msgid "failed to get {} items field as a list!"
-msgstr "¡no se pudo analizar {} items campo como una lista!"
+msgstr "¡no se pudo analizar {} items entrada como una lista!"
 
 #. items field exists, but is not an array (fatal)
 #: src/settings/local.cpp:187
 #, c++-format
 msgid "template {} {} field is not a list!"
-msgstr "¡template {} {} campo no es una lista!"
+msgstr "¡template {} {} entrada no es una lista!"
 
 #. items field doesn't exist (fatal)
 #: src/settings/local.cpp:192
@@ -109,12 +109,12 @@ msgstr "eliminar enlace simbólico roto en {}"
 msgid "parent directory for {} doesn't exist, skipping"
 msgstr "el directorio principal {} no existe, omitiendo"
 
-#: src/actions/link.cpp:86 src/actions/link.cpp:216 src/help.cpp:234
+#: src/actions/link.cpp:86 src/actions/link.cpp:216 src/help.cpp:232
 #, c++-format
 msgid "failed to create directory {}"
 msgstr "no se pudo crear el directorio {}"
 
-#: src/actions/link.cpp:92 src/help.cpp:237
+#: src/actions/link.cpp:92 src/help.cpp:235
 #, c++-format
 msgid "created directory {}"
 msgstr "directorio creado {}"
@@ -139,7 +139,7 @@ msgstr "vinculado {}"
 #: src/actions/link.cpp:133
 #, c++-format
 msgid "template {} required no links"
-msgstr "template {} no necesitaba enlaces."
+msgstr "template {} no necesitaba enlaces"
 
 #: src/actions/link.cpp:134
 #, c++-format
@@ -196,7 +196,7 @@ msgstr "creó {} enlaces normales"
 
 #: src/help.cpp:27
 msgid "your configuration"
-msgstr "tu amigo de configuracion"
+msgstr "tu amigo de configuración"
 
 #: src/help.cpp:27
 msgid "pal and confidant"
@@ -212,11 +212,11 @@ msgstr "inicializar un repositorio"
 
 #: src/help.cpp:30
 msgid "view configuration"
-msgstr "ver configuracion"
+msgstr "ver configuración"
 
 #: src/help.cpp:31
 msgid "create symlinks"
-msgstr "crear enlaces simbolicos"
+msgstr "crear enlaces simbólicos"
 
 #: src/help.cpp:32
 msgid "display help for subcommands"
@@ -224,29 +224,29 @@ msgstr "ayuda para subcomandos"
 
 #: src/help.cpp:33
 msgid "brief command-line usage info"
-msgstr "informacion breve sobre el uso"
+msgstr "información breve sobre el uso"
 
 #: src/help.cpp:34
 msgid "display version info"
-msgstr "mostrar informacion de la version"
+msgstr "mostrar información de la versión"
 
 #: src/help.cpp:35 src/help.cpp:42 src/help.cpp:63 src/help.cpp:79
-#: src/help.cpp:111 src/help.cpp:125
+#: src/help.cpp:109 src/help.cpp:123
 msgid "options"
 msgstr "opciones"
 
-#: src/help.cpp:36 src/help.cpp:80 src/help.cpp:97 src/help.cpp:113
-#: src/help.cpp:130
+#: src/help.cpp:36 src/help.cpp:80 src/help.cpp:95 src/help.cpp:111
+#: src/help.cpp:128
 msgid "output more information about actions taken"
 msgstr "dar mas informacion durante la ejecucion"
 
-#: src/help.cpp:37 src/help.cpp:66 src/help.cpp:81 src/help.cpp:98
-#: src/help.cpp:114 src/help.cpp:131
+#: src/help.cpp:37 src/help.cpp:66 src/help.cpp:81 src/help.cpp:96
+#: src/help.cpp:112 src/help.cpp:129
 msgid "suppress non-error messages"
 msgstr "ocultar mensajes que no son de error"
 
-#: src/help.cpp:38 src/help.cpp:67 src/help.cpp:82 src/help.cpp:99
-#: src/help.cpp:115 src/help.cpp:132
+#: src/help.cpp:38 src/help.cpp:67 src/help.cpp:82 src/help.cpp:97
+#: src/help.cpp:113 src/help.cpp:130
 msgid "display this help"
 msgstr "mostrar este mensaje de ayuda"
 
@@ -254,13 +254,13 @@ msgstr "mostrar este mensaje de ayuda"
 msgid "usage"
 msgstr "uso"
 
+#: src/help.cpp:42 src/help.cpp:50 src/help.cpp:83
+msgid "action"
+msgstr "acción"
+
 #: src/help.cpp:50
 msgid "see"
 msgstr "consulte"
-
-#: src/help.cpp:50 src/help.cpp:83
-msgid "action"
-msgstr "accion"
 
 #: src/help.cpp:50
 msgid "or"
@@ -268,41 +268,41 @@ msgstr "o"
 
 #: src/help.cpp:51
 msgid "for more information about a specific action"
-msgstr "para obtener mas informacion sobre una accion especiffica"
+msgstr "para obtener más información sobre una acción"
 
-#: src/help.cpp:51 src/help.cpp:85
+#: src/help.cpp:51
 msgid "and its' respective options."
-msgstr "y sus opciones"
+msgstr "específica y sus opciones."
 
 #: src/help.cpp:59
 msgid "initialize a confidant repository"
 msgstr "inicializar un repositorio"
 
-#: src/help.cpp:60 src/help.cpp:107
+#: src/help.cpp:60 src/help.cpp:105
 msgid "arguments"
 msgstr "argumentos"
 
-#: src/help.cpp:61 src/help.cpp:93 src/help.cpp:127
+#: src/help.cpp:61 src/help.cpp:91 src/help.cpp:125
 msgid "PATH"
 msgstr "RUTA"
 
 #: src/help.cpp:61
-msgid "specify the path to initialize"
-msgstr "especifique la ruta del directorio para inicializar"
+msgid "                specify the path to initialize"
+msgstr "                especifique la ruta del directorio para inicializar"
 
 #: src/help.cpp:62
 msgid "default: current working directory"
 msgstr "predeterminado: directorio actual"
 
-#: src/help.cpp:64 src/help.cpp:129
+#: src/help.cpp:64 src/help.cpp:127
 msgid "show what actions"
 msgstr "solo"
 
-#: src/help.cpp:64 src/help.cpp:129
+#: src/help.cpp:64 src/help.cpp:127
 msgid "would"
 msgstr "simular"
 
-#: src/help.cpp:64 src/help.cpp:129
+#: src/help.cpp:64 src/help.cpp:127
 msgid "be taken"
 msgstr "las acciones"
 
@@ -327,96 +327,100 @@ msgid "see 'confidant help config"
 msgstr "consulte 'confidant help config"
 
 #: src/help.cpp:83
-msgid "for more information about a specific command"
-msgstr "para obtener más información sobre un comando específico"
+msgid ""
+"for more information about a specific command\n"
+"and its' respective options."
+msgstr ""
+"para obtener mas informacion sobre un comando\n"
+"específico y sus opciones"
 
-#: src/help.cpp:91
+#: src/help.cpp:89
 msgid "display current configuration"
 msgstr "mostrar la configuración actual"
 
-#: src/help.cpp:93
-msgid "specify a configuration file to operate on"
-msgstr "especificar un archivo de configuración sobre el que operar"
+#: src/help.cpp:91
+msgid "     specify a configuration file to operate on"
+msgstr "     especifique el archivo de configuración con el que desea trabajar"
 
-#: src/help.cpp:94 src/help.cpp:128
+#: src/help.cpp:92 src/help.cpp:126
 msgid "default: <current directory>/confidant.ucl"
 msgstr "predeterminado: <directorio actual>/confidant.ucl"
 
-#: src/help.cpp:95
+#: src/help.cpp:93
 msgid "display the global configuration"
 msgstr "mostrar la configuración global"
 
-#: src/help.cpp:96
+#: src/help.cpp:94
 msgid "output configuration in JSON format"
 msgstr "configuración de salida en formato JSON"
 
-#: src/help.cpp:106
+#: src/help.cpp:104
 msgid "find a configuration value by name"
 msgstr "buscar el valor de una configuración por nombre"
 
-#: src/help.cpp:108
+#: src/help.cpp:106
 msgid "QUERY"
 msgstr "CONSULTA"
 
-#: src/help.cpp:108
-msgid "the configuration setting to search for"
-msgstr "la configuración para buscar"
+#: src/help.cpp:106
+msgid "               the configuration setting to search for"
+msgstr "            la configuración para buscar"
 
-#: src/help.cpp:109
+#: src/help.cpp:107
 msgid "you may search for nested values by using"
-msgstr "puede buscar valores anidados"
+msgstr "puede buscar valores anidados utilizando"
+
+#: src/help.cpp:108
+msgid "periods to traverse, e.g.: 'repository.url'"
+msgstr "puntos para recorrerlos, por ejemplo: 'repository.url'"
 
 #: src/help.cpp:110
-msgid "periods to traverse, e.g.: 'repository.url'"
-msgstr "utilizando puntos para recorrerlos, por ejemplo: 'repository.url'"
-
-#: src/help.cpp:112
 msgid "query the global configuration"
 msgstr "consulta la configuración global"
 
-#: src/help.cpp:124
+#: src/help.cpp:122
 msgid "apply symlinks from your configuration file"
 msgstr "aplique los enlaces simbólicos desde su configuración"
 
-#: src/help.cpp:126
-msgid "specify a set of tagged links to apply, separated by commas"
+#: src/help.cpp:124
+msgid "    specify a set of tagged links to apply, separated by commas"
 msgstr ""
-"especifique un grupo de enlaces etiquetados que se aplicarán, separados por "
-"comas"
+"    especifique un grupo de enlaces etiquetados que se aplicarán, separados "
+"por comas"
 
-#: src/help.cpp:127
-msgid "specify the configuration file to operate on"
-msgstr "especifique el archivo de configuración con el que desea trabajar"
+#: src/help.cpp:125
+msgid "     specify the configuration file to operate on"
+msgstr "     especifique el archivo de configuración con el que desea trabajar"
 
-#: src/help.cpp:241
+#: src/help.cpp:239
 #, c++-format
 msgid "no permission to write files to {}"
 msgstr "sin permiso para escribir archivos en {}"
 
-#: src/help.cpp:244
+#: src/help.cpp:242
 #, c++-format
 msgid "file {} already exists, not overwriting"
 msgstr "el archivo {} ya existe, no se sobrescribirá"
 
-#: src/help.cpp:250
+#: src/help.cpp:248
 #, c++-format
 msgid "failed to open {} for writing"
-msgstr "no se puede abrir {} para escribir."
+msgstr "no se puede abrir {} para escribir"
 
-#: src/help.cpp:255 src/help.cpp:275
+#: src/help.cpp:253 src/help.cpp:273
 #, c++-format
 msgid "wrote configuration to file {}"
 msgstr "escribió el archivo de configuración en {}"
 
-#: src/help.cpp:263
+#: src/help.cpp:261
 #, c++-format
 msgid "file {} already exists, not overwriting."
-msgstr "el archivo {} ya existe, no se sobrescribirá."
+msgstr "el archivo {} ya existe, no se sobrescribirá"
 
-#: src/help.cpp:270
+#: src/help.cpp:268
 #, c++-format
 msgid "unable to open {} for writing"
-msgstr "no se puede abrir {} para escribir."
+msgstr "no se puede abrir {} para escribir"
 
 #: src/main.cpp:178
 #, c++-format
@@ -459,26 +463,26 @@ msgstr "escribí un archivo de configuración de muestra en {}"
 msgid "log-level {} is invalid!"
 msgstr "¡log-level {} no es válido!"
 
-#: include/msg.hpp:40
+#: src/msg.hpp:40
 msgid "error"
 msgstr "error"
 
-#: include/msg.hpp:52
+#: src/msg.hpp:52
 msgid "info"
 msgstr "información"
 
-#: include/msg.hpp:65 include/msg.hpp:78
+#: src/msg.hpp:65 src/msg.hpp:78
 msgid "warn"
 msgstr "aviso"
 
-#: include/msg.hpp:91 include/msg.hpp:104
+#: src/msg.hpp:91 src/msg.hpp:104
 msgid "debug"
 msgstr "depuración"
 
-#: include/msg.hpp:117
+#: src/msg.hpp:117
 msgid "trace"
 msgstr "traza"
 
-#: include/msg.hpp:128
+#: src/msg.hpp:128
 msgid "fatal"
 msgstr "fatal"

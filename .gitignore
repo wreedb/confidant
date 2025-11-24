@@ -1,3 +1,5 @@
+/i18n/po/*~
+/locale/
 *.o
 *.a
 *.so

@@ -36,3 +36,8 @@ option('static-libucl',
        type: 'boolean',
        value: false,
        description: 'link libucl statically')
+
+option('translations',
+       type: 'feature',
+       value: 'auto',
+       description: 'install translations, requires GNU gettext')

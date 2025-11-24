@@ -4,6 +4,10 @@
 
 version := `cat .version`
 
+[group("i18n")]
+gettext:
+    ./misc/scripts/i18n.sh
+
 [group("build")]
 build-static: clean-build
     meson setup .build --prefix=/ --buildtype=release -D static=true -D static-stdlib=true --wrap-mode=forcefallback

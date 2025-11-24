@@ -4,6 +4,28 @@ SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 # Changelog
+## [v0.4.1] - 2025-11-24
+
+
+### Changed
+
+-  Update PKGBUILD and changelog
+
+-  Add links to my dotfiles repo for example usage people can look at
+
+-  Change log-level logic for warnextra function
+
+-  Updating reuse annotations
+
+-  Bump to 0.4.1
+
+
+### Fixed
+
+-  Added custom subproject meson.build for lyra
+
+-  Regression; create global configuration file with defaults, or error with a better message
+
 ## [v0.4.0] - 2025-11-23
 
 

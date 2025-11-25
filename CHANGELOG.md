@@ -4,6 +4,67 @@ SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 # Changelog
+## [v0.4.3] - 2025-11-25
+
+
+### Fixed
+
+-  Incorrect localedir in executables
+
+## [v0.4.2] - 2025-11-25
+
+
+### Changed
+
+-  Make aur repo into submodule
+
+-  Updated changelog
+
+-  Move examples to misc
+
+-  Integrating gettext
+
+- **i18n**: Adding auxilary help for gettext
+
+-  Add translation section to readme, credit lyra on thanks
+
+-  Split meson.build to subdirs
+
+-  Move headers into src, no need for separate include
+
+-  Add gettext dependency to flake
+
+- **i18n**: Update po files, complete es_MX translation
+
+-  Change some strings in help.cpp for translated formatting
+
+-  Reuse annotations
+
+-  Fix typo in THANKS.md
+
+-  Repo maint, translations updated
+
+-  Add gettext configuration data to meson.build, check for localedir being undefined
+
+-  Add glibc locales to flake native inputs
+
+- **i18n**: Ever-changing po updates
+
+- **i18n**: Pt_BR translations added, marked for install with meson
+
+-  Formatting change
+
+-  Add language independent spacing for translations to use for alignment
+
+-  Bump to 0.4.2
+
+
+### Fixed
+
+-  No longer copy string maps in parse.cpp, write them in place
+
+-  Add fallback locale settings when environment is isolated
+
 ## [v0.4.1] - 2025-11-24
 
 

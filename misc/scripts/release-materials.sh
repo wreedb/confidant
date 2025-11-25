@@ -33,6 +33,7 @@ sourcedirs=(
     test
     LICENSES
     example
+    i18n
 )
 
 mkdir -p rel

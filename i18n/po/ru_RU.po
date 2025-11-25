@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: confidant 0.4.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 22:11-0600\n"
+"POT-Creation-Date: 2025-11-24 23:20-0600\n"
 "PO-Revision-Date: 2025-11-24 04:40-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -433,36 +433,36 @@ msgstr ""
 msgid "unable to open {} for writing"
 msgstr ""
 
-#: src/main.cpp:178
+#: src/main.cpp:193
 #, c++-format
 msgid "failed to create parent directory {} for global config file!"
 msgstr ""
 
-#: src/main.cpp:184
+#: src/main.cpp:199
 #, c++-format
 msgid "failed to create global config file at {}!"
 msgstr ""
 
-#: src/main.cpp:261
+#: src/main.cpp:276
 msgid "--quiet and --verbose are mutually exclusive."
 msgstr ""
 
-#: src/main.cpp:276
+#: src/main.cpp:291
 msgid "unable to parse command line"
 msgstr ""
 
-#: src/main.cpp:315
+#: src/main.cpp:330
 #, c++-format
 msgid "version {}"
 msgstr ""
 
-#: src/main.cpp:371 src/main.cpp:380
+#: src/main.cpp:386 src/main.cpp:395
 #, c++-format
 msgid "setting {} not found in configuration"
 msgstr ""
 
 #. help::defaults::write_local_config(args::init::path);
-#: src/main.cpp:406
+#: src/main.cpp:421
 #, c++-format
 msgid "wrote sample config file to {}"
 msgstr ""

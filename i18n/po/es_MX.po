@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: confidant 0.4.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 22:11-0600\n"
+"POT-Creation-Date: 2025-11-24 23:20-0600\n"
 "PO-Revision-Date: 2025-11-24 10:26-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -438,38 +438,38 @@ msgstr "el archivo {} ya existe, no se sobrescribirá"
 msgid "unable to open {} for writing"
 msgstr "no se puede abrir {} para escribir"
 
-#: src/main.cpp:178
+#: src/main.cpp:193
 #, c++-format
 msgid "failed to create parent directory {} for global config file!"
 msgstr ""
 "¡no se pudo crear el directorio principal {} para el archivo de "
 "configuración global!"
 
-#: src/main.cpp:184
+#: src/main.cpp:199
 #, c++-format
 msgid "failed to create global config file at {}!"
 msgstr "¡no se pudo crear el archivo de configuración global en {}!"
 
-#: src/main.cpp:261
+#: src/main.cpp:276
 msgid "--quiet and --verbose are mutually exclusive."
 msgstr "--quiet y --verbose se excluyen mutuamente."
 
-#: src/main.cpp:276
+#: src/main.cpp:291
 msgid "unable to parse command line"
 msgstr "no se puede analizar la línea de comandos"
 
-#: src/main.cpp:315
+#: src/main.cpp:330
 #, c++-format
 msgid "version {}"
 msgstr "versión {}"
 
-#: src/main.cpp:371 src/main.cpp:380
+#: src/main.cpp:386 src/main.cpp:395
 #, c++-format
 msgid "setting {} not found in configuration"
 msgstr "no se encuentra {} en la configuración"
 
 #. help::defaults::write_local_config(args::init::path);
-#: src/main.cpp:406
+#: src/main.cpp:421
 #, c++-format
 msgid "wrote sample config file to {}"
 msgstr "escribí un archivo de configuración de muestra en {}"

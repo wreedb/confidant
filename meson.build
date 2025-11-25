@@ -44,7 +44,7 @@ config_hpp = configuration_data()
 config_hpp.set_quoted('GETTEXTDOMAIN', textdomain)
 config_hpp.set_quoted('PROJECT_VERSION', meson.project_version())
 config_hpp.set_quoted('PROJECT_NAME', meson.project_name())
-config_hpp.set_quoted('LOCALEDIR', get_option('localedir'))
+config_hpp.set_quoted('LOCALEDIR', get_option('prefix') / get_option('localedir'))
 configure_file(output: 'config.hpp', configuration: config_hpp)
 
 subdir('i18n')

@@ -12,6 +12,7 @@
 #include <format>
 #include <print>
 #include <filesystem>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 
@@ -160,6 +161,19 @@ namespace flags {
 };
 
 int main(int argc, const char *argv[]) {
+
+    try {
+        // try to use the environments' locale
+        std::locale::global(std::locale(""));
+    } catch (const std::runtime_error&) {
+        // fall back to classic locales, UTF-8 first, then regular C
+        try {
+            std::locale::global(std::locale("C.UTF-8"));
+        } catch (const std::runtime_error&) {
+            std::locale::global(std::locale("C"));
+        }
+    }
+
     std::locale::global(std::locale(""));
     bindtextdomain(GETTEXTDOMAIN, LOCALEDIR);
     textdomain(GETTEXTDOMAIN);

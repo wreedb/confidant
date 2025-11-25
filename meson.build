@@ -53,7 +53,7 @@ subdir('doc/man')
 
 libucl_dep = dependency(
     'libucl',
-    required: true,
+    required: false,
     fallback: ['libucl', 'libucl_dep'],
     static: opt_static or get_option('static-libucl'))
 

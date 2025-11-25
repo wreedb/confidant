@@ -131,10 +131,13 @@ namespace confidant {
                     // show *something* when nothing happens
                     if (processedItems == 0)
                         msg::pretty("template {} required no links", fmt::bolden(tmpl.name));
-                    msg::trace("processed {} items", processedItems);
+                    
+                    msg::trace(_n("processed {} item", "processed {} items", processedItems));
+                    // msg::trace("processed {} items", processedItems);
                     processedTemplates++;
                 }
-                msg::trace("processed {} templates", processedTemplates);
+                msg::trace(_n("processed {} template", "processed {} templates", processedTemplates));
+                // msg::trace("processed {} templates", processedTemplates);
                 
                 return 0;
             }
@@ -220,14 +223,14 @@ namespace confidant {
                                 }
                             }
                             // display extra message regardless, for dry-run verbose
-                            msg::extra("create directory {}",
+                            msg::extra("created directory {}",
                                 fmt::bolden(unexpandhome(destpath.parent_path().string())));
                         }
                     }
                     
                     // check parent directory for write permission
                     if (!util::hasperms(deststr) && !dry) {
-                        msg::error("no write permissions for {}",
+                        msg::error("no write permissions for directory {}",
                             fmt::bolden(unexpandhome(destpath.parent_path().string())));
                         // TODO: add strict setting, continue if true, return 1 if false
                         continue;
@@ -288,7 +291,8 @@ namespace confidant {
                 // show *something* when nothing happens at least
                 if (linksdone == 0)
                     msg::pretty("no links were needed");
-                msg::trace("created {} normal links", fmt::bolden(std::to_string(linksdone)));
+                msg::trace(_n("created {} normal link", "created {} normal links", linksdone));
+                // msg::trace("created {} normal links", fmt::bolden(std::to_string(linksdone)));
                 return 0;
         
             }

@@ -124,8 +124,6 @@ namespace cmd {
         lyra::command init = lyra::command("init", [](const lyra::group&) { args::init::help = true; });
         lyra::command link = lyra::command("link", [](const lyra::group&) { args::link::help = true; });
     };
-    lyra::command usage = lyra::command("usage", [](const lyra::group&) { args::usage = true; });
-    lyra::command version = lyra::command("version", [](const lyra::group&) { args::version = true; });
     namespace init {
         lyra::command self = lyra::command("init", [](const lyra::group&) { args::init::self = true; });
         lyra::help help = lyra::help(args::init::help);
@@ -150,6 +148,8 @@ namespace cmd {
             lyra::opt file = lyra::opt(args::config::get::file, "path")["-f"]["--file"];
         };
     };
+    lyra::command usage = lyra::command("usage", [](const lyra::group&) { args::usage = true; });
+    lyra::command version = lyra::command("version", [](const lyra::group&) { args::version = true; });
 };
 
 namespace flags {
@@ -250,6 +250,8 @@ int main(int argc, const char *argv[]) {
         .add_argument(flags::verbose)
         .add_argument(flags::quiet)
         .add_argument(cmd::config::help))
+    .add_argument(cmd::version)
+    .add_argument(cmd::usage)
     .add_argument(flags::usage)
     .add_argument(flags::quiet)
     .add_argument(flags::verbose)

@@ -12,6 +12,10 @@ inline std::string _(const char* msgid) {
     return gettext(msgid);
 }
 
+inline std::string _n(const char* singular, const char* plural, unsigned long n) {
+    return ngettext(singular, plural, n);
+}
+
 template<typename... Args>
 inline std::string _(const char* msgid, Args**... args) {
     return std::vformat(gettext(msgid), std::make_format_args(args...));

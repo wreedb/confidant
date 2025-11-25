@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: confidant 0.4.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 23:20-0600\n"
+"POT-Creation-Date: 2025-11-25 13:18-0600\n"
 "PO-Revision-Date: 2025-11-24 04:40-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -92,12 +92,12 @@ msgstr ""
 msgid "failed while parsing "
 msgstr ""
 
-#: src/actions/link.cpp:48 src/actions/link.cpp:170
+#: src/actions/link.cpp:48 src/actions/link.cpp:173
 #, c++-format
 msgid "source file {} does not exist!"
 msgstr ""
 
-#: src/actions/link.cpp:55 src/actions/link.cpp:180
+#: src/actions/link.cpp:55 src/actions/link.cpp:183
 #, c++-format
 msgid "skipping {}, already linked"
 msgstr ""
@@ -107,12 +107,12 @@ msgstr ""
 msgid "destination {} already exists, skipping"
 msgstr ""
 
-#: src/actions/link.cpp:68 src/actions/link.cpp:195
+#: src/actions/link.cpp:68 src/actions/link.cpp:198
 #, c++-format
 msgid "failed to remove broken symlink at {}"
 msgstr ""
 
-#: src/actions/link.cpp:73 src/actions/link.cpp:200
+#: src/actions/link.cpp:73 src/actions/link.cpp:203
 #, c++-format
 msgid "removing broken symlink at {}"
 msgstr ""
@@ -122,17 +122,18 @@ msgstr ""
 msgid "parent directory for {} doesn't exist, skipping"
 msgstr ""
 
-#: src/actions/link.cpp:86 src/actions/link.cpp:216 src/help.cpp:232
+#: src/actions/link.cpp:86 src/actions/link.cpp:219 src/help.cpp:233
 #, c++-format
 msgid "failed to create directory {}"
 msgstr ""
 
-#: src/actions/link.cpp:92 src/help.cpp:235
+#. display extra message regardless, for dry-run verbose
+#: src/actions/link.cpp:92 src/actions/link.cpp:226 src/help.cpp:236
 #, c++-format
 msgid "created directory {}"
 msgstr ""
 
-#: src/actions/link.cpp:98
+#: src/actions/link.cpp:98 src/actions/link.cpp:233
 #, c++-format
 msgid "no write permissions for directory {}"
 msgstr ""
@@ -144,7 +145,7 @@ msgstr ""
 
 #. show message regardless for dry-runs
 #. the file was linked
-#: src/actions/link.cpp:129 src/actions/link.cpp:286
+#: src/actions/link.cpp:129 src/actions/link.cpp:289
 #, c++-format
 msgid "linked {}"
 msgstr ""
@@ -154,279 +155,293 @@ msgstr ""
 msgid "template {} required no links"
 msgstr ""
 
-#: src/actions/link.cpp:134
+#: src/actions/link.cpp:135
 #, c++-format
-msgid "processed {} items"
-msgstr ""
+msgid "processed {} item"
+msgid_plural "processed {} items"
+msgstr[0] ""
+msgstr[1] ""
 
-#: src/actions/link.cpp:137
+#: src/actions/link.cpp:139
 #, c++-format
-msgid "processed {} templates"
-msgstr ""
+msgid "processed {} template"
+msgid_plural "processed {} templates"
+msgstr[0] ""
+msgstr[1] ""
 
 #. the destination already exists, and isn't identical to our source; we do nothing and skip
-#: src/actions/link.cpp:185
+#: src/actions/link.cpp:188
 #, c++-format
 msgid "destination {} already exists and is not identical to source, skipping"
 msgstr ""
 
 #. parent path doesn't exist and settings to create dirs is off
-#: src/actions/link.cpp:207
+#: src/actions/link.cpp:210
 #, c++-format
 msgid "parent directory for {} does not exist, skipping"
 msgstr ""
 
-#. display extra message regardless, for dry-run verbose
-#: src/actions/link.cpp:223
-#, c++-format
-msgid "create directory {}"
-msgstr ""
-
-#: src/actions/link.cpp:230
-#, c++-format
-msgid "no write permissions for {}"
-msgstr ""
-
 #. they specified directory, but the source is not a directory
-#: src/actions/link.cpp:243
+#: src/actions/link.cpp:246
 #, c++-format
 msgid "link {} source {} is not a directory"
 msgstr ""
 
-#: src/actions/link.cpp:254 src/actions/link.cpp:270
+#: src/actions/link.cpp:257 src/actions/link.cpp:273
 #, c++-format
 msgid "failed to create symlink for {} at {}"
 msgstr ""
 
-#: src/actions/link.cpp:290
+#: src/actions/link.cpp:293
 msgid "no links were needed"
 msgstr ""
 
-#: src/actions/link.cpp:291
+#: src/actions/link.cpp:294
 #, c++-format
-msgid "created {} normal links"
-msgstr ""
+msgid "created {} normal link"
+msgid_plural "created {} normal links"
+msgstr[0] ""
+msgstr[1] ""
 
-#: src/help.cpp:27
+#. i18n: "pal and confidant" is italicized
+#: src/help.cpp:28
 msgid "your configuration"
 msgstr ""
 
-#: src/help.cpp:27
+#: src/help.cpp:28
 msgid "pal and confidant"
 msgstr ""
 
-#: src/help.cpp:28 src/help.cpp:43
+#: src/help.cpp:29 src/help.cpp:44
 msgid "actions"
 msgstr ""
 
-#: src/help.cpp:29
+#: src/help.cpp:30
 msgid "initialize a repository"
 msgstr ""
 
-#: src/help.cpp:30
+#: src/help.cpp:31
 msgid "view configuration"
 msgstr ""
 
-#: src/help.cpp:31
+#: src/help.cpp:32
 msgid "create symlinks"
 msgstr ""
 
-#: src/help.cpp:32
+#: src/help.cpp:33
 msgid "display help for subcommands"
 msgstr ""
 
-#: src/help.cpp:33
+#: src/help.cpp:34
 msgid "brief command-line usage info"
 msgstr ""
 
-#: src/help.cpp:34
+#: src/help.cpp:35
 msgid "display version info"
 msgstr ""
 
-#: src/help.cpp:35 src/help.cpp:42 src/help.cpp:63 src/help.cpp:79
-#: src/help.cpp:109 src/help.cpp:123
+#: src/help.cpp:36 src/help.cpp:43 src/help.cpp:64 src/help.cpp:80
+#: src/help.cpp:110 src/help.cpp:124
 msgid "options"
 msgstr ""
 
-#: src/help.cpp:36 src/help.cpp:80 src/help.cpp:95 src/help.cpp:111
-#: src/help.cpp:128
+#: src/help.cpp:37 src/help.cpp:81 src/help.cpp:96 src/help.cpp:112
+#: src/help.cpp:129
 msgid "output more information about actions taken"
-msgstr ""
-
-#: src/help.cpp:37 src/help.cpp:66 src/help.cpp:81 src/help.cpp:96
-#: src/help.cpp:112 src/help.cpp:129
-msgid "suppress non-error messages"
 msgstr ""
 
 #: src/help.cpp:38 src/help.cpp:67 src/help.cpp:82 src/help.cpp:97
 #: src/help.cpp:113 src/help.cpp:130
+msgid "suppress non-error messages"
+msgstr ""
+
+#: src/help.cpp:39 src/help.cpp:68 src/help.cpp:83 src/help.cpp:98
+#: src/help.cpp:114 src/help.cpp:131
 msgid "display this help"
 msgstr ""
 
-#: src/help.cpp:42
+#: src/help.cpp:43
 msgid "usage"
 msgstr ""
 
-#: src/help.cpp:42 src/help.cpp:50 src/help.cpp:83
+#: src/help.cpp:43 src/help.cpp:51 src/help.cpp:84
 msgid "action"
 msgstr ""
 
-#: src/help.cpp:50
+#: src/help.cpp:51
 msgid "see"
 msgstr ""
 
-#: src/help.cpp:50
+#: src/help.cpp:51
 msgid "or"
 msgstr ""
 
-#: src/help.cpp:51
-msgid "for more information about a specific action"
+#: src/help.cpp:52
+msgid ""
+"for more information\n"
+"about a specific action and its' respective options."
 msgstr ""
 
-#: src/help.cpp:51
-msgid "and its' respective options."
-msgstr ""
-
-#: src/help.cpp:59
+#: src/help.cpp:60
 msgid "initialize a confidant repository"
 msgstr ""
 
-#: src/help.cpp:60 src/help.cpp:105
+#: src/help.cpp:61 src/help.cpp:106
 msgid "arguments"
 msgstr ""
 
-#: src/help.cpp:61 src/help.cpp:91 src/help.cpp:125
+#: src/help.cpp:62 src/help.cpp:92 src/help.cpp:126
 msgid "PATH"
 msgstr ""
 
-#: src/help.cpp:61
-msgid "                specify the path to initialize"
+#: src/help.cpp:62 src/help.cpp:78
+msgid "                "
 msgstr ""
 
 #: src/help.cpp:62
+msgid "specify the path to initialize"
+msgstr ""
+
+#: src/help.cpp:63
 msgid "default: current working directory"
 msgstr ""
 
-#: src/help.cpp:64 src/help.cpp:127
+#: src/help.cpp:65 src/help.cpp:128
 msgid "show what actions"
 msgstr ""
 
-#: src/help.cpp:64 src/help.cpp:127
+#: src/help.cpp:65 src/help.cpp:128
 msgid "would"
 msgstr ""
 
-#: src/help.cpp:64 src/help.cpp:127
+#: src/help.cpp:65 src/help.cpp:128
 msgid "be taken"
 msgstr ""
 
-#: src/help.cpp:65
+#: src/help.cpp:66
 msgid "output more information about actions"
 msgstr ""
 
-#: src/help.cpp:75
+#: src/help.cpp:76
 msgid "view configuration settings"
 msgstr ""
 
-#: src/help.cpp:77
+#: src/help.cpp:78
 msgid "display current configuration settings"
 msgstr ""
 
-#: src/help.cpp:78
+#: src/help.cpp:79
+msgid "                 "
+msgstr ""
+
+#: src/help.cpp:79
 msgid "find the value of a setting by name"
 msgstr ""
 
-#: src/help.cpp:83
+#: src/help.cpp:84
 msgid "see 'confidant help config"
 msgstr ""
 
-#: src/help.cpp:83
+#: src/help.cpp:84
 msgid ""
 "for more information about a specific command\n"
 "and its' respective options."
 msgstr ""
 
-#: src/help.cpp:89
+#: src/help.cpp:90
 msgid "display current configuration"
 msgstr ""
 
-#: src/help.cpp:91
-msgid "     specify a configuration file to operate on"
+#: src/help.cpp:92 src/help.cpp:126
+msgid "     "
 msgstr ""
 
-#: src/help.cpp:92 src/help.cpp:126
+#: src/help.cpp:92
+msgid "specify a configuration file to operate on"
+msgstr ""
+
+#: src/help.cpp:93 src/help.cpp:127
 msgid "default: <current directory>/confidant.ucl"
 msgstr ""
 
-#: src/help.cpp:93
+#: src/help.cpp:94
 msgid "display the global configuration"
 msgstr ""
 
-#: src/help.cpp:94
+#: src/help.cpp:95
 msgid "output configuration in JSON format"
 msgstr ""
 
-#: src/help.cpp:104
+#: src/help.cpp:105
 msgid "find a configuration value by name"
 msgstr ""
 
-#: src/help.cpp:106
+#: src/help.cpp:107
 msgid "QUERY"
 msgstr ""
 
-#: src/help.cpp:106
-msgid "               the configuration setting to search for"
+#: src/help.cpp:107
+msgid "               "
 msgstr ""
 
 #: src/help.cpp:107
-msgid "you may search for nested values by using"
+msgid "the configuration setting to search for"
 msgstr ""
 
 #: src/help.cpp:108
+msgid "you may search for nested values by using"
+msgstr ""
+
+#: src/help.cpp:109
 msgid "periods to traverse, e.g.: 'repository.url'"
 msgstr ""
 
-#: src/help.cpp:110
+#: src/help.cpp:111
 msgid "query the global configuration"
 msgstr ""
 
-#: src/help.cpp:122
+#: src/help.cpp:123
 msgid "apply symlinks from your configuration file"
 msgstr ""
 
-#: src/help.cpp:124
-msgid "    specify a set of tagged links to apply, separated by commas"
+#: src/help.cpp:125
+msgid "    "
 msgstr ""
 
 #: src/help.cpp:125
-msgid "     specify the configuration file to operate on"
+msgid "specify a set of tagged links to apply, separated by commas"
 msgstr ""
 
-#: src/help.cpp:239
+#: src/help.cpp:126
+msgid "specify the configuration file to operate on"
+msgstr ""
+
+#: src/help.cpp:240
 #, c++-format
 msgid "no permission to write files to {}"
 msgstr ""
 
-#: src/help.cpp:242
+#: src/help.cpp:243
 #, c++-format
 msgid "file {} already exists, not overwriting"
 msgstr ""
 
-#: src/help.cpp:248
+#: src/help.cpp:249
 #, c++-format
 msgid "failed to open {} for writing"
 msgstr ""
 
-#: src/help.cpp:253 src/help.cpp:273
+#: src/help.cpp:254 src/help.cpp:274
 #, c++-format
 msgid "wrote configuration to file {}"
 msgstr ""
 
-#: src/help.cpp:261
+#: src/help.cpp:262
 #, c++-format
 msgid "file {} already exists, not overwriting."
 msgstr ""
 
-#: src/help.cpp:268
+#: src/help.cpp:269
 #, c++-format
 msgid "unable to open {} for writing"
 msgstr ""
@@ -441,26 +456,26 @@ msgstr ""
 msgid "failed to create global config file at {}!"
 msgstr ""
 
-#: src/main.cpp:276
+#: src/main.cpp:278
 msgid "--quiet and --verbose are mutually exclusive."
 msgstr ""
 
-#: src/main.cpp:291
+#: src/main.cpp:293
 msgid "unable to parse command line"
 msgstr ""
 
-#: src/main.cpp:330
+#: src/main.cpp:332
 #, c++-format
 msgid "version {}"
 msgstr ""
 
-#: src/main.cpp:386 src/main.cpp:395
+#: src/main.cpp:388 src/main.cpp:397
 #, c++-format
 msgid "setting {} not found in configuration"
 msgstr ""
 
 #. help::defaults::write_local_config(args::init::path);
-#: src/main.cpp:421
+#: src/main.cpp:423
 #, c++-format
 msgid "wrote sample config file to {}"
 msgstr ""

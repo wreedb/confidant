@@ -39,12 +39,12 @@ if cxxid == 'gcc' and opt_staticstdlib
     add_project_link_arguments('-static-libstdc++', language: 'cpp')
 endif
 
+textdomain = 'org.codeberg.wreedb.confidant'
 config_hpp = configuration_data()
-
+config_hpp.set_quoted('GETTEXTDOMAIN', textdomain)
 config_hpp.set_quoted('PROJECT_VERSION', meson.project_version())
 config_hpp.set_quoted('PROJECT_NAME', meson.project_name())
 config_hpp.set_quoted('LOCALEDIR', get_option('localedir'))
-
 configure_file(output: 'config.hpp', configuration: config_hpp)
 
 subdir('i18n')
@@ -53,13 +53,13 @@ subdir('doc/man')
 
 libucl_dep = dependency(
     'libucl',
-    required: false,
+    required: true,
     fallback: ['libucl', 'libucl_dep'],
     static: opt_static or get_option('static-libucl'))
 
 lyra_dep = dependency(
     'lyra',
-    required: true,
+    required: false,
     fallback: ['lyra', 'lyra_dep'])
 
 sources = files(

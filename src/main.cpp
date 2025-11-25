@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 // cli
-#include <clocale>
 #include <lyra/lyra.hpp>
 #include <lyra/group.hpp>
 #include <lyra/parser.hpp>
@@ -33,6 +32,10 @@
 
 // meson
 #include "config.hpp"
+
+#ifndef LOCALEDIR
+#define LOCALEDIR "/usr/share/locale"
+#endif
 
 // detect: NO_COLOR env var, output is not a terminal, etc.
 const static bool usecolorp = util::usecolorp();
@@ -157,10 +160,9 @@ namespace flags {
 };
 
 int main(int argc, const char *argv[]) {
-    setlocale(LC_ALL, "");
     std::locale::global(std::locale(""));
-    bindtextdomain("confidant", LOCALEDIR);
-    textdomain("confidant");
+    bindtextdomain(GETTEXTDOMAIN, LOCALEDIR);
+    textdomain(GETTEXTDOMAIN);
     
     std::string version = PROJECT_VERSION;
     std::string argz = util::stripargz(argv[0]);

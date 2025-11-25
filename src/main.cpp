@@ -174,7 +174,6 @@ int main(int argc, const char *argv[]) {
         }
     }
 
-    std::locale::global(std::locale(""));
     bindtextdomain(GETTEXTDOMAIN, LOCALEDIR);
     textdomain(GETTEXTDOMAIN);
     

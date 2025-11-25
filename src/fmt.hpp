@@ -26,7 +26,7 @@ namespace fmt {
         std::string cyan(std::string_view s);
         std::string white(std::string_view s);
         
-        std::string rgb(const int& red, const int& green, const int& blue);
+        std::string rgb(int red, int green, int blue);
     
     }; // END fmt::fg
 
@@ -41,7 +41,7 @@ namespace fmt {
         std::string cyan(std::string_view s);
         std::string white(std::string_view s);
         
-        std::string rgb(const int& red, const int& green, const int& blue);
+        std::string rgb(int red, int green, int blue);
     
     }; // END fmt::bg
     

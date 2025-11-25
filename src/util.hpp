@@ -21,12 +21,12 @@ namespace util {
         trace = 4
     };
     std::map<std::string, std::string> makevarmap(std::string_view path);
-    std::string verboseliteral(const verbose& v);
-    std::string substitute(const std::string &tmpl, const std::string &item);
+    std::string verboseliteral(verbose v);
+    std::string substitute(std::string_view tmpl, std::string_view item);
     std::vector<std::string_view> split(std::string_view sv);
     std::vector<std::string_view> splittags(std::string_view sv);
     bool hasperms(std::string_view p);
-    std::string stripargz(const std::string& arg);
+    std::string stripargz(std::string_view arg);
     std::optional<std::string> getenv(const std::string& name);
     bool hasenv(const std::string& name);
     std::string unexpandhome(std::string_view p);

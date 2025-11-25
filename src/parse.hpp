@@ -6,6 +6,7 @@
 
 #include <optional>
 #include <string_view>
+#include <map>
 #include <ucl++.h>
 #include <ucl.h>
 
@@ -50,19 +51,19 @@ namespace ucl {
     };
 
     namespace get {
-        std::optional<bool> boolean(const ucl::Ucl& object, const std::string& key);
-        std::optional<int> integer(const ucl::Ucl& object, const std::string& key);
-        std::optional<std::string> str(const ucl::Ucl& object, const std::string& key);
-        std::optional<ucl::Ucl> list(const ucl::Ucl& object, const std::string& key);
-        std::optional<ucl::Ucl> node(const ucl::Ucl& object, const std::string& key);
+        std::optional<bool> boolean(const ucl::Ucl& object, std::string_view key);
+        std::optional<int> integer(const ucl::Ucl& object, std::string_view key);
+        std::optional<std::string> str(const ucl::Ucl& object, std::string_view key);
+        std::optional<ucl::Ucl> list(const ucl::Ucl& object, std::string_view key);
+        std::optional<ucl::Ucl> node(const ucl::Ucl& object, std::string_view key);
     }; // END ucl::get
 
     namespace var {
-        std::map<std::string, std::string> add(const std::string& name, const std::string& value, std::map<std::string, std::string>& vm);
-        std::map<std::string, std::string> fromenv(const std::string& key, std::map<std::string, std::string>& vm, const std::string& fallback);
+        void add(std::string_view name, std::string_view value, std::map<std::string, std::string>& vm);
+        void fromenv(std::string_view key, std::map<std::string, std::string>& vm, std::string_view fallback);
     }; // END ucl::var
 
-    bool check(const ucl::Ucl& obj, const std::string& key);
+    bool check(const ucl::Ucl& obj, std::string_view key);
     int members(const ucl::Ucl& object);
 
 }; // END ucl

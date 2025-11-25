@@ -25,46 +25,48 @@ using std::string_view;
 namespace util {
     
     std::map<std::string, std::string> makevarmap(std::string_view path) {
+        
         std::map<std::string, std::string> vars;
         std::map<std::string, fs::path> xdghomes = xdg::homes();
-        vars = ucl::var::add("XDG_CONFIG_HOME", xdghomes["XDG_CONFIG_HOME"].string(), vars);
-        vars = ucl::var::add("XDG_CACHE_HOME",  xdghomes["XDG_CACHE_HOME"].string(),  vars);
-        vars = ucl::var::add("XDG_DATA_HOME",   xdghomes["XDG_DATA_HOME"].string(),   vars);
-        vars = ucl::var::add("XDG_STATE_HOME",  xdghomes["XDG_STATE_HOME"].string(),  vars);
+
+        ucl::var::add("XDG_CONFIG_HOME", xdghomes["XDG_CONFIG_HOME"].string(), vars);
+        ucl::var::add("XDG_CACHE_HOME",  xdghomes["XDG_CACHE_HOME"].string(),  vars);
+        ucl::var::add("XDG_DATA_HOME",   xdghomes["XDG_DATA_HOME"].string(),   vars);
+        ucl::var::add("XDG_STATE_HOME",  xdghomes["XDG_STATE_HOME"].string(),  vars);
         
-        vars = ucl::var::add("xdg_config_home", xdghomes["XDG_CONFIG_HOME"].string(), vars);
-        vars = ucl::var::add("xdg_cache_home",  xdghomes["XDG_CACHE_HOME"].string(),  vars);
-        vars = ucl::var::add("xdg_data_home",   xdghomes["XDG_DATA_HOME"].string(),   vars);
-        vars = ucl::var::add("xdg_state_home",  xdghomes["XDG_STATE_HOME"].string(),  vars);
+        ucl::var::add("xdg_config_home", xdghomes["XDG_CONFIG_HOME"].string(), vars);
+        ucl::var::add("xdg_cache_home",  xdghomes["XDG_CACHE_HOME"].string(),  vars);
+        ucl::var::add("xdg_data_home",   xdghomes["XDG_DATA_HOME"].string(),   vars);
+        ucl::var::add("xdg_state_home",  xdghomes["XDG_STATE_HOME"].string(),  vars);
         
-        vars = ucl::var::add("XDG_RUNTIME_DIR", xdghomes["XDG_RUNTIME_DIR"].string(), vars);
-        vars = ucl::var::add("xdg_runtime_dir", xdghomes["XDG_RUNTIME_DIR"].string(), vars);
+        ucl::var::add("XDG_RUNTIME_DIR", xdghomes["XDG_RUNTIME_DIR"].string(), vars);
+        ucl::var::add("xdg_runtime_dir", xdghomes["XDG_RUNTIME_DIR"].string(), vars);
  
         std::optional<std::string> homedir = util::getenv("HOME");
         if (!homedir)
             throw std::runtime_error("HOME is not set in the environment!");
      
-        vars = ucl::var::add("HOME", homedir.value(), vars);
-        vars = ucl::var::add("home", homedir.value(), vars);
-        vars = ucl::var::add("REPO", fs::path(path).parent_path().string(), vars);
-        vars = ucl::var::add("repo", fs::path(path).parent_path().string(), vars);
+        ucl::var::add("HOME", homedir.value(), vars);
+        ucl::var::add("home", homedir.value(), vars);
+        ucl::var::add("REPO", fs::path(path).parent_path().string(), vars);
+        ucl::var::add("repo", fs::path(path).parent_path().string(), vars);
         
         std::optional<std::string> username = util::getenv("USER");
         if (username) {
-            vars = ucl::var::add("user", username.value(), vars);
-            vars = ucl::var::add("USER", username.value(), vars);
+            ucl::var::add("user", username.value(), vars);
+            ucl::var::add("USER", username.value(), vars);
         }
         
         std::optional<std::string> email = util::getenv("EMAIL");
         if (email) {
-            vars = ucl::var::add("email", email.value(), vars);
-            vars = ucl::var::add("EMAIL", email.value(), vars);
+            ucl::var::add("email", email.value(), vars);
+            ucl::var::add("EMAIL", email.value(), vars);
         }
         
         return vars;
     }
     
-    std::string verboseliteral(const verbose& v) {
+    std::string verboseliteral(verbose v) {
         switch (v) {
             case verbose::quiet:
                 return "quiet";
@@ -82,9 +84,9 @@ namespace util {
         
     }
 
-    std::string substitute(const std::string& tmpl, const std::string& item) {
+    std::string substitute(std::string_view tmpl, std::string_view item) {
         const std::string placeholder = "%{item}";
-        std::string result = tmpl;
+        std::string result = tmpl.data();
         
         size_t pos = 0;
         while ((pos = result.find(placeholder, pos)) != std::string::npos) {
@@ -145,8 +147,8 @@ namespace util {
     }
     
     
-    std::string stripargz(const std::string& arg) {
-        std::string argz = arg;
+    std::string stripargz(std::string_view arg) {
+        std::string argz = arg.data();
         // remove './' from beginning of string
         if (argz.size() >= 2 && argz.substr(0, 2) == "./")
             argz = argz.substr(2);
@@ -160,7 +162,7 @@ namespace util {
     std::optional<std::string> getenv(const std::string& name) {
         char* value = std::getenv(name.c_str());
         if (value == nullptr) return std::nullopt;
-        return std::string(value);
+        else return std::string(value);
     }
 
     bool hasenv(const std::string& name) {

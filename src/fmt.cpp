@@ -87,7 +87,7 @@ namespace fmt {
                 return std::format("{}{}{}", ansi::fg::white, s, ansi::fg::reset);
             else return std::string(s);
         }
-        std::string rgb(const int& red, const int& green, const int& blue) {
+        std::string rgb(int red, int green, int blue) {
             if (confidant::config::global::color && options::global::color)
                 return std::format(
                 "\033[38;2;{};{};{}m",
@@ -146,7 +146,7 @@ namespace fmt {
                 return std::format("{}{}{}", ansi::bg::white, s, ansi::fg::reset);
             else return std::string(s);
         }
-        std::string rgb(const int& red, const int& green, const int& blue) {
+        std::string rgb(int red, int green, int blue) {
             if (confidant::config::global::color && options::global::color)
                 return std::format(
                 "\033[48;2;{};{};{}m",

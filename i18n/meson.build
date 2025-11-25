@@ -9,6 +9,6 @@ if msgfmt.found() and i18n_feat.allowed()
     meson.add_install_script(
         'gettext.post-install',
         get_option('prefix') / get_option('localedir'),
-        meson.project_name(),
+        textdomain,
         'es_MX')
 endif

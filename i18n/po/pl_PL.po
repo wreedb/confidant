@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: confidant 0.4.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 11:00-0600\n"
+"POT-Creation-Date: 2025-11-24 22:11-0600\n"
 "PO-Revision-Date: 2025-11-24 04:40-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -76,6 +76,22 @@ msgstr ""
 #: src/settings/local.cpp:192
 #, c++-format
 msgid "template {} has no {} list!"
+msgstr ""
+
+#: src/parse.cpp:25
+msgid "file at"
+msgstr ""
+
+#: src/parse.cpp:25
+msgid "does not exist"
+msgstr ""
+
+#: src/parse.cpp:32
+msgid "failed to open file at "
+msgstr ""
+
+#: src/parse.cpp:47
+msgid "failed while parsing "
 msgstr ""
 
 #: src/actions/link.cpp:48 src/actions/link.cpp:170
@@ -451,7 +467,7 @@ msgstr ""
 msgid "wrote sample config file to {}"
 msgstr ""
 
-#: src/util.cpp:80
+#: src/util.cpp:82
 #, c++-format
 msgid "log-level {} is invalid!"
 msgstr ""

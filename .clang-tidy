@@ -1,0 +1,9 @@
+# -*- yaml-ts -*- vim:ft=yaml
+
+HeaderFileExtensions:
+- hpp
+
+ImplementationFileExtensions:
+- cpp
+
+SystemHeaders: true

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: confidant 0.4.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-24 11:00-0600\n"
+"POT-Creation-Date: 2025-11-24 22:11-0600\n"
 "PO-Revision-Date: 2025-11-24 10:26-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -78,6 +78,22 @@ msgstr "¡template {} {} entrada no es una lista!"
 #, c++-format
 msgid "template {} has no {} list!"
 msgstr "¡template {} no tiene lista {}!"
+
+#: src/parse.cpp:25
+msgid "file at"
+msgstr "archivo en"
+
+#: src/parse.cpp:25
+msgid "does not exist"
+msgstr "¡el archivo fuente {} no existe!"
+
+#: src/parse.cpp:32
+msgid "failed to open file at "
+msgstr "no se puede abrir {} para escribir"
+
+#: src/parse.cpp:47
+msgid "failed while parsing "
+msgstr "error al analizar "
 
 #: src/actions/link.cpp:48 src/actions/link.cpp:170
 #, c++-format
@@ -458,7 +474,7 @@ msgstr "no se encuentra {} en la configuración"
 msgid "wrote sample config file to {}"
 msgstr "escribí un archivo de configuración de muestra en {}"
 
-#: src/util.cpp:80
+#: src/util.cpp:82
 #, c++-format
 msgid "log-level {} is invalid!"
 msgstr "¡log-level {} no es válido!"

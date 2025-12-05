@@ -22,7 +22,7 @@ namespace ucl {
     namespace parsing {
         ucl::Ucl file(std::string_view path, const std::map<std::string, std::string>& vars) {
             if (!fs::exists(path)) {
-                std::cerr << _("file at") << path << _("does not exist") << std::endl;
+                std::cerr << _("file at ") << path << _(" does not exist") << std::endl;
                 std::exit(1);
             }
             

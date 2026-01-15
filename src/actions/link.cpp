@@ -132,12 +132,19 @@ namespace confidant {
                     if (processedItems == 0)
                         msg::pretty("template {} required no links", fmt::bolden(tmpl.name));
                     
-                    msg::trace(_n("processed {} item", "processed {} items", processedItems));
-                    // msg::trace("processed {} items", processedItems);
+                    else if (processedItems == 1) {
+                        msg::trace("processed 1 item");
+                    } else {
+                        msg::trace("processed {} items", processedItems);
+                    }
                     processedTemplates++;
                 }
-                msg::trace(_n("processed {} template", "processed {} templates", processedTemplates));
-                // msg::trace("processed {} templates", processedTemplates);
+                if (processedTemplates == 0) {
+                } else if (processedTemplates == 1) {
+                    msg::trace("processed 1 template");
+                } else {
+                    msg::trace("processed {} templates", processedTemplates);
+                }
                 
                 return 0;
             }
@@ -289,10 +296,14 @@ namespace confidant {
                     msg::pretty("linked {}", udeststr);
                 }
                 // show *something* when nothing happens at least
-                if (linksdone == 0)
+                if (linksdone == 0) {
                     msg::pretty("no links were needed");
-                msg::trace(_n("created {} normal link", "created {} normal links", linksdone));
-                // msg::trace("created {} normal links", fmt::bolden(std::to_string(linksdone)));
+                } else {
+                    if (linksdone == 1)
+                        msg::trace("created 1 normal link");
+                    else
+                        msg::trace("created {} normal links", linksdone);
+                }
                 return 0;
         
             }

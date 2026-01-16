@@ -1,5 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
-#
+# SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 docs_dir: doc/site
@@ -8,7 +7,7 @@ site_name: Confidant
 site_url: https://wreedb.github.io
 site_description: Your configuration pal and confidant
 site_author: Will Reed
-copyright: Copyright © Will Reed 2025
+copyright: Copyright © Will Reed 2026
 repo_name: wreedb/confidant
 repo_url: https://codeberg.org/wreedb/confidant
 strict: true

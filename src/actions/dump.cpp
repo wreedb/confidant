@@ -1,5 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
-//
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <string_view>
@@ -12,20 +11,23 @@
 #include "util.hpp"
 #include "fmt.hpp"
 
+using std::string;
+using sview = std::string_view;
+
 namespace confidant {
     namespace actions {
         namespace dump {
             
             namespace json {
-                void global(std::string_view path) {
-                    auto input = ucl::parsing::file(path, std::map<std::string, std::string>{});
+                void global(sview path) {
+                    auto input = ucl::parsing::file(path, std::map<string, string>{});
                     std::cout << input.dump(ucl::emit::json) << std::endl;
                 }
-                void local(std::string_view path) {
+                void local(sview path) {
                     auto input = ucl::parsing::file(path, util::makevarmap(path));
                     std::cout << input.dump(ucl::emit::json) << std::endl;
                 }
-            };
+            }; // END json
 
             void global(const confidant::config::global::settings& conf) {
                 std::println("{}: {}", fmt::fg::blue("create-directories"), conf.createdirs);
@@ -64,9 +66,9 @@ namespace confidant {
                 if (numtemplates > 0) {
                     std::println("{}:", fmt::fg::blue("templates"));
                     for (int n = 0; n < numtemplates; n++) {
-                        std::string name = conf.templates.at(n).name;
-                        std::string src = conf.templates.at(n).source.string();
-                        std::string dst = conf.templates.at(n).destination.string();
+                        string name = conf.templates.at(n).name;
+                        string src = conf.templates.at(n).source.string();
+                        string dst = conf.templates.at(n).destination.string();
                         std::println("- {}: {}", fmt::fg::blue("name"), name);
                         std::println("  {}: {}", fmt::fg::blue("source"), src);
                         std::println("  {}: {}", fmt::fg::blue("destination"), dst);
@@ -82,6 +84,6 @@ namespace confidant {
                     }
                 }
             }
-        } // END confidant::actions::dump
-    } // END confidant::actions
+        } // END dump
+    } // END actions
 } // END confidant

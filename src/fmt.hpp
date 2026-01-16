@@ -1,5 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
-//
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #pragma once
@@ -7,42 +6,44 @@
 #include <string>
 #include <string_view>
 
+using std::string;
+using sview = std::string_view;
 
 namespace fmt {
     
-    std::string bolden(std::string_view str);
-    std::string ital(std::string_view str);
-    std::string ul(std::string_view str);
-    std::string sthru(std::string_view str);
+    string bolden(sview str);
+    string ital(sview str);
+    string ul(sview str);
+    string sthru(sview str);
 
     namespace fg {
         
-        std::string black(std::string_view s);
-        std::string red(std::string_view s);
-        std::string green(std::string_view s);
-        std::string yellow(std::string_view s);
-        std::string blue(std::string_view s);
-        std::string magenta(std::string_view s);
-        std::string cyan(std::string_view s);
-        std::string white(std::string_view s);
+        string black(sview s);
+        string red(sview s);
+        string green(sview s);
+        string yellow(sview s);
+        string blue(sview s);
+        string magenta(sview s);
+        string cyan(sview s);
+        string white(sview s);
         
-        std::string rgb(int red, int green, int blue);
+        string rgb(int red, int green, int blue);
     
-    }; // END fmt::fg
+    }; // END fg
 
     namespace bg {
         
-        std::string black(std::string_view s);
-        std::string red(std::string_view s);
-        std::string green(std::string_view s);
-        std::string yellow(std::string_view s);
-        std::string blue(std::string_view s);
-        std::string magenta(std::string_view s);
-        std::string cyan(std::string_view s);
-        std::string white(std::string_view s);
+        string black(sview s);
+        string red(sview s);
+        string green(sview s);
+        string yellow(sview s);
+        string blue(sview s);
+        string magenta(sview s);
+        string cyan(sview s);
+        string white(sview s);
         
-        std::string rgb(int red, int green, int blue);
+        string rgb(int red, int green, int blue);
     
-    }; // END fmt::bg
+    }; // END bg
     
 }; // END fmt

@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Will Reed
+# SPDX-FileCopyrightText: 2026 Will Reed
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 {

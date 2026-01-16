@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #pragma once
@@ -6,7 +6,6 @@
 #include <string>
 #include <libintl.h>
 #include <format>
-
 
 inline std::string _(const char* msgid) {
     return gettext(msgid);

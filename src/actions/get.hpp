@@ -1,38 +1,48 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
-//
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #pragma once
 
 #include <variant>
+#include <string>
+#include <string_view>
+#include <vector>
+#include <optional>
 
 #include "settings/local.hpp"
+
+using sview = std::string_view;
+using std::string;
+using std::vector;
+using std::optional;
+using std::variant;
 
 namespace confidant {
     namespace actions {
         namespace get {
             
-            using localvalue = std::variant<
+            using localvalue = variant<
                 bool,
-                std::string,
-                std::vector<std::string>,
-                std::vector<confidant::config::local::link>,
-                std::vector<confidant::config::local::templatelink>,
+                string,
+                vector<string>,
+                vector<confidant::config::local::link>,
+                vector<confidant::config::local::templatelink>,
                 confidant::config::local::link,
                 confidant::config::local::templatelink
             >;
             
-            using globalvalue = std::variant<
+            using globalvalue = variant<
                 bool,
                 util::verbose,
-                std::string,
+                string,
                 int
             >;
             
-            std::optional<localvalue> local(const confidant::config::local::settings& conf, std::string_view qry);
-            std::optional<globalvalue> global(const confidant::config::global::settings& conf, std::string_view qry);
-            std::string formatlocalvalue(const localvalue& v);
-            std::string formatglobalvalue(const globalvalue& v);
-        }
-    }
-}
+            optional<localvalue> local(const confidant::config::local::settings& conf, sview qry);
+            optional<globalvalue> global(const confidant::config::global::settings& conf, sview qry);
+            string formatlocalvalue(const localvalue& v);
+            string formatglobalvalue(const globalvalue& v);
+
+        }; // END get
+    }; // END actions
+}; // END confidant

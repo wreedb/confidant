@@ -1,5 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
-//
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "settings/global.hpp"
@@ -14,14 +13,20 @@
 
 #include "actions/get.hpp"
 
+using sview = std::string_view;
+using std::string;
+using std::vector;
+using std::optional;
+using std::nullopt;
+
 namespace confidant {
   
     namespace actions {
         
         namespace get {
-            std::optional<globalvalue> global(const confidant::config::global::settings& conf, std::string_view qry) {
+            optional<globalvalue> global(const confidant::config::global::settings& conf, sview qry) {
                 auto parts = util::split(qry);
-                if (parts.empty()) return std::nullopt;
+                if (parts.empty()) return nullopt;
                 if (parts.at(0) == "create-directories")
                     return conf.createdirs;
                 else if (parts.at(0) == "log-level")
@@ -29,16 +34,16 @@ namespace confidant {
                 else if (parts.at(0) == "color")
                     return conf.color;
                 else
-                    return std::nullopt;
+                    return nullopt;
             }
             
-            std::optional<localvalue> local(const confidant::config::local::settings& conf, std::string_view qry) {
+            optional<localvalue> local(const confidant::config::local::settings& conf, sview qry) {
                 auto parts = util::split(qry);
-                if (parts.empty()) return std::nullopt;
+                if (parts.empty()) return nullopt;
                 if (parts.at(0) == "repository") {
                     if (parts.size() == 1) return conf.repo.url;
                     if (parts.size() == 2 && parts.at(1) == "url") return conf.repo.url;
-                    return std::nullopt;
+                    return nullopt;
                 }
                 
                 if (parts.at(0) == "links") {
@@ -48,7 +53,7 @@ namespace confidant {
                     if (parts.size() == 2) {
                         for (const auto& link : conf.links) 
                             if (link.name == parts.at(1)) return link;
-                        return std::nullopt;
+                        return nullopt;
                     }
                     if (parts.size() == 3) {
                         for (const auto& link : conf.links) {
@@ -62,7 +67,7 @@ namespace confidant {
                             }
                         }
                     }
-                    return std::nullopt;
+                    return nullopt;
                 }
                 
                 if (parts.at(0) == "templates") {
@@ -82,17 +87,17 @@ namespace confidant {
                             }
                         }
                     }
-                    return std::nullopt;
+                    return nullopt;
                 }
-                return std::nullopt;
+                return nullopt;
             }
             
-            std::string formatglobalvalue(const globalvalue& v) {
-                return std::visit([](auto&& arg) -> std::string {
+            string formatglobalvalue(const globalvalue& v) {
+                return std::visit([](auto&& arg) -> string {
                     using T = std::decay_t<decltype(arg)>;
                     if constexpr (std::is_same_v<T, bool>)
                         return arg ? "true" : "false";
-                    else if constexpr (std::is_same_v<T, std::string>)
+                    else if constexpr (std::is_same_v<T, string>)
                         return arg;
                     else if constexpr (std::is_same_v<T, util::verbose>)
                         return util::verboseliteral(arg);
@@ -102,17 +107,17 @@ namespace confidant {
                 }, v);
             }
             
-            std::string formatlocalvalue(const localvalue& v) {
-                return std::visit([](auto&& arg) -> std::string {
+            string formatlocalvalue(const localvalue& v) {
+                return std::visit([](auto&& arg) -> string {
                     using T = std::decay_t<decltype(arg)>;
                     
                     if constexpr (std::is_same_v<T, bool>) {
                         return arg ? "true" : "false";
                     }
-                    else if constexpr (std::is_same_v<T, std::string>) {
+                    else if constexpr (std::is_same_v<T, string>) {
                         return arg;
                     }
-                    else if constexpr (std::is_same_v<T, std::vector<std::string>>) {
+                    else if constexpr (std::is_same_v<T, vector<string>>) {
                         std::ostringstream oss;
                         oss << "[\n";
                         for (const auto& item : arg) {
@@ -121,7 +126,7 @@ namespace confidant {
                         oss << "]";
                         return oss.str();
                     }
-                    else if constexpr (std::is_same_v<T, std::vector<config::local::link>>) {
+                    else if constexpr (std::is_same_v<T, vector<config::local::link>>) {
                         std::ostringstream oss;
                         for (const auto& link : arg) {
                             oss << link.name << ":\n";
@@ -140,7 +145,7 @@ namespace confidant {
                         oss << "type: " << (arg.type == config::local::linktype::file ? "file" : "directory");
                         return oss.str();
                     }
-                    else if constexpr (std::is_same_v<T, std::vector<config::local::templatelink>>) {
+                    else if constexpr (std::is_same_v<T, vector<config::local::templatelink>>) {
                         std::ostringstream oss;
                         for (const auto& tmpl : arg) {
                             oss << tmpl.name << ":\n";
@@ -166,8 +171,8 @@ namespace confidant {
                     return "<unknown type>";
                 }, v);
             }
-        };
+        }; // END get
     
-    };
+    }; // END actions
     
-};
+}; // END confidant

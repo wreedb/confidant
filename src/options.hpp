@@ -1,5 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
-//
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <string>
@@ -26,7 +25,7 @@ namespace options {
             inline bool verbose = false;
             inline bool quiet = false;
             inline std::string file = fs::current_path().string() + "/confidant.ucl";
-        };
+        }; // END dump
     
         namespace get {
             inline bool invoked = false;
@@ -36,9 +35,9 @@ namespace options {
             inline bool quiet = false;
             inline std::string file = fs::current_path().string() + "/confidant.ucl";
             inline std::string name;
-        };
+        }; // END get
     
-    };
+    }; // END config
     
     namespace link {
         inline bool invoked = false;
@@ -48,7 +47,7 @@ namespace options {
         inline bool verbose = false;
         inline bool quiet = false;
         inline std::string file = fs::current_path().string() + "/confidant.ucl";
-    };
+    }; // END link
     
     namespace init {
         inline bool invoked = false;
@@ -57,7 +56,7 @@ namespace options {
         inline bool dryrun = false;
         inline bool help = false;
         inline bool quiet = false;
-    };
+    }; // END init
     
     inline bool version = false;
     inline bool usage = false;
@@ -72,12 +71,12 @@ namespace options {
             inline bool invoked = false;
             inline bool get = false;
             inline bool dump = false;
-        };
-    };
+        }; // END config
+    }; // END help
     
     namespace global {
         inline bool create_dirs = true;
         inline int verbosity = util::verbose::normal;
         inline bool color = util::usecolorp();
-    };
-};
+    }; // END global
+}; // END options

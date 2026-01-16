@@ -1,5 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
-//
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #pragma once
@@ -33,7 +32,7 @@ namespace ucl {
         inline ucl_emitter msgpack = UCL_EMIT_MSGPACK;
         inline ucl_emitter config = UCL_EMIT_CONFIG;
         inline ucl_emitter max = UCL_EMIT_MAX;
-    }; // END ucl::emit
+    }; // END emit
 
     namespace flags {
         inline ucl_parser_flags_t Default = UCL_PARSER_DEFAULT;
@@ -44,7 +43,7 @@ namespace ucl {
         inline ucl_parser_flags_t SaveComments = UCL_PARSER_SAVE_COMMENTS;
         inline ucl_parser_flags_t NoMacros = UCL_PARSER_DISABLE_MACRO;
         inline ucl_parser_flags_t NoVars = UCL_PARSER_NO_FILEVARS;
-    }; // END ucl::flags
+    }; // END flags
     
     namespace parsing {
         ucl::Ucl file(std::string_view path, const std::map<std::string, std::string>& vars);
@@ -56,12 +55,12 @@ namespace ucl {
         std::optional<std::string> str(const ucl::Ucl& object, std::string_view key);
         std::optional<ucl::Ucl> list(const ucl::Ucl& object, std::string_view key);
         std::optional<ucl::Ucl> node(const ucl::Ucl& object, std::string_view key);
-    }; // END ucl::get
+    }; // END get
 
     namespace var {
         void add(std::string_view name, std::string_view value, std::map<std::string, std::string>& vm);
         void fromenv(std::string_view key, std::map<std::string, std::string>& vm, std::string_view fallback);
-    }; // END ucl::var
+    }; // END var
 
     bool check(const ucl::Ucl& obj, std::string_view key);
     int members(const ucl::Ucl& object);

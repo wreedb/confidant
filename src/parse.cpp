@@ -1,5 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
-//
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <filesystem>
@@ -50,7 +49,7 @@ namespace ucl {
             
             return input;
         }
-    };
+    }; // END parsing
     
     namespace get {
         std::optional<bool> boolean(const ucl::Ucl& object, std::string_view key) {
@@ -82,7 +81,7 @@ namespace ucl {
                 return object.lookup(key.data());
             else return std::nullopt;
         }
-    };
+    }; // END get
 
     namespace var {
 
@@ -96,7 +95,7 @@ namespace ucl {
             else ucl::var::add(key, env.value(), vm);
         }
     
-    }; // END ucl::var
+    }; // END var
 
     bool check(const ucl::Ucl& obj, std::string_view key) {
         if (obj.lookup(key.data()).type() == UCL_NULL)

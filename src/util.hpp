@@ -1,5 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
-//
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #pragma once
@@ -32,4 +31,4 @@ namespace util {
     std::string unexpandhome(std::string_view p);
     std::vector<std::filesystem::path> splitpath(const std::string& pathstr);
     bool usecolorp();
-};
+}; // END util

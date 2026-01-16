@@ -1,5 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
-//
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #pragma once
@@ -26,12 +25,11 @@ namespace confidant {
                 util::verbose loglevel = util::verbose::normal;
             };
             
-            // confidant::settings defaults();
             inline bool color = true;
             inline bool createdirs = true;
             inline util::verbose loglevel = util::verbose::normal;
             
             confidant::config::global::settings serialize(std::string_view path);
-        }; // END confidant::config::global
-    }; // END confidant::config
+        }; // END global
+    }; // END config
 }; // END confidant

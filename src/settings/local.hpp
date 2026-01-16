@@ -1,5 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
-//
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #pragma once
@@ -47,7 +46,8 @@ namespace confidant {
             };
             
             confidant::config::local::settings serialize(std::string_view path, const confidant::config::global::settings& globals);
-        };
-    };
+        }; // END local
+
+    }; // END config
     
-};
+}; // END confidant

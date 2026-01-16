@@ -1,10 +1,11 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
-//
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <filesystem>
 #include <string>
 #include <utility>
+#include <vector>
+#include <string_view>
 
 #include "settings/global.hpp"
 #include "util.hpp"
@@ -14,13 +15,17 @@
 
 namespace fs = std::filesystem;
 
+using sview = std::string_view;
+using std::string;
+using std::vector;
+
 namespace confidant {
     
     namespace actions {
         
         namespace link {
         
-            int linktemplate(const confidant::config::local::settings& conf, const confidant::config::global::settings& globals, const std::vector<std::string_view>& tags, bool dry) {
+            int linktemplate(const confidant::config::local::settings& conf, const confidant::config::global::settings& globals, const vector<sview>& tags, bool dry) {
                 int processedTemplates = 0;
                 for (auto& tmpl : conf.templates) {
               
@@ -35,14 +40,14 @@ namespace confidant {
                     
                     for (int n = 0; n < numitems; n++) {
                         
-                        std::string sourcestr = util::substitute(tmpl.source.string() , tmpl.items.at(n));
-                        std::string deststr   = util::substitute(tmpl.destination.string(), tmpl.items.at(n));
+                        string sourcestr = util::substitute(tmpl.source.string() , tmpl.items.at(n));
+                        string deststr   = util::substitute(tmpl.destination.string(), tmpl.items.at(n));
                         
                         fs::path sourcepath = fs::path(sourcestr);
                         fs::path destpath = fs::path(deststr);
                         
-                        std::string usourcestr = fs::relative(fs::path(sourcestr)).string();
-                        std::string udeststr = util::unexpandhome(deststr);
+                        string usourcestr = fs::relative(fs::path(sourcestr)).string();
+                        string udeststr = util::unexpandhome(deststr);
                         
                         if (!fs::exists(sourcepath)) {
                             msg::error("source file {} does not exist!",
@@ -149,21 +154,21 @@ namespace confidant {
                 return 0;
             }
             
-            int linknormal(const config::local::settings& conf, const config::global::settings& globals, const std::vector<std::string_view>& tags, bool dry) {
+            int linknormal(const config::local::settings& conf, const config::global::settings& globals, const vector<sview>& tags, bool dry) {
                 using util::unexpandhome;
                 int numlinks = conf.links.size();
                 int linksdone = 0;
                 
                 for (int n = 0; n < numlinks; n++) {
                     
-                    std::string name       = conf.links.at(n).name;
-                    std::string tag        = conf.links.at(n).tag;
+                    string name       = conf.links.at(n).name;
+                    string tag        = conf.links.at(n).tag;
                     fs::path sourcepath    = conf.links.at(n).source;
                     fs::path destpath      = conf.links.at(n).destination;
-                    std::string sourcestr  = sourcepath.string();
-                    std::string deststr    = destpath.string();
-                    std::string usourcestr = fs::relative(sourcepath).string();
-                    std::string udeststr   = util::unexpandhome(deststr);
+                    string sourcestr  = sourcepath.string();
+                    string deststr    = destpath.string();
+                    string usourcestr = fs::relative(sourcepath).string();
+                    string udeststr   = util::unexpandhome(deststr);
                     
                     config::local::linktype lt = conf.links.at(n).type;
                 
@@ -308,6 +313,6 @@ namespace confidant {
         
             }
 
-    };
-  };  
-};
+        }; // END link
+    }; // END actions
+}; // END confidant

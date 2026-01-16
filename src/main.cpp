@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Will Reed <wreed@disroot.org>
+// SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -58,7 +58,7 @@ namespace args {
         std::string tags;
         std::string file = fs::current_path().string() + "/confidant.ucl";
     
-    };
+    }; // END link
     
     namespace config {
         bool self = false;
@@ -70,7 +70,7 @@ namespace args {
             bool json = false;
             bool global = false;
             std::string file = fs::current_path().string() + "/confidant.ucl";
-        };
+        }; // END dump
         
         namespace get {
             bool self = false;
@@ -78,8 +78,8 @@ namespace args {
             bool global = false;
             std::string query;
             std::string file = fs::current_path().string() + "/confidant.ucl";
-        };
-    };
+        }; // END get
+    }; // END config
     
     bool usage = false;
     bool version = false;
@@ -92,10 +92,10 @@ namespace args {
             bool self = false;
             bool dump = false;
             bool get = false;
-        };
+        }; // END config
         bool init = false;
         bool link = false;
-    }
+    }; // END help
     
     namespace init {
         std::string path = fs::current_path().string();
@@ -103,8 +103,8 @@ namespace args {
         bool self = false;
         bool help = false;
         bool dry = false;
-    };  
-};
+    }; // END init
+}; // END args
 
 namespace cmd {
     namespace link {
@@ -113,23 +113,23 @@ namespace cmd {
         lyra::opt dry = lyra::opt(args::link::dry)["-d"]["--dry-run"];
         lyra::opt tags = lyra::opt(args::link::tags, "tags")["-t"]["--tags"];
         lyra::opt file = lyra::opt(args::link::file, "path")["-f"]["--file"];
-    };
+    }; // END link
     namespace help {
         lyra::command self = lyra::command("help", [](const lyra::group&) { args::help::self = true; });
         namespace config {
             lyra::command self = lyra::command("config", [](const lyra::group&) { args::config::help = true; });
             lyra::command dump = lyra::command("dump", [](const lyra::group&) { args::config::dump::help = true; });
             lyra::command get  = lyra::command("get", [](const lyra::group&) { args::config::get::help = true; });
-        };
+        }; // END config
         lyra::command init = lyra::command("init", [](const lyra::group&) { args::init::help = true; });
         lyra::command link = lyra::command("link", [](const lyra::group&) { args::link::help = true; });
-    };
+    }; // END help
     namespace init {
         lyra::command self = lyra::command("init", [](const lyra::group&) { args::init::self = true; });
         lyra::help help = lyra::help(args::init::help);
         lyra::arg path = lyra::arg(args::init::path, "path");
         lyra::opt dry = lyra::opt(args::init::dry)["-d"]["--dry-run"];
-    };
+    }; // END init
     namespace config {
         lyra::command self = lyra::command("config", [](const lyra::group&) { args::config::self = true; });
         lyra::opt help = lyra::opt(args::config::help).name("-h").name("--help").name("-?").optional();
@@ -139,18 +139,18 @@ namespace cmd {
             lyra::opt global = lyra::opt(args::config::dump::global)["-g"]["--global"].optional();
             lyra::opt json = lyra::opt(args::config::dump::json)["-j"]["--json"].optional();
             lyra::opt file = lyra::opt(args::config::dump::file, "path")["-f"]["--file"];
-        };
+        }; // END dump
         namespace get {
             lyra::command self = lyra::command("get", [](const lyra::group&) { args::config::get::self = true; }).optional();
             lyra::arg query = lyra::arg(args::config::get::query, "query");
             lyra::help help = lyra::help(args::config::get::help);
             lyra::opt global = lyra::opt(args::config::get::global)["-g"]["--global"];
             lyra::opt file = lyra::opt(args::config::get::file, "path")["-f"]["--file"];
-        };
-    };
+        }; // END get
+    }; // END config
     lyra::command usage = lyra::command("usage", [](const lyra::group&) { args::usage = true; });
     lyra::command version = lyra::command("version", [](const lyra::group&) { args::version = true; });
-};
+}; // END cmd
 
 namespace flags {
     lyra::help help = lyra::help(args::help::self);
@@ -158,7 +158,7 @@ namespace flags {
     lyra::opt version = lyra::opt(args::version)["-V"]["--version"];
     lyra::opt verbose = lyra::opt(args::verbose)["-v"]["--verbose"];
     lyra::opt quiet = lyra::opt(args::quiet)["-q"]["--quiet"];
-};
+}; // END flags
 
 int main(int argc, const char *argv[]) {
 

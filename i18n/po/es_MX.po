@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: confidant 0.4.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 13:18-0600\n"
+"POT-Creation-Date: 2026-01-14 20:38-0600\n"
 "PO-Revision-Date: 2025-11-24 10:26-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,89 +18,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/settings/local.cpp:36
-#, c++-format
-msgid "failed to parse {} value as a string!"
-msgstr "¡no se pudo analizar {} como una cadena!"
-
-#: src/settings/local.cpp:46 src/settings/local.cpp:124
-#, c++-format
-msgid "field {} not specified"
-msgstr "no se especificó la entrada {}"
-
-#: src/settings/local.cpp:50 src/settings/local.cpp:128
-#, c++-format
-msgid "failed to parse {} as a node!"
-msgstr "¡no se pudo analizar {} entrada {} como nodo!"
-
-#: src/settings/local.cpp:66 src/settings/local.cpp:76
-#: src/settings/local.cpp:88 src/settings/local.cpp:92
-#: src/settings/local.cpp:105 src/settings/local.cpp:144
-#, c++-format
-msgid "failed to parse {} field {} as a string!"
-msgstr "¡no se pudo analizar {} entrada {} como una cadena!"
-
-#: src/settings/local.cpp:79
-#, c++-format
-msgid "{} field {} must be a string!"
-msgstr "¡el campo {} {} debe ser una candena!"
-
-#: src/settings/local.cpp:81 src/settings/local.cpp:96
-#, c++-format
-msgid "link {} is missing a {} value!"
-msgstr "¡link {} le falte el valor {}!"
-
-#: src/settings/local.cpp:109
-#, c++-format
-msgid "type {} is not recognized, expected one of {} or {}, using default"
-msgstr ""
-"type {} no se reconoce, se espera uno de los siguientes: {} o {}, utilizando "
-"el valor predeterminado"
-
-#: src/settings/local.cpp:154 src/settings/local.cpp:164
-#, c++-format
-msgid "template {} is missing a {} value!"
-msgstr "¡template {} le falte el valor {}!"
-
-#: src/settings/local.cpp:178
-#, c++-format
-msgid "failed to get {} items field as a list!"
-msgstr "¡no se pudo analizar {} items entrada como una lista!"
-
-#. items field exists, but is not an array (fatal)
-#: src/settings/local.cpp:187
-#, c++-format
-msgid "template {} {} field is not a list!"
-msgstr "¡template {} {} entrada no es una lista!"
-
-#. items field doesn't exist (fatal)
-#: src/settings/local.cpp:192
-#, c++-format
-msgid "template {} has no {} list!"
-msgstr "¡template {} no tiene lista {}!"
-
-#: src/parse.cpp:25
-msgid "file at"
-msgstr "archivo en"
-
-#: src/parse.cpp:25
-msgid "does not exist"
-msgstr "¡el archivo fuente {} no existe!"
-
-#: src/parse.cpp:32
-msgid "failed to open file at "
-msgstr "no se puede abrir {} para escribir"
-
-#: src/parse.cpp:47
-msgid "failed while parsing "
-msgstr "error al analizar "
-
-#: src/actions/link.cpp:48 src/actions/link.cpp:173
+#: src/actions/link.cpp:48 src/actions/link.cpp:180
 #, c++-format
 msgid "source file {} does not exist!"
 msgstr "¡el archivo fuente {} no existe!"
 
-#: src/actions/link.cpp:55 src/actions/link.cpp:183
+#: src/actions/link.cpp:55 src/actions/link.cpp:190
 #, c++-format
 msgid "skipping {}, already linked"
 msgstr "omitiendo {}, ya está vinculado"
@@ -110,12 +33,12 @@ msgstr "omitiendo {}, ya está vinculado"
 msgid "destination {} already exists, skipping"
 msgstr "el destino {} ya existe, omitiendo"
 
-#: src/actions/link.cpp:68 src/actions/link.cpp:198
+#: src/actions/link.cpp:68 src/actions/link.cpp:205
 #, c++-format
 msgid "failed to remove broken symlink at {}"
 msgstr "no se ha podido eliminar el enlace simbólico roto en {}"
 
-#: src/actions/link.cpp:73 src/actions/link.cpp:203
+#: src/actions/link.cpp:73 src/actions/link.cpp:210
 #, c++-format
 msgid "removing broken symlink at {}"
 msgstr "eliminar enlace simbólico roto en {}"
@@ -125,18 +48,18 @@ msgstr "eliminar enlace simbólico roto en {}"
 msgid "parent directory for {} doesn't exist, skipping"
 msgstr "el directorio principal {} no existe, omitiendo"
 
-#: src/actions/link.cpp:86 src/actions/link.cpp:219 src/help.cpp:233
+#: src/actions/link.cpp:86 src/actions/link.cpp:226 src/help.cpp:233
 #, c++-format
 msgid "failed to create directory {}"
 msgstr "no se pudo crear el directorio {}"
 
 #. display extra message regardless, for dry-run verbose
-#: src/actions/link.cpp:92 src/actions/link.cpp:226 src/help.cpp:236
+#: src/actions/link.cpp:92 src/actions/link.cpp:233 src/help.cpp:236
 #, c++-format
 msgid "created directory {}"
 msgstr "directorio creado {}"
 
-#: src/actions/link.cpp:98 src/actions/link.cpp:233
+#: src/actions/link.cpp:98 src/actions/link.cpp:240
 #, c++-format
 msgid "no write permissions for directory {}"
 msgstr "sin permisos de escritura para directorio {}"
@@ -148,7 +71,7 @@ msgstr "no se pudo crear el enlace simbólico en {}"
 
 #. show message regardless for dry-runs
 #. the file was linked
-#: src/actions/link.cpp:129 src/actions/link.cpp:289
+#: src/actions/link.cpp:129 src/actions/link.cpp:296
 #, c++-format
 msgid "linked {}"
 msgstr "vinculado {}"
@@ -158,53 +81,57 @@ msgstr "vinculado {}"
 msgid "template {} required no links"
 msgstr "template {} no necesitaba enlaces"
 
-#: src/actions/link.cpp:135
-#, c++-format
-msgid "processed {} item"
-msgid_plural "processed {} items"
-msgstr[0] "procesó {} items"
-msgstr[1] "procesó {} items"
+#: src/actions/link.cpp:136
+msgid "processed 1 item"
+msgstr "procesó un item"
 
-#: src/actions/link.cpp:139
+#: src/actions/link.cpp:138
 #, c++-format
-msgid "processed {} template"
-msgid_plural "processed {} templates"
-msgstr[0] "procesó {} templates"
-msgstr[1] "procesó {} templates"
+msgid "processed {} items"
+msgstr "procesó {} items"
+
+#: src/actions/link.cpp:144
+msgid "processed 1 template"
+msgstr "procesó un template"
+
+#: src/actions/link.cpp:146
+msgid "processed {} templates"
+msgstr "procesó {} templates"
 
 #. the destination already exists, and isn't identical to our source; we do nothing and skip
-#: src/actions/link.cpp:188
+#: src/actions/link.cpp:195
 #, c++-format
 msgid "destination {} already exists and is not identical to source, skipping"
 msgstr "el destino {} ya existe y no es idéntico a source, omitiendo"
 
 #. parent path doesn't exist and settings to create dirs is off
-#: src/actions/link.cpp:210
+#: src/actions/link.cpp:217
 #, c++-format
 msgid "parent directory for {} does not exist, skipping"
 msgstr "el directorio principal de {} no existe, omitiendo"
 
 #. they specified directory, but the source is not a directory
-#: src/actions/link.cpp:246
+#: src/actions/link.cpp:253
 #, c++-format
 msgid "link {} source {} is not a directory"
 msgstr "link {} source {} no es un directorio"
 
-#: src/actions/link.cpp:257 src/actions/link.cpp:273
+#: src/actions/link.cpp:264 src/actions/link.cpp:280
 #, c++-format
 msgid "failed to create symlink for {} at {}"
 msgstr "no se pudo crear el enlace simbólico para {} en {}"
 
-#: src/actions/link.cpp:293
+#: src/actions/link.cpp:300
 msgid "no links were needed"
 msgstr "no se necesitaban enlaces"
 
-#: src/actions/link.cpp:294
-#, c++-format
-msgid "created {} normal link"
-msgid_plural "created {} normal links"
-msgstr[0] "creó {} enlaces normales"
-msgstr[1] "creó {} enlaces normales"
+#: src/actions/link.cpp:303
+msgid "created 1 normal link"
+msgstr "creó un enlace normal"
+
+#: src/actions/link.cpp:305
+msgid "created {} normal links"
+msgstr "creó {} enlaces normales"
 
 #. i18n: "pal and confidant" is italicized
 #: src/help.cpp:28
@@ -491,11 +418,6 @@ msgstr "no se encuentra {} en la configuración"
 msgid "wrote sample config file to {}"
 msgstr "escribí un archivo de configuración de muestra en {}"
 
-#: src/util.cpp:82
-#, c++-format
-msgid "log-level {} is invalid!"
-msgstr "¡log-level {} no es válido!"
-
 #: src/msg.hpp:40
 msgid "error"
 msgstr "error"
@@ -520,20 +442,84 @@ msgstr "traza"
 msgid "fatal"
 msgstr "fatal"
 
-#~ msgid "for more information about a specific action"
-#~ msgstr "para obtener más información sobre una acción"
+#: src/parse.cpp:25
+msgid "file at "
+msgstr "archivo en "
 
-#~ msgid "and its' respective options."
-#~ msgstr "específica y sus opciones."
+#: src/parse.cpp:25
+msgid " does not exist"
+msgstr "¡el archivo fuente {} no existe!"
 
-#~ msgid "     specify a configuration file to operate on"
-#~ msgstr ""
-#~ "     especifique el archivo de configuración con el que desea trabajar"
+#: src/parse.cpp:32
+msgid "failed to open file at "
+msgstr "no se puede abrir {} para escribir"
 
+#: src/parse.cpp:47
+msgid "failed while parsing "
+msgstr "error al analizar "
+
+#: src/settings/local.cpp:36
 #, c++-format
-#~ msgid "create directory {}"
-#~ msgstr "directorio creado {}"
+msgid "failed to parse {} value as a string!"
+msgstr "¡no se pudo analizar {} como una cadena!"
 
+#: src/settings/local.cpp:46 src/settings/local.cpp:124
 #, c++-format
-#~ msgid "no write permissions for {}"
-#~ msgstr "sin permisos de escritura para {}"
+msgid "field {} not specified"
+msgstr "no se especificó la entrada {}"
+
+#: src/settings/local.cpp:50 src/settings/local.cpp:128
+#, c++-format
+msgid "failed to parse {} as a node!"
+msgstr "¡no se pudo analizar {} entrada {} como nodo!"
+
+#: src/settings/local.cpp:66 src/settings/local.cpp:76
+#: src/settings/local.cpp:88 src/settings/local.cpp:92
+#: src/settings/local.cpp:105 src/settings/local.cpp:144
+#, c++-format
+msgid "failed to parse {} field {} as a string!"
+msgstr "¡no se pudo analizar {} entrada {} como una cadena!"
+
+#: src/settings/local.cpp:79
+#, c++-format
+msgid "{} field {} must be a string!"
+msgstr "¡el campo {} {} debe ser una candena!"
+
+#: src/settings/local.cpp:81 src/settings/local.cpp:96
+#, c++-format
+msgid "link {} is missing a {} value!"
+msgstr "¡link {} le falte el valor {}!"
+
+#: src/settings/local.cpp:109
+#, c++-format
+msgid "type {} is not recognized, expected one of {} or {}, using default"
+msgstr ""
+"type {} no se reconoce, se espera uno de los siguientes: {} o {}, utilizando "
+"el valor predeterminado"
+
+#: src/settings/local.cpp:154 src/settings/local.cpp:164
+#, c++-format
+msgid "template {} is missing a {} value!"
+msgstr "¡template {} le falte el valor {}!"
+
+#: src/settings/local.cpp:178
+#, c++-format
+msgid "failed to get {} items field as a list!"
+msgstr "¡no se pudo analizar {} items entrada como una lista!"
+
+#. items field exists, but is not an array (fatal)
+#: src/settings/local.cpp:187
+#, c++-format
+msgid "template {} {} field is not a list!"
+msgstr "¡template {} {} entrada no es una lista!"
+
+#. items field doesn't exist (fatal)
+#: src/settings/local.cpp:192
+#, c++-format
+msgid "template {} has no {} list!"
+msgstr "¡template {} no tiene lista {}!"
+
+#: src/util.cpp:82
+#, c++-format
+msgid "log-level {} is invalid!"
+msgstr "¡log-level {} no es válido!"

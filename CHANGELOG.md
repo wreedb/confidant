@@ -4,6 +4,42 @@ SPDX-FileCopyrightText: 2026 Will Reed <wreed@disroot.org>
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 # Changelog
+## [v0.4.5] - 2026-01-16
+
+
+### Changed
+
+-  Update changelog
+
+-  Add .clangd, add ignores for unused includes to .clang-tidy
+
+-  Auto insert final newlines for everything except for `.version`
+
+-  Update translations
+
+-  Bump to 0.4.5, update copyright year, adjust formatting for consistency
+
+-  Add .clangd, add ignores for unused includes to .clang-tidy
+
+-  Auto insert final newlines for everything except for `.version`
+
+-  Update translations
+
+-  Bump to 0.4.5, update copyright year, adjust formatting for consistency
+
+-  Merge branch 'main' of ssh://codeberg.org/wreedb/confidant
+
+-  Ignore merge commits in cliff.toml
+
+
+### Fixed
+
+-  Format string error
+
+-  Add a space
+
+-  Add a space
+
 ## [v0.4.3] - 2025-11-25
 
 

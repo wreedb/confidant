@@ -1,5 +1,3 @@
-# -*- yaml-ts -*- vim:ft=yaml
-
 HeaderFileExtensions:
 - hpp
 
